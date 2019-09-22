@@ -89,5 +89,41 @@ def main_activity():
     database_connector.stop_connection()
 
 
+def test_activity():
+    from database import query_constructors
+
+    # query_constructor = query_constructors.NewQueryConstructor("products", "online_shop_logistics")
+    query_constructor = query_constructors.NewQueryConstructor("products")
+    query_constructor.add_field("gtin14")
+    print(query_constructor.render_select_query())
+    print("Meant to fail:")
+    print(query_constructor.render_update_query())
+    print("Meant to fail:")
+    print(query_constructor.render_delete_query())
+    query_constructor.add_condition_like("name", "rice")
+    query_constructor.add_condition_ranged_values("price", 50, 200)
+    print(query_constructor.render_select_query())
+    query_constructor.add_field("name")
+    print(query_constructor.render_select_query())
+    query_constructor.add_value("rice")
+    query_constructor.add_value("15.50")
+    print(query_constructor.render_update_query())
+    print(query_constructor.render_delete_query())
+    query_constructor.reset()
+    print(query_constructor.render_select_query())
+    print("Meant to fail:")
+    print(query_constructor.render_update_query())
+    print("Meant to fail:")
+    print(query_constructor.render_delete_query())
+    query_constructor.add_condition_exact_value("name", "rice")
+    print(query_constructor.render_delete_query())
+    print("Meant to fail:")
+    print(query_constructor.render_update_query())
+    query_constructor.add_field("description")
+    query_constructor.add_value("test")
+    print(query_constructor.render_update_query())
+
+
 if __name__ == "__main__":
-    main_activity()
+    # main_activity()
+    test_activity()
