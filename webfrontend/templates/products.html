@@ -1,0 +1,47 @@
+{% extends "layoutDataTables.html" %}
+
+{% block title %}Products{% endblock %}
+{% block tablename %}Products{% endblock %}
+
+{% block navigation %}
+<li><a class="dropdown-item" href="/customers">Customers</a></li>
+<li><a class="dropdown-item text-info" disabled>Products</a></li>
+<li><a class="dropdown-item" href="/customer-orders">Customer Orders</a></li>
+<li><a class="dropdown-item" href="/company-orders">Company Orders</a></li>
+{% endblock %}
+
+{% block filtering %}
+Under Construction
+{% endblock %}
+
+{% block tableheaders %}
+<th>GTIN-14</th>
+<th>Name</th>
+<th>Description</th>
+<th>Current Price</th>
+<th>Qty in Stock</th>
+<th></th>
+{% endblock %}
+
+{% block tablebody %}
+{% for record in selection %}
+  <tr>
+    <td>{{ record[0] }}</td>
+    <td>{{ record[1] }}</td>
+    <td>{{ record[2] }}</td>
+    <td>{{ record[3] }}</td>
+    <td>{{ record[4] }}</td>
+    <td>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+          <i class="fa fa-ellipsis-v"></i>
+        </button>
+        <ul class="dropdown-menu shadow">
+          <li><a class="dropdown-item" href="/products/{{ record[0] }}">Details...</a></li>
+          <li><a class="dropdown-item text-danger" href="/products/{{ record[0] }}/delete">Delete</a></li>
+        </ul>
+      </div>
+    </td>
+  </tr>
+{% endfor %}
+{% endblock %}

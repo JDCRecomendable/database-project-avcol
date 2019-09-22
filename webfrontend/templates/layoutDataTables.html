@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2019 Jared Recomendable. All rights reserved. -->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Online Shop Logistics Management">
+    <meta name="author" content="Jared Recomendable">
+    <title>Online Shop Logistics Management - {% block title %}{% endblock %}</title>
+
+    <!-- Include Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+      <span class="navbar-brand">Online Shop<br>Logistics Management</span>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item mx-2">
+            <div class="dropdown">
+              <a class="nav-link active dropdown-toggle" data-toggle="dropdown">
+                Data
+              </a>
+              <ul class="dropdown-menu shadow">
+                {% block navigation %}
+                {% endblock %}
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item mx-2">
+            <div class="dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown">
+                Bulk Operations
+              </a>
+              <ul class="dropdown-menu shadow">
+                <li><a class="dropdown-item" href="#!">Update Records</a></li>
+                <li><a class="dropdown-item" href="#!">Delete Records</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item mx-2"><a class="nav-link" href="#">Reports</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <!-- Main Content -->
+      <main role="main" class="pt-3 px-4">
+        <div class="d-flex flex-wrap mb-3">
+          <div class="flex-grow-1 mr-2">
+            <h3>{% block tablename %}{% endblock %}</h3>
+          </div>
+          <div>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filterData">
+              Filter Data
+            </button>
+          </div>
+        </div>
+        <div class="collapse" id="filterData">
+          <div class="container-fluid bg-light p-3 mb-3">
+            <!-- Form for Filtering -->
+            {% block filtering %}{% endblock %}
+            <button type="submit" class="btn btn-primary mb-2 m-2 px-3">Filter</button>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table id="dataTable" class="table table-striped table-sm">
+            <thead>
+              <tr>
+                {% block tableheaders %}
+                {% endblock %}
+              </tr>
+            </thead>
+            <tbody>
+              {% block tablebody %}
+              {% endblock %}
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $("#dataTable").DataTable({
+          "columnDefs": [
+            { "orderable": false, "targets": 5 }
+          ]
+        });
+      });
+    </script>
+  </body>
+</html>

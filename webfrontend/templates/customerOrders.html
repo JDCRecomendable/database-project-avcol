@@ -1,0 +1,47 @@
+{% extends "layoutDataTables.html" %}
+
+{% block title %}Customer Orders{% endblock %}
+{% block tablename %}Customer Orders{% endblock %}
+
+{% block navigation %}
+<li><a class="dropdown-item" href="/customers">Customers</a></li>
+<li><a class="dropdown-item" href="/products">Products</a></li>
+<li><a class="dropdown-item text-info" disabled>Customer Orders</a></li>
+<li><a class="dropdown-item" href="/company-orders">Company Orders</a></li>
+{% endblock %}
+
+{% block filtering %}
+Under Construction
+{% endblock %}
+
+{% block tableheaders %}
+<th>#</th>
+<th>Customer</th>
+<th>Date/Time Ordered</th>
+<th>Delivery Date</th>
+<th>Delivery Location</th>
+<th></th>
+{% endblock %}
+
+{% block tablebody %}
+{% for record in selection %}
+  <tr>
+    <td>{{ record[0] }}</td>
+    <td>{{ record[1] }}</td>
+    <td>{{ record[2] }}</td>
+    <td>{{ record[3] }}</td>
+    <td>{{ record[4] }}</td>
+    <td>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+          <i class="fa fa-ellipsis-v"></i>
+        </button>
+        <ul class="dropdown-menu shadow">
+          <li><a class="dropdown-item" href="/customer-orders/{{ record[0] }}">Details...</a></li>
+          <li><a class="dropdown-item text-danger" href="/customer-orders/{{ record[0] }}/delete">Delete</a></li>
+        </ul>
+      </div>
+    </td>
+  </tr>
+{% endfor %}
+{% endblock %}
