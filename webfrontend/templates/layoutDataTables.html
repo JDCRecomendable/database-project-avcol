@@ -80,8 +80,13 @@
               </tr>
             </thead>
             <tbody>
-              {% block tablebody %}
-              {% endblock %}
+              {% for record in selection %}
+                <tr>
+                  {% block tablebody scoped %}
+                  {{ record }}
+                  {% endblock %}
+                </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
