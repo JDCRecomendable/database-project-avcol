@@ -59,7 +59,6 @@ class DatabaseConnector:
                     return self.cursor.fetchall()
             except mysql.connector.Error as err:
                 print_error(str(err))
-                exit(1)
         else:
             print_error(Message.DatabaseConnector.not_connected)
             exit(1)
@@ -82,7 +81,6 @@ class DatabaseConnector:
                 self.cnx.commit()
             except mysql.connector.Error as err:
                 print_error(str(err))
-                exit(1)
 
     def stop_connection(self):
         if self.db_is_connected:
@@ -91,3 +89,4 @@ class DatabaseConnector:
             print_message(Message.DatabaseConnector.connection_stopped)
         else:
             print_error(Message.DatabaseConnector.not_connected)
+            exit(1)
