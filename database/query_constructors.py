@@ -10,8 +10,10 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 from base.utils import *
 
 
-class NewQueryConstructor:
-    """Class for constructing a query to be executed by the DBMS."""
+class QueryConstructor:
+    """Class for constructing a query to be executed by the DBMS. Specifically made with the goal to automate adding
+    conditions using the WHERE clause in SQL
+    """
     def __init__(self, table_name: str, schema_name: str = ""):
         """Initialise the object. Optionally pass a schema name to the constructor.
         :type table_name: str
@@ -196,7 +198,7 @@ class NewQueryConstructor:
         )
 
 
-class QueryConstructor:
+class OldQueryConstructor:
     """Base class for constructing a query to be executed by the DBMS."""
     def __init__(self, table_name: str, schema_name: str = False):
         """Initialise the object. Optionally pass a schema name to the constructor.
@@ -269,19 +271,19 @@ class QueryConstructor:
         self.condition += " AND "
 
 
-class SelectQueryConstructor(QueryConstructor):
+class SelectOldQueryConstructor(OldQueryConstructor):
     """Class for constructing a SELECT query to be executed by the DBMS."""
     def __init__(self, table_name: str, schema_name: str = False):
         """Initialise the object. Optionally pass a schema name to the constructor.
         :type table_name: str
         :type schema_name: str
         """
-        super(SelectQueryConstructor, self).__init__(table_name, schema_name)
+        super(SelectOldQueryConstructor, self).__init__(table_name, schema_name)
         self.fields_selection = ""
 
     def reset(self):
         """Clear the query in memory for this object. Essential before creating a new select SQL query."""
-        super(SelectQueryConstructor, self).reset()
+        super(SelectOldQueryConstructor, self).reset()
         self.fields_selection = ""
 
     def render(self) -> str:
@@ -331,20 +333,20 @@ class SelectQueryConstructor(QueryConstructor):
             self.fields_selection += ", {}".format(field_list[i])
 
 
-class UpdateQueryConstructor(QueryConstructor):
+class UpdateOldQueryConstructor(OldQueryConstructor):
     """Class for constructing UPDATE queries to be executed by the DBMS."""
     def __init__(self, table_name: str, schema_name: str = False):
         """Initialise the object. Optionally pass a schema name to the constructor.
         :type table_name: str
         :type schema_name: str
         """
-        super(UpdateQueryConstructor, self).__init__(table_name, schema_name)
+        super(UpdateOldQueryConstructor, self).__init__(table_name, schema_name)
         self.field_list = []
         self.value_list = []
 
     def reset(self):
         """Clear the query in memory for this object. Essential before creating a new update SQL query."""
-        super(UpdateQueryConstructor, self).reset()
+        super(UpdateOldQueryConstructor, self).reset()
         self.field_list = []
         self.value_list = []
 
@@ -410,14 +412,14 @@ class UpdateQueryConstructor(QueryConstructor):
         self.value_list += value_list
 
 
-class DeleteQueryConstructor(QueryConstructor):
+class DeleteOldQueryConstructor(OldQueryConstructor):
     """Class for constructing DELETE FROM queries to be executed by the DBMS."""
     def __init__(self, table_name: str, schema_name: str = False):
         """Initialise the object. Optionally pass a schema name to the constructor.
         :type table_name: str
         :type schema_name: str
         """
-        super(DeleteQueryConstructor, self).__init__(table_name, schema_name)
+        super(DeleteOldQueryConstructor, self).__init__(table_name, schema_name)
 
     def render(self) -> str:
         """Return the constructed SQL delete query."""

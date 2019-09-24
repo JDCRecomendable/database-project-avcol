@@ -8,20 +8,59 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
 from base.utils import *
-from database.query_constructors import SelectQueryConstructor, UpdateQueryConstructor, DeleteQueryConstructor
+from database.query_constructors import QueryConstructor, SelectOldQueryConstructor, UpdateOldQueryConstructor, DeleteOldQueryConstructor
 
 
 class TableAdapter:
+    def __init__(self, table_name: str, insert_query: str):
+        self.query_constructor = QueryConstructor(
+            table_name,
+            schema_name=DatabaseSchemaAndTableName.schema
+        )
+        self.insert_query = insert_query
+
+    def insert_data(self, data_list: tuple) -> str:
+        """Return a SQL query for inserting data into the table.
+        :type data_list: tuple
+        """
+        return self.insert_query.format(*data_list)
+
+    def add_select_field(self, field: str):
+        """Add a field for reading from or manipulating in the table.
+        :type field
+        """
+        self.query_constructor.add_field(field)
+
+    def add_condition_nested_select_query(self, variable: str, nested_query: str):
+        """Add a nested select query as a condition for the query to generate.
+        :type variable: str
+        :type nested_query: str
+        """
+        self.query_constructor.add_nested_query(variable, nested_query)
+
+
+class CustomersTableAdapter(TableAdapter):
+    def __init__(self):
+        super(CustomersTableAdapter, self).__init__(
+            DatabaseSchemaAndTableName.customers,
+            get_text_file_lines_as_single_line(DatabaseQueryFilePath.add_customer)
+        )
+
+    def f(self):
+        pass
+
+
+class OldTableAdapter:
     def __init__(self, table_name, insert_query):
-        self.select_query_constructor = SelectQueryConstructor(
+        self.select_query_constructor = SelectOldQueryConstructor(
             table_name,
             schema_name=DatabaseSchemaAndTableName.schema
         )
-        self.update_query_constructor = UpdateQueryConstructor(
+        self.update_query_constructor = UpdateOldQueryConstructor(
             table_name,
             schema_name=DatabaseSchemaAndTableName.schema
         )
-        self.delete_query_constructor = DeleteQueryConstructor(
+        self.delete_query_constructor = DeleteOldQueryConstructor(
             table_name,
             schema_name=DatabaseSchemaAndTableName.schema
         )
@@ -111,9 +150,9 @@ class TableAdapter:
         return self.delete_query_constructor.render()
 
 
-class CustomersTableAdapter(TableAdapter):
+class CustomersOldTableAdapter(OldTableAdapter):
     def __init__(self):
-        super(CustomersTableAdapter, self).__init__(
+        super(CustomersOldTableAdapter, self).__init__(
             DatabaseSchemaAndTableName.customers,
             get_text_file_lines_as_single_line(DatabaseQueryFilePath.add_customer)
         )
@@ -285,9 +324,9 @@ class CustomersTableAdapter(TableAdapter):
         )
 
 
-class ProductsTableAdapter(TableAdapter):
+class ProductsOldTableAdapter(OldTableAdapter):
     def __init__(self):
-        super(ProductsTableAdapter, self).__init__(
+        super(ProductsOldTableAdapter, self).__init__(
             DatabaseSchemaAndTableName.products,
             get_text_file_lines_as_single_line(DatabaseQueryFilePath.add_product)
         )
@@ -408,9 +447,9 @@ class ProductsTableAdapter(TableAdapter):
         )
 
 
-class LocationsTableAdapter(TableAdapter):
+class LocationsOldTableAdapter(OldTableAdapter):
     def __init__(self):
-        super(LocationsTableAdapter, self).__init__(
+        super(LocationsOldTableAdapter, self).__init__(
             DatabaseSchemaAndTableName.locations,
             get_text_file_lines_as_single_line(DatabaseQueryFilePath.add_location)
         )
@@ -438,9 +477,9 @@ class LocationsTableAdapter(TableAdapter):
         )
 
 
-class CustomerLocationsTableAdapter(TableAdapter):
+class CustomerLocationsOldTableAdapter(OldTableAdapter):
     def __init__(self):
-        super(CustomerLocationsTableAdapter, self).__init__(
+        super(CustomerLocationsOldTableAdapter, self).__init__(
             DatabaseSchemaAndTableName.customer_locations,
             get_text_file_lines_as_single_line(DatabaseQueryFilePath.add_customer_location)
         )
@@ -468,7 +507,7 @@ class CustomerLocationsTableAdapter(TableAdapter):
         """Add the condition for exact customer `email_address` for when selecting customer location(s).
         :type customer_email_address_value: str
         """
-        customer_select_query_constructor = SelectQueryConstructor(
+        customer_select_query_constructor = SelectOldQueryConstructor(
             DatabaseSchemaAndTableName.customers,
             schema_name=DatabaseSchemaAndTableName.schema
         )
@@ -490,7 +529,7 @@ class CustomerLocationsTableAdapter(TableAdapter):
         :type last_name_value: str
         :type first_name_value: str
         """
-        customer_select_query_constructor = SelectQueryConstructor(
+        customer_select_query_constructor = SelectOldQueryConstructor(
             DatabaseSchemaAndTableName.customers,
             schema_name=DatabaseSchemaAndTableName.schema
         )
@@ -543,7 +582,7 @@ class CustomerLocationsTableAdapter(TableAdapter):
         """Add the condition for exact customer `email_address` for when updating or deleting a customer location.
         :type customer_email_address_value: str
         """
-        customer_select_query_constructor = SelectQueryConstructor(
+        customer_select_query_constructor = SelectOldQueryConstructor(
             DatabaseSchemaAndTableName.customers,
             schema_name=DatabaseSchemaAndTableName.schema
         )
@@ -564,9 +603,9 @@ class CustomerLocationsTableAdapter(TableAdapter):
         )
 
 
-class CompanyOrdersTableAdapter(TableAdapter):
+class CompanyOrdersOldTableAdapter(OldTableAdapter):
     def __init__(self):
-        super(CompanyOrdersTableAdapter, self).__init__(
+        super(CompanyOrdersOldTableAdapter, self).__init__(
             DatabaseSchemaAndTableName.company_orders,
             get_text_file_lines_as_single_line(DatabaseQueryFilePath.add_company_order)
         )
@@ -776,9 +815,9 @@ class CompanyOrdersTableAdapter(TableAdapter):
         )
 
 
-class CustomerOrdersTableAdapter(TableAdapter):
+class CustomerOrdersOldTableAdapter(OldTableAdapter):
     def __init__(self):
-        super(CustomerOrdersTableAdapter, self).__init__(
+        super(CustomerOrdersOldTableAdapter, self).__init__(
             DatabaseSchemaAndTableName.customer_orders,
             get_text_file_lines_as_single_line(DatabaseQueryFilePath.add_customer_order)
         )
@@ -933,9 +972,9 @@ class CustomerOrdersTableAdapter(TableAdapter):
         )
 
 
-class CustomerOrderItemsTableAdapter(TableAdapter):
+class CustomerOrderItemsOldTableAdapter(OldTableAdapter):
     def __init__(self):
-        super(CustomerOrderItemsTableAdapter, self).__init__(
+        super(CustomerOrderItemsOldTableAdapter, self).__init__(
             DatabaseSchemaAndTableName.customer_order_items,
             get_text_file_lines_as_single_line(DatabaseQueryFilePath.add_customer_order_item)
         )
