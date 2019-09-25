@@ -14,6 +14,14 @@
 Under Construction
 {% endblock %}
 
+{% block tableheaders %}
+<th>#</th>
+<th>Customer</th>
+<th>Date/Time Ordered</th>
+<th>Delivery Date</th>
+<th>Delivery Location</th>
+{% endblock %}
+
 {% block tablebody %}
 <td>{{ record[0] }}</td>
 <td>{{ record[1] }}</td>

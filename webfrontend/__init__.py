@@ -46,15 +46,7 @@ def show_customers():
             query,
             select=True
         )
-        return render_template("customers.html", selection=customers_selection,
-                               fields=[
-                                   WebInterface.DBAttibuteLabels.Customers.id,
-                                   WebInterface.DBAttibuteLabels.Customers.first_name,
-                                   WebInterface.DBAttibuteLabels.Customers.last_name,
-                                   WebInterface.DBAttibuteLabels.Customers.email_address,
-                                   WebInterface.DBAttibuteLabels.Customers.phone,
-                                   WebInterface.DBAttibuteLabels.Customers.date_registered
-                               ])
+        return render_template("customers.html", selection=customers_selection)
 
 
 @app.route("/products", methods=["GET", "POST"])
@@ -65,14 +57,7 @@ def show_products():
             query,
             select=True
         )
-        return render_template("products.html", selection=products_selection,
-                               fields=[
-                                   WebInterface.DBAttibuteLabels.Products.gtin14,
-                                   WebInterface.DBAttibuteLabels.Products.name,
-                                   WebInterface.DBAttibuteLabels.Products.description,
-                                   WebInterface.DBAttibuteLabels.Products.current_price,
-                                   WebInterface.DBAttibuteLabels.Products.qty_in_stock
-                               ])
+        return render_template("products.html", selection=products_selection)
 
 
 @app.route("/customer-orders", methods=["GET", "POST"])
@@ -83,14 +68,7 @@ def show_customer_orders():
             query,
             select=True
         )
-        return render_template("customerOrders.html", selection=customer_orders_selection,
-                               fields=[
-                                   WebInterface.DBAttibuteLabels.CustomerOrders.id,
-                                   WebInterface.DBAttibuteLabels.CustomerOrders.customer_id,
-                                   WebInterface.DBAttibuteLabels.CustomerOrders.datetime_ordered,
-                                   WebInterface.DBAttibuteLabels.CustomerOrders.delivery_date,
-                                   WebInterface.DBAttibuteLabels.CustomerOrders.delivery_location
-                               ])
+        return render_template("customerOrders.html", selection=customer_orders_selection)
 
 
 @app.route("/company-orders", methods=["GET", "POST"])
@@ -101,12 +79,4 @@ def show_company_orders():
             query,
             select=True
         )
-        return render_template("companyOrders.html", selection=company_orders_selection,
-                               fields=[
-                                   WebInterface.DBAttibuteLabels.CompanyOrders.id,
-                                   WebInterface.DBAttibuteLabels.CompanyOrders.product_gtin14,
-                                   WebInterface.DBAttibuteLabels.CompanyOrders.datetime_ordered,
-                                   WebInterface.DBAttibuteLabels.CompanyOrders.qty_bought,
-                                   WebInterface.DBAttibuteLabels.CompanyOrders.total_price_paid,
-                                   WebInterface.DBAttibuteLabels.CompanyOrders.delivery_date
-                               ])
+        return render_template("companyOrders.html", selection=company_orders_selection)
