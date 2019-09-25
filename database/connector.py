@@ -24,7 +24,7 @@ class DatabaseConnector:
 
     def start_connection(self):
         try:
-            print_message(Message.DatabaseConnector.connecting)
+            print_message(Msg.DatabaseConnector.connecting)
             self.cnx = mysql.connector.connect(
                 user=self.username,
                 password=self.password,
@@ -32,12 +32,12 @@ class DatabaseConnector:
             )
             self.cursor = self.cnx.cursor()
             self.db_is_connected = True
-            print_message(Message.DatabaseConnector.connected)
+            print_message(Msg.DatabaseConnector.connected)
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-                print_error(Message.DatabaseConnector.invalid_database_credentials)
+                print_error(Msg.DatabaseConnector.invalid_database_credentials)
             elif err.errno == errorcode.ER_BAD_DB_ERROR:
-                print_error(Message.DatabaseConnector.database_not_exists)
+                print_error(Msg.DatabaseConnector.database_not_exists)
             else:
                 print_error(str(err))
             exit(1)
@@ -52,7 +52,7 @@ class DatabaseConnector:
                 statement = statement.format(*inputs)
             try:
                 self.cursor.execute(statement)
-                print_message(Message.DatabaseConnector.command_processed + statement)
+                print_message(Msg.DatabaseConnector.command_processed + statement)
                 if commit:
                     self.cnx.commit()
                 if select:
@@ -60,7 +60,7 @@ class DatabaseConnector:
             except mysql.connector.Error as err:
                 print_error(str(err))
         else:
-            print_error(Message.DatabaseConnector.not_connected)
+            print_error(Msg.DatabaseConnector.not_connected)
             exit(1)
 
     def execute_queries_sequentially(self, queries):
@@ -74,7 +74,7 @@ class DatabaseConnector:
                     elif query.strip().endswith(";"):
                         statement += query.strip()
                         self.cursor.execute(statement)
-                        print_message(Message.DatabaseConnector.command_processed + statement)
+                        print_message(Msg.DatabaseConnector.command_processed + statement)
                         statement = ""
                     else:
                         statement += query.strip() + " "
@@ -86,7 +86,7 @@ class DatabaseConnector:
         if self.db_is_connected:
             self.cursor.close()
             self.cnx.close()
-            print_message(Message.DatabaseConnector.connection_stopped)
+            print_message(Msg.DatabaseConnector.connection_stopped)
         else:
-            print_error(Message.DatabaseConnector.not_connected)
+            print_error(Msg.DatabaseConnector.not_connected)
             exit(1)

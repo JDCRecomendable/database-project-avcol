@@ -40,22 +40,22 @@ def main_activity():
     if (config[Config.Headers.system][Config.Keys.System.is_initialised] ==
             Config.DefaultKeyValuePairs.system[Config.Keys.System.is_initialised]):
         # Define the Schema and Tables for the Database
-        database_connector.execute_queries_sequentially(get_text_file_lines(DatabaseQueryFilePath.schema))
+        database_connector.execute_queries_sequentially(get_text_file_lines(DBQueryFilePath.schema))
 
         # Addition of Sample Data (before modification during demonstration, provided the data has not been added yet)
-        add_sample_data(DatabaseQueryFilePath.add_customer,
+        add_sample_data(DBQueryFilePath.add_customer,
                         SampleDataFilepath.customers, database_connector)
-        add_sample_data(DatabaseQueryFilePath.add_product,
+        add_sample_data(DBQueryFilePath.add_product,
                         SampleDataFilepath.products, database_connector)
-        add_sample_data(DatabaseQueryFilePath.add_location,
+        add_sample_data(DBQueryFilePath.add_location,
                         SampleDataFilepath.locations, database_connector)
-        add_sample_data(DatabaseQueryFilePath.add_customer_location,
+        add_sample_data(DBQueryFilePath.add_customer_location,
                         SampleDataFilepath.customer_locations, database_connector)
-        add_sample_data(DatabaseQueryFilePath.add_company_order,
+        add_sample_data(DBQueryFilePath.add_company_order,
                         SampleDataFilepath.company_orders, database_connector)
-        add_sample_data(DatabaseQueryFilePath.add_customer_order,
+        add_sample_data(DBQueryFilePath.add_customer_order,
                         SampleDataFilepath.customer_orders, database_connector)
-        add_sample_data(DatabaseQueryFilePath.add_customer_order_item,
+        add_sample_data(DBQueryFilePath.add_customer_order_item,
                         SampleDataFilepath.customer_order_items, database_connector)
         config[Config.Headers.system][Config.Keys.System.is_initialised] = "1"
         with open(Config.file_path, "w+", newline=Config.newline_char) as config_file:

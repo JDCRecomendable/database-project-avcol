@@ -12,15 +12,15 @@ from configparser import ConfigParser
 
 
 def print_message(message: str):
-    print("[{}] {}".format(Message.Symbol.message, message))
+    print("[{}] {}".format(Msg.Symbol.message, message))
 
 
 def print_warning(message: str):
-    print("[{}] {}".format(Message.Symbol.warning, message))
+    print("[{}] {}".format(Msg.Symbol.warning, message))
 
 
 def print_error(message: str):
-    print("[{}] {}".format(Message.Symbol.error, message))
+    print("[{}] {}".format(Msg.Symbol.error, message))
 
 
 def check_if_config_exists(file_path: str) -> bool:

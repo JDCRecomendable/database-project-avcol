@@ -36,7 +36,7 @@ class Config:
         }
 
 
-class Message:
+class Msg:
     class Symbol:
         message = "*"
         warning = "!"
@@ -72,7 +72,7 @@ class Message:
         file_not_exists = "File does not exist!"
 
 
-class DatabaseSchemaAndTableName:
+class DBSchemaTableNames:
     schema = "online_shop_logistics"
     customers = "customers"
     customer_locations = "customer_locations"
@@ -83,7 +83,7 @@ class DatabaseSchemaAndTableName:
     company_orders = "company_orders"
 
 
-class DatabaseAttributeName:
+class DBFields:
     class Customers:
         id = "id"
         last_name = "last_name"
@@ -131,7 +131,7 @@ class DatabaseAttributeName:
         delivery_date = "delivery_date"
 
 
-class DatabaseQueryFilePath:
+class DBQueryFilePath:
     """File paths for database commands on the local machine."""
     # Schema Creation
     schema = "commands/schema.sql"
@@ -192,3 +192,81 @@ class SampleDataFilepath:
     products = "sample_data/products.txt"
     customer_order_items = "sample_data/customer_order_items.txt"
     company_orders = "sample_data/company_orders.txt"
+
+
+class WebInterface:
+    class DBAttibuteLabels:
+        class Customers:
+            id = "#"
+            first_name = "First Name"
+            last_name = "Last Name"
+            email_address = "Email Address"
+            phone = "Phone Number"
+            date_registered = "Date Registered"
+
+        class Products:
+            gtin14 = "GTIN-14"
+            name = "Name of Product"
+            description = "Description"
+            current_price = "Current Price"
+            qty_in_stock = "Qty in Stock"
+
+        class CustomerOrders:
+            id = "#"
+            customer_id = "Customer"
+            datetime_ordered = "Date/Time Ordered"
+            delivery_date = "Delivery Date"
+            delivery_location = "Delivery Location"
+
+        class CompanyOrders:
+            id = "#"
+            product_gtin14 = "Product GTIN-14"
+            datetime_ordered = "Date/Time Ordered"
+            qty_bought = "Qty Bought"
+            total_price_paid = "Total Price Paid"
+            delivery_date = "Delivery Date"
+
+    class DataFilterForm:
+        @staticmethod
+        def selection_label(attribute_name):
+            return "Sort by {}".format(attribute_name)
+
+        @staticmethod
+        def entry_label(attribute_name):
+            return "Enter {}".format(attribute_name)
+
+        class Customers:
+            # Selection
+            first_name_no_filter_id = "fNameNoFilter"
+            first_name_no_filter_label = "Do not filter"
+            first_name_filter_id = "fNameFilter"
+            first_name_filter_label = "Filter"
+
+            last_name_no_filter_id = "lNameNoFilter"
+            last_name_no_filter_label = "Do not filter"
+            last_name_filter_id = "lNameFilter"
+            last_name_filter_label = "Filter"
+
+            email_address_no_filter_id = "emailAddressNoFilter"
+            email_address_no_filter_label = "Do not filter"
+            email_address_filter_id = "emailAddressFilter"
+            email_address_filter_label = "Filter"
+
+            phone_no_filter_id = "phoneNoFilter"
+            phone_no_filter_label = "Do not filter"
+            phone_filter_id = "phoneFilter"
+            phone_filter_label = "Filter"
+
+            date_registered_no_filter_id = "dateRegisteredFilter"
+            date_registered_no_filter_label = "Do not filter"
+            date_registered_filter_id = "dateRegisteredFilter"
+            date_registered_filter_label = "Filter"
+
+            # Validators
+            email_address_invalid = "Invalid email address!"
+            phone_length_invalid = "Phone number length is invalid!"
+
+        class Products:
+            # Selection
+            pass
+            # Validators

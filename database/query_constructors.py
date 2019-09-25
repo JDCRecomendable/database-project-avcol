@@ -57,7 +57,7 @@ class QueryConstructor:
         elif lower_limit and upper_limit:
             self.condition += '({} BETWEEN "{}" AND "{}")'.format(variable, lower_limit, upper_limit)
         else:
-            print_error(Message.DatabaseQueryConstructor.missing_ranged_values_limits)
+            print_error(Msg.DatabaseQueryConstructor.missing_ranged_values_limits)
 
     def add_condition_like(self, variable: str, like_value: str, at_beginning: bool = False, at_end: bool = False):
         """Add a condition to go along with the SQL query, where the value for the condition would be a subset
@@ -105,7 +105,7 @@ class QueryConstructor:
         condition = self.condition
 
         if len(table_name) == 0:
-            print_error(Message.DatabaseQueryConstructor.missing_table_name)
+            print_error(Msg.DatabaseQueryConstructor.missing_table_name)
             return ""
 
         if not schema_name:
@@ -139,15 +139,15 @@ class QueryConstructor:
         condition = self.condition
 
         if len(table_name) == 0:
-            print_error(Message.DatabaseQueryConstructor.missing_table_name)
+            print_error(Msg.DatabaseQueryConstructor.missing_table_name)
             return ""
 
         if len(fields) == 0 or len(values) == 0:
-            print_error(Message.DatabaseQueryConstructor.missing_fields_or_values)
+            print_error(Msg.DatabaseQueryConstructor.missing_fields_or_values)
             return ""
 
         if len(fields) != len(values):
-            print_error(Message.DatabaseQueryConstructor.number_of_field_and_value_mismatch)
+            print_error(Msg.DatabaseQueryConstructor.number_of_field_and_value_mismatch)
             return ""
 
         if not schema_name:
@@ -176,11 +176,11 @@ class QueryConstructor:
         condition = self.condition
 
         if len(table_name) == 0:
-            print_error(Message.DatabaseQueryConstructor.missing_table_name)
+            print_error(Msg.DatabaseQueryConstructor.missing_table_name)
             return ""
 
         if len(condition) == 0:
-            print_error(Message.DatabaseQueryConstructor.cannot_render)
+            print_error(Msg.DatabaseQueryConstructor.cannot_render)
             return ""
 
         if not schema_name:
