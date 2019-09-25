@@ -81,7 +81,7 @@ def test_activity():
     print("Meant to fail:")
     print(query_constructor.render_delete_query())
     query_constructor.add_condition_like("name", "rice")
-    query_constructor.add_condition_ranged_values("price", 50, 200)
+    query_constructor.add_condition_ranged_values("price", "50", "200")
     print(query_constructor.render_select_query())
     query_constructor.add_field("name")
     print(query_constructor.render_select_query())
