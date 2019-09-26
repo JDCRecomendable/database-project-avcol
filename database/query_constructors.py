@@ -98,6 +98,7 @@ class QueryConstructor:
         """Add a value to the query."""
         self.value_list.append(value)
 
+    # Rendering the Queries
     def render_select_query(self) -> str:
         """Return constructed select SQL query."""
         schema_name = self.schema_name
