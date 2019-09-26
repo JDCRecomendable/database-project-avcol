@@ -37,46 +37,38 @@ company_orders_query_constructor = QueryConstructor(
 )
 
 
+def get_select_all_records(query_constructor: QueryConstructor):
+    """Get the select query for a particular table, using the QueryConstructor object assigned to it.
+    :type query_constructor: QueryConstructor
+    """
+    query = query_constructor.render_select_query()
+    selection = database_connector.execute_query(
+        query,
+        select=True
+    )
+    return selection
+
+
 @app.route("/customers", methods=["GET", "POST"])
 def show_customers():
     customers_query_constructor.reset()
     if request.method == "GET":
-        query = customers_query_constructor.render_select_query()
-        customers_selection = database_connector.execute_query(
-            query,
-            select=True
-        )
-        return render_template("customers.html", selection=customers_selection)
+        return render_template("customers.html", selection=get_select_all_records(customers_query_constructor))
 
 
 @app.route("/products", methods=["GET", "POST"])
 def show_products():
     if request.method == "GET":
-        query = products_query_constructor.render_select_query()
-        products_selection = database_connector.execute_query(
-            query,
-            select=True
-        )
-        return render_template("products.html", selection=products_selection)
+        return render_template("products.html", selection=get_select_all_records(products_query_constructor))
 
 
 @app.route("/customer-orders", methods=["GET", "POST"])
 def show_customer_orders():
     if request.method == "GET":
-        query = customer_orders_query_constructor.render_select_query()
-        customer_orders_selection = database_connector.execute_query(
-            query,
-            select=True
-        )
-        return render_template("customerOrders.html", selection=customer_orders_selection)
+        return render_template("customerOrders.html", selection=get_select_all_records(customer_orders_query_constructor))
 
 
 @app.route("/company-orders", methods=["GET", "POST"])
 def show_company_orders():
     if request.method == "GET":
-        query = company_orders_query_constructor.render_select_query()
-        company_orders_selection = database_connector.execute_query(
-            query,
-            select=True
-        )
-        return render_template("companyOrders.html", selection=company_orders_selection)
+        return render_template("companyOrders.html", selection=get_select_all_records(company_orders_query_constructor))
