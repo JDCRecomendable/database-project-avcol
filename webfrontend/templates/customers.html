@@ -2,6 +2,7 @@
 
 {% block title %}Customers{% endblock %}
 {% block tablename %}Customers{% endblock %}
+{% block pageurl %}/customers{% endblock %}
 
 {% block navigation %}
 <li><a class="dropdown-item text-info" disabled>Customers</a></li>
@@ -11,7 +12,109 @@
 {% endblock %}
 
 {% block filtering %}
-Under Construction
+<!-- First Name -->
+<div class="shadow-sm p-2 m-2">
+  <h5>{{ form.first_name_selection.label }}</h5>
+  <div class="form-check">
+    {% for option in form.first_name_selection %}
+      <span class="mx-2 form-check-inline">
+        {{ option(class="form-check-input") }}
+        {{ option.label(class="form-check-label") }}
+      </span>
+    {% endfor %}
+  </div>
+  <div class="input-group my-2">
+    <div class="input-group-prepend">
+      <div class="input-group-text">
+        {{ form.first_name_string.label }}
+      </div>
+    </div>
+    {{ form.first_name_string() }}
+  </div>
+  <div class="form-check">
+    <span class="mx-2 form-check-inline">
+      {{ form.first_name_at_beginning(class="form-check-input") }}
+      {{ form.first_name_at_beginning.label(class="form-check-label") }}
+    </span>
+    <span class="mx-2 form-check-inline">
+      {{ form.first_name_at_end(class="form-check-input") }}
+      {{ form.first_name_at_end.label(class="form-check-label") }}
+    </span>
+  </div>
+</div>
+
+<!-- Last Name -->
+<div class="shadow-sm p-2 m-2">
+  <h5>{{ form.last_name_selection.label }}</h5>
+  <div class="form-check">
+    {% for option in form.last_name_selection %}
+      <span class="mx-2 form-check-inline">
+        {{ option(class="form-check-input") }}
+        {{ option.label(class="form-check-label") }}
+      </span>
+    {% endfor %}
+  </div>
+  <div class="input-group my-2">
+    <div class="input-group-prepend">
+      <div class="input-group-text">
+        {{ form.last_name_string.label }}
+      </div>
+    </div>
+    {{ form.last_name_string() }}
+  </div>
+  <div class="form-check">
+    <span class="mx-2 form-check-inline">
+      {{ form.last_name_at_beginning(class="form-check-input") }}
+      {{ form.last_name_at_beginning.label(class="form-check-label") }}
+    </span>
+    <span class="mx-2 form-check-inline">
+      {{ form.last_name_at_end(class="form-check-input") }}
+      {{ form.last_name_at_end.label(class="form-check-label") }}
+    </span>
+  </div>
+</div>
+
+<!-- Email Address -->
+<div class="shadow-sm p-2 m-2">
+  <h5>{{ form.email_address_selection.label }}</h5>
+  <div class="form-check">
+    {% for option in form.email_address_selection %}
+      <span class="mx-2 form-check-inline">
+        {{ option(class="form-check-input") }}
+        {{ option.label(class="form-check-label") }}
+      </span>
+    {% endfor %}
+  </div>
+  <div class="input-group my-2">
+    <div class="input-group-prepend">
+      <div class="input-group-text">
+        {{ form.email_address_string.label }}
+      </div>
+    </div>
+    {{ form.email_address_string() }}
+  </div>
+</div>
+
+<!-- Phone -->
+<div class="shadow-sm p-2 m-2">
+  <h5>{{ form.phone_selection.label }}</h5>
+  <div class="form-check">
+    {% for option in form.phone_selection %}
+      <span class="mx-2 form-check-inline">
+        {{ option(class="form-check-input") }}
+        {{ option.label(class="form-check-label") }}
+      </span>
+    {% endfor %}
+  </div>
+  <div class="input-group my-2">
+    <div class="input-group-prepend">
+      <div class="input-group-text">
+        {{ form.phone_string.label }}
+      </div>
+    </div>
+    {{ form.phone_string() }}
+  </div>
+</div>
 {% endblock %}
 
 {% block tableheaders %}
@@ -41,4 +144,14 @@ Under Construction
     </ul>
   </div>
 </td>
+{% endblock %}
+
+{% block datatable %}
+$(document).ready(function() {
+  $("#dataTable").DataTable({
+    "columnDefs": [
+      { "orderable": false, "targets": 6 }
+    ]
+  });
+}, 5000);
 {% endblock %}

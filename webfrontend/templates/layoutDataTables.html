@@ -64,10 +64,12 @@
           </div>
         </div>
         <div class="collapse" id="filterData">
-          <div class="container-fluid bg-light p-3 mb-3">
+          <div class="container-fluid bg-light mb-3 py-3">
             <!-- Form for Filtering -->
-            {% block filtering %}{% endblock %}
-            <button type="submit" class="btn btn-primary mb-2 m-2 px-3">Filter</button>
+            <form class="form-inline" method="POST" action="{% block pageurl %}{% endblock %}">
+              {% block filtering %}{% endblock %}
+              <input type="submit" value="Submit" class="btn btn-primary m-2 px-3">
+            </form>
           </div>
         </div>
         <div class="table-responsive">
@@ -97,13 +99,7 @@
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     <script>
-      $(document).ready(function() {
-        $("#dataTable").DataTable({
-          "columnDefs": [
-            { "orderable": false, "targets": 5 }
-          ]
-        });
-      }, 5000);
+      {% block datatable %}{% endblock %}
     </script>
   </body>
 </html>

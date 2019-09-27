@@ -2,6 +2,7 @@
 
 {% block title %}Products{% endblock %}
 {% block tablename %}Products{% endblock %}
+{% block pageurl %}/products{% endblock %}
 
 {% block navigation %}
 <li><a class="dropdown-item" href="/customers">Customers</a></li>
@@ -39,4 +40,14 @@ Under Construction
     </ul>
   </div>
 </td>
+{% endblock %}
+
+{% block datatable%}
+$(document).ready(function() {
+  $("#dataTable").DataTable({
+    "columnDefs": [
+      { "orderable": false, "targets": 5 }
+    ]
+  });
+}, 5000);
 {% endblock %}
