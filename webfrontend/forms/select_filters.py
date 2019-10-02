@@ -8,7 +8,8 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
 from wtforms import Form
-from wtforms import StringField, RadioField, DateField, BooleanField, IntegerField
+from wtforms import StringField, RadioField, BooleanField
+from wtforms.fields.html5 import DateField, IntegerField, EmailField, TelField
 from wtforms.validators import Email, Length
 
 
@@ -33,21 +34,21 @@ class CustomersDataFilterForm(Form):
     email_address_selection = RadioField("Filter by Email Address",
                                          choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
                                          default="noFilter")
-    email_address_string = StringField("Email Address", validators=[Email("Invalid email address!")])
+    email_address_string = EmailField("Email Address", validators=[Email("Invalid email address!")])
 
     # Phone Number
     phone_selection = RadioField("Filter by Phone Number",
                                  choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
                                  default="noFilter")
-    phone_string = StringField("Phone Number",
-                               validators=[Length(min=9, max=12, message="Invalid phone number length!")])
+    phone_string = TelField("Phone Number",
+                            validators=[Length(min=9, max=12, message="Invalid phone number length!")])
 
     # Date Registered
     date_registered_selection = RadioField("Filter by Date Registered",
                                            choices=[("noFilter", "Do not filter"), ("filter", "Filter by Range")],
                                            default="noFilter")
-    date_registered_lower_limit_string = DateField("Date Registered from")
-    date_registered_upper_limit_string = DateField("Date Registered to")
+    date_registered_lower_limit_string = DateField("Date Registered from", format="%Y-%m-d")
+    date_registered_upper_limit_string = DateField("Date Registered to", format="%Y-%m-d")
 
     # Location
     location_selection = RadioField("Filter by Location of Customer",
@@ -101,16 +102,16 @@ class OrdersDataFilterForm(Form):
                                             choices=[("noFilter", "Do not filter"),
                                                      ("filter", "Filter by Range of Dates")],
                                             default="noFilter")
-    datetime_ordered_lower_limit_string = DateField("Date Ordered from")
-    datetime_ordered_upper_limit_string = DateField("Date Ordered to")
+    datetime_ordered_lower_limit_string = DateField("Date Ordered from", format="%Y-%m-d")
+    datetime_ordered_upper_limit_string = DateField("Date Ordered to", format="%Y-%m-d")
 
     # Delivery Date
     delivery_date_selection = RadioField("Filter by Delivery Date",
                                          choices=[("noFilter", "Do not filter"),
                                                   ("filter", "Filter by Range of Dates")],
                                          default="noFilter")
-    delivery_date_lower_limit_string = DateField("Delivery Date from")
-    delivery_date_upper_limit_string = DateField("Delivery Date to")
+    delivery_date_lower_limit_string = DateField("Delivery Date from", format="%Y-%m-d")
+    delivery_date_upper_limit_string = DateField("Delivery Date to", format="%Y-%m-d")
 
 
 class CustomerOrdersDataFilterForm(OrdersDataFilterForm):
@@ -140,7 +141,7 @@ class CustomerOrdersDataFilterForm(OrdersDataFilterForm):
     # customer_email_address_selection = RadioField("Filter by Customer Email Address",
     #                                               choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
     #                                               default="noFilter")
-    # customer_email_address_string = StringField("Customer Email Address", validators.Email("Invalid email address!"))
+    # customer_email_address_string = EmailField("Customer Email Address", validators.Email("Invalid email address!"))
 
     # Customer? (continue)
 

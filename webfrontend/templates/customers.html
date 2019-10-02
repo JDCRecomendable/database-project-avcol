@@ -115,7 +115,73 @@
     {{ form.phone_string() }}
   </div>
 </div>
-{% endblock %}
+
+<!-- Date Registered -->
+<div class="shadow-sm p-2 m-2">
+  <h5>{{ form.date_registered_selection.label }}</h5>
+  <div>
+    {% for option in form.date_registered_selection %}
+      <span class="mx-2 form-check-inline">
+        {{ option(class="form-check-input") }}
+        {{ option.label(class="form-check-label") }}
+      </span>
+    {% endfor %}
+  </div>
+  <div class="input-group my-2">
+    <div class="input-group-prepend">
+      <div class="input-group-text">
+        {{ form.date_registered_lower_limit_string.label }}
+      </div>
+    </div>
+    {{ form.date_registered_lower_limit_string() }}
+  </div>
+  <div class="input-group my-2">
+    <div class="input-group-prepend">
+      <div class="input-group-text">
+        {{ form.date_registered_upper_limit_string.label }}
+      </div>
+    </div>
+    {{ form.date_registered_upper_limit_string() }}
+  </div>
+</div>
+
+<!-- Location -->
+<div class="shadow-sm p-2 m-2">
+  <h5>{{ form.location_selection.label }}</h5>
+  <div>
+    {% for option in form.location_selection %}
+      <span class="mx-2 form-check-inline">
+        {{ option(class="form-check-input") }}
+        {{ option.label(class="form-check-label") }}
+      </span>
+    {% endfor %}
+  </div>
+  <div class="input-group my-2">
+    <div class="input-group-prepend">
+      <div class="input-group-text">
+        {{ form.location_place_no.label }}
+      </div>
+    </div>
+    {{ form.location_place_no() }}
+  </div>
+  <div class="input-group my-2">
+    <div class="input-group-prepend">
+      <div class="input-group-text">
+        {{ form.location_road_name.label }}
+      </div>
+    </div>
+    {{ form.location_road_name() }}
+  </div>
+  <div class="input-group my-2">
+    <div class="input-group-prepend">
+      <div class="input-group-text">
+        {{ form.location_city.label }}
+      </div>
+    </div>
+    {{ form.location_city() }}
+  </div>
+</div>
+{% endblock filtering %}
 
 {% block tableheaders %}
 <th>#</th>
@@ -146,7 +212,7 @@
 </td>
 {% endblock %}
 
-{% block datatable %}
+{% block datatablescript %}
 $(document).ready(function() {
   $("#dataTable").DataTable({
     "columnDefs": [
