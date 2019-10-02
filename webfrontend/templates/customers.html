@@ -14,172 +14,43 @@
 {% block filtering %}
 <!-- First Name -->
 <div class="shadow-sm p-2 m-2">
-  <h5>{{ form.first_name_selection.label }}</h5>
-  <div class="form-check">
-    {% for option in form.first_name_selection %}
-      <span class="mx-2 form-check-inline">
-        {{ option(class="form-check-input") }}
-        {{ option.label(class="form-check-label") }}
-      </span>
-    {% endfor %}
-  </div>
-  <div class="input-group my-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text">
-        {{ form.first_name_string.label }}
-      </div>
-    </div>
-    {{ form.first_name_string() }}
-  </div>
-  <div class="form-check">
-    <span class="mx-2 form-check-inline">
-      {{ form.first_name_at_beginning(class="form-check-input") }}
-      {{ form.first_name_at_beginning.label(class="form-check-label") }}
-    </span>
-    <span class="mx-2 form-check-inline">
-      {{ form.first_name_at_end(class="form-check-input") }}
-      {{ form.first_name_at_end.label(class="form-check-label") }}
-    </span>
-  </div>
+  {{ render_label_and_filter_option(form.first_name_selection) }}
+  {{ render_main_field(form.first_name_string) }}
+  {{ render_string_at_beg_end_options(form.first_name_at_beginning, form.first_name_at_end) }}
 </div>
 
 <!-- Last Name -->
 <div class="shadow-sm p-2 m-2">
-  <h5>{{ form.last_name_selection.label }}</h5>
-  <div class="form-check">
-    {% for option in form.last_name_selection %}
-      <span class="mx-2 form-check-inline">
-        {{ option(class="form-check-input") }}
-        {{ option.label(class="form-check-label") }}
-      </span>
-    {% endfor %}
-  </div>
-  <div class="input-group my-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text">
-        {{ form.last_name_string.label }}
-      </div>
-    </div>
-    {{ form.last_name_string() }}
-  </div>
-  <div class="form-check">
-    <span class="mx-2 form-check-inline">
-      {{ form.last_name_at_beginning(class="form-check-input") }}
-      {{ form.last_name_at_beginning.label(class="form-check-label") }}
-    </span>
-    <span class="mx-2 form-check-inline">
-      {{ form.last_name_at_end(class="form-check-input") }}
-      {{ form.last_name_at_end.label(class="form-check-label") }}
-    </span>
-  </div>
+  {{ render_label_and_filter_option(form.last_name_selection) }}
+  {{ render_main_field(form.last_name_string) }}
+  {{ render_string_at_beg_end_options(form.last_name_at_beginning, form.last_name_at_end) }}
 </div>
 
 <!-- Email Address -->
 <div class="shadow-sm p-2 m-2">
-  <h5>{{ form.email_address_selection.label }}</h5>
-  <div class="form-check">
-    {% for option in form.email_address_selection %}
-      <span class="mx-2 form-check-inline">
-        {{ option(class="form-check-input") }}
-        {{ option.label(class="form-check-label") }}
-      </span>
-    {% endfor %}
-  </div>
-  <div class="input-group my-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text">
-        {{ form.email_address_string.label }}
-      </div>
-    </div>
-    {{ form.email_address_string() }}
-  </div>
+  {{ render_label_and_filter_option(form.email_address_selection) }}
+  {{ render_main_field(form.email_address_string) }}
 </div>
 
 <!-- Phone -->
 <div class="shadow-sm p-2 m-2">
-  <h5>{{ form.phone_selection.label }}</h5>
-  <div class="form-check">
-    {% for option in form.phone_selection %}
-      <span class="mx-2 form-check-inline">
-        {{ option(class="form-check-input") }}
-        {{ option.label(class="form-check-label") }}
-      </span>
-    {% endfor %}
-  </div>
-  <div class="input-group my-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text">
-        {{ form.phone_string.label }}
-      </div>
-    </div>
-    {{ form.phone_string() }}
-  </div>
+  {{ render_label_and_filter_option(form.phone_selection) }}
+  {{ render_main_field(form.phone_string) }}
 </div>
 
 <!-- Date Registered -->
 <div class="shadow-sm p-2 m-2">
-  <h5>{{ form.date_registered_selection.label }}</h5>
-  <div>
-    {% for option in form.date_registered_selection %}
-      <span class="mx-2 form-check-inline">
-        {{ option(class="form-check-input") }}
-        {{ option.label(class="form-check-label") }}
-      </span>
-    {% endfor %}
-  </div>
-  <div class="input-group my-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text">
-        {{ form.date_registered_lower_limit_string.label }}
-      </div>
-    </div>
-    {{ form.date_registered_lower_limit_string() }}
-  </div>
-  <div class="input-group my-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text">
-        {{ form.date_registered_upper_limit_string.label }}
-      </div>
-    </div>
-    {{ form.date_registered_upper_limit_string() }}
-  </div>
+  {{ render_label_and_filter_option(form.date_registered_selection) }}
+  {{ render_main_field(form.date_registered_lower_limit_string) }}
+  {{ render_main_field(form.date_registered_upper_limit_string) }}
 </div>
 
 <!-- Location -->
 <div class="shadow-sm p-2 m-2">
-  <h5>{{ form.location_selection.label }}</h5>
-  <div>
-    {% for option in form.location_selection %}
-      <span class="mx-2 form-check-inline">
-        {{ option(class="form-check-input") }}
-        {{ option.label(class="form-check-label") }}
-      </span>
-    {% endfor %}
-  </div>
-  <div class="input-group my-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text">
-        {{ form.location_place_no.label }}
-      </div>
-    </div>
-    {{ form.location_place_no() }}
-  </div>
-  <div class="input-group my-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text">
-        {{ form.location_road_name.label }}
-      </div>
-    </div>
-    {{ form.location_road_name() }}
-  </div>
-  <div class="input-group my-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text">
-        {{ form.location_city.label }}
-      </div>
-    </div>
-    {{ form.location_city() }}
-  </div>
+  {{ render_label_and_filter_option(form.location_selection) }}
+  {{ render_main_field(form.location_place_no) }}
+  {{ render_main_field(form.location_road_name) }}
+  {{ render_main_field(form.location_city) }}
 </div>
 {% endblock filtering %}
 
