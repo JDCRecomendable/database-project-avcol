@@ -7,6 +7,7 @@ Licensed under the GNU General Public License Version 3.
 This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
+import os
 from flask import Flask, request, render_template
 from database.query_constructors import QueryConstructor
 from base.constants import *
@@ -14,7 +15,9 @@ from webfrontend.forms.select_filters import CustomersDataFilterForm, ProductsDa
 from webfrontend.forms.select_filters import CustomerOrdersDataFilterForm, CompanyOrderDataFilterForm
 
 
+SECRET_KEY = os.urandom(32)
 app = Flask(__name__)
+app.config["SECRET_KEY"] = SECRET_KEY
 database_connector = None
 
 
