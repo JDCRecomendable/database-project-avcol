@@ -23,6 +23,16 @@ customers_query_constructor = QueryConstructor(
     DBSchemaTableNames.schema
 )
 
+locations_query_constructor = QueryConstructor(
+    DBSchemaTableNames.locations,
+    DBSchemaTableNames.schema
+)
+
+customer_locations_query_constructor = QueryConstructor(
+    DBSchemaTableNames.customer_locations,
+    DBSchemaTableNames.schema
+)
+
 products_query_constructor = QueryConstructor(
     DBSchemaTableNames.products,
     DBSchemaTableNames.schema
@@ -64,7 +74,6 @@ def show_customers():
                                selection=get_selected_records(customers_query_constructor),
                                form=form)
     result = request.form.to_dict(flat=False)
-    print("test", result)
     if result["first_name_selection"][0] == "filter":
         customers_query_constructor.add_condition_like(
             DBFields.Customers.first_name,
@@ -96,7 +105,35 @@ def show_customers():
             upper_limit=result["date_registered_upper_limit_string"][0]
         )
     if result["location_selection"][0] == "filter":
-        pass
+        # Get location IDs
+        locations_query_constructor.reset()
+        customer_locations_query_constructor.reset()
+        locations_query_constructor.add_condition_like(
+            DBFields.Locations.place_no,
+            result["location_place_no"][0]
+        )
+        locations_query_constructor.add_condition_like(
+            DBFields.Locations.road_name,
+            result["location_road_name"][0]
+        )
+        locations_query_constructor.add_condition_like(
+            DBFields.Locations.city,
+            result["location_city"][0]
+        )
+        locations_query_constructor.add_field(DBFields.Locations.id)
+
+        # Get customer IDs if they are in the selected location(s)
+        customer_locations_query_constructor.add_nested_query(
+            DBFields.CustomerLocations.location_id,
+            locations_query_constructor.render_select_query()
+        )
+        customer_locations_query_constructor.add_field(DBFields.CustomerLocations.customer_id)
+
+        # Get all customer details if their IDs are found in the selected customer locations
+        customers_query_constructor.add_nested_query(
+            DBFields.Customers.id,
+            customer_locations_query_constructor.render_select_query()
+        )
     return render_template("customers.html",
                            selection=get_selected_records(customers_query_constructor),
                            form=form)
