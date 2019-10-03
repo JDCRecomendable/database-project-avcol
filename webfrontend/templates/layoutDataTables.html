@@ -67,7 +67,6 @@
           <div class="container-fluid bg-light mb-3 py-3">
             <!-- Form for Filtering -->
             <form class="form-inline" action="{% block pageurl %}{% endblock %}" method="POST">
-              {{ form.csrf_token }}
               {% block filtering %}{% endblock %}
               <input type="submit" value="Submit" class="btn btn-primary m-2 px-3">
             </form>

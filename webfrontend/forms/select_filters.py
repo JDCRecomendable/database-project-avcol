@@ -7,8 +7,7 @@ Licensed under the GNU General Public License Version 3.
 This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
-from flask_wtf import Form
-from wtforms import StringField, RadioField, BooleanField
+from wtforms import Form, StringField, RadioField, BooleanField
 from wtforms.fields.html5 import DateField, IntegerField, EmailField, TelField
 
 
