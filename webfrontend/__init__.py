@@ -74,6 +74,7 @@ def show_customers():
                                selection=get_selected_records(customers_query_constructor),
                                form=form)
     result = request.form.to_dict(flat=False)
+    print(result)
     if result["first_name_selection"][0] == "filter":
         customers_query_constructor.add_condition_like(
             DBFields.Customers.first_name,

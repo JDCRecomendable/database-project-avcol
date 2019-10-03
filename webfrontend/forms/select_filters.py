@@ -7,11 +7,12 @@ Licensed under the GNU General Public License Version 3.
 This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
-from wtforms import Form, StringField, RadioField, BooleanField
+from wtforms import Form
+from wtforms import StringField, RadioField, BooleanField
 from wtforms.fields.html5 import DateField, IntegerField, EmailField, TelField
 
 
-class CustomersDataFilterForm(Form):
+class CustomersDataForm(Form):
     # First Name
     first_name_selection = RadioField("Filter by First Name",
                                       choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
@@ -59,7 +60,7 @@ class CustomersDataFilterForm(Form):
     # Bought Specific Product? (continue)
 
 
-class ProductsDataFilterForm(Form):
+class ProductsDataForm(Form):
     # GTIN-14
     gtin_14_selection = RadioField("Filter by GTIN-14",
                                    choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
@@ -93,7 +94,7 @@ class ProductsDataFilterForm(Form):
     # Ordered by Customer? (continue)
 
 
-class OrdersDataFilterForm(Form):
+class OrdersDataForm(Form):
     # Date/Time Ordered
     datetime_ordered_selection = RadioField("Filter by Date/Time Ordered",
                                             choices=[("noFilter", "Do not filter"),
@@ -111,7 +112,7 @@ class OrdersDataFilterForm(Form):
     delivery_date_upper_limit_string = DateField("Delivery Date to", format="%Y-%m-d")
 
 
-class CustomerOrdersDataFilterForm(OrdersDataFilterForm):
+class CustomerOrdersDataForm(OrdersDataForm):
     # # Customer ID
     # customer_id_selection = RadioField("Filter by Customer ID",
     #                                    choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
@@ -151,7 +152,7 @@ class CustomerOrdersDataFilterForm(OrdersDataFilterForm):
     location_city = StringField("City")
 
 
-class CompanyOrderDataFilterForm(OrdersDataFilterForm):
+class CompanyOrderDataForm(OrdersDataForm):
     # Product GTIN-14
     product_gtin14_selection = RadioField("Filter by Product Ordered",
                                           choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
