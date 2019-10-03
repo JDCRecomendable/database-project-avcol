@@ -1,0 +1,43 @@
+{% macro render_label_and_filter_option(field) %}
+<h5>{{ field.label }}</h5>
+<div class="form-check">
+  {% for option in field %}
+    <span class="mx-2 form-check-inline">
+      {{ option(class="form-check-input") }}
+      {{ option.label(class="form-check-label") }}
+    </span>
+  {% endfor %}
+</div>
+{% endmacro %}
+
+{% macro render_main_field(field) %}
+<div class="input-group my-2">
+  <div class="input-group-prepend">
+    <div class="input-group-text">
+      {{ field.label }}
+    </div>
+  </div>
+  {{ field(**kwargs)|safe }}
+</div>
+{% if field.errors %}
+  <ul>
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endmacro %}
+
+{% macro render_string_at_beg_end_options(at_beg_field, at_end_field) %}
+<div class="form-check">
+  <span class="mx-2 form-check-inline">
+    {{ at_beg_field(class="form-check-input") }}
+    {{ at_beg_field.label(class="form-check-label") }}
+  </span>
+  <span class="mx-2 form-check-inline">
+    {{ at_end_field(class="form-check-input") }}
+    {{ at_end_field.label(class="form-check-label") }}
+  </span>
+</div>
+{% endmacro %}
+
