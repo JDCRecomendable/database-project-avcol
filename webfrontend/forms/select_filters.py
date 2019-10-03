@@ -10,7 +10,6 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 from wtforms import Form
 from wtforms import StringField, RadioField, BooleanField
 from wtforms.fields.html5 import DateField, IntegerField, EmailField, TelField
-from wtforms.validators import Email, Length
 
 
 class CustomersDataFilterForm(Form):
@@ -34,14 +33,13 @@ class CustomersDataFilterForm(Form):
     email_address_selection = RadioField("Filter by Email Address",
                                          choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
                                          default="noFilter")
-    email_address_string = EmailField("Email Address", validators=[Email("Invalid email address!")])
+    email_address_string = EmailField("Email Address")
 
     # Phone Number
     phone_selection = RadioField("Filter by Phone Number",
                                  choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
                                  default="noFilter")
-    phone_string = TelField("Phone Number",
-                            validators=[Length(min=9, max=12, message="Invalid phone number length!")])
+    phone_string = TelField("Phone Number")
 
     # Date Registered
     date_registered_selection = RadioField("Filter by Date Registered",
@@ -67,7 +65,7 @@ class ProductsDataFilterForm(Form):
     gtin_14_selection = RadioField("Filter by GTIN-14",
                                    choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
                                    default="noFilter")
-    gtin14_string = StringField("GTIN-14", validators=[Length(min=14, max=14, message="Invalid length!")])
+    gtin14_string = StringField("GTIN-14")
 
     # Name of Product
     name_selection = RadioField("Filter by Name",
@@ -159,7 +157,7 @@ class CompanyOrderDataFilterForm(OrdersDataFilterForm):
     product_gtin14_selection = RadioField("Filter by Product Ordered",
                                           choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
                                           default="noFilter")
-    product_gtin14_text = StringField("Product GTIN-14", validators=[Length(min=14, max=14, message="Invalid length!")])
+    product_gtin14_text = StringField("Product GTIN-14")
 
     # Qty Bought
     qty_bought_selection = RadioField("Filter by Qty Bought",

@@ -21,14 +21,14 @@
     </div>
   </div>
   {{ field(**kwargs)|safe }}
-  {% if field.errors %}
-    <ul class=errors>
+</div>
+{% if field.errors %}
+  <ul>
     {% for error in field.errors %}
       <li>{{ error }}</li>
     {% endfor %}
-    </ul>
-  {% endif %}
-</div>
+  </ul>
+{% endif %}
 {% endmacro %}
 
 {% macro render_string_at_beg_end_options(at_beg_field, at_end_field) %}
@@ -110,7 +110,7 @@
         <div class="collapse" id="filterData">
           <div class="container-fluid bg-light mb-3 py-3">
             <!-- Form for Filtering -->
-            <form class="form-inline" method="POST" action="{% block pageurl %}{% endblock %}">
+            <form class="form-inline" action="{% block pageurl %}{% endblock %}" method="POST">
               {% block filtering %}{% endblock %}
               <input type="submit" value="Submit" class="btn btn-primary m-2 px-3">
             </form>

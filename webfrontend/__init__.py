@@ -39,7 +39,7 @@ company_orders_query_constructor = QueryConstructor(
 )
 
 
-def get_select_all_records(query_constructor: QueryConstructor):
+def get_selected_records(query_constructor: QueryConstructor):
     """Get the select query for a particular table, using the QueryConstructor object assigned to it.
     :type query_constructor: QueryConstructor
     """
@@ -57,8 +57,49 @@ def show_customers():
     form = CustomersDataFilterForm()
     if request.method == "GET":
         return render_template("customers.html",
-                               selection=get_select_all_records(customers_query_constructor),
+                               selection=get_selected_records(customers_query_constructor),
                                form=form)
+    if not form.validate():
+        return render_template("customers.html",
+                               selection=get_selected_records(customers_query_constructor),
+                               form=form)
+    result = request.form.to_dict(flat=False)
+    print("test", result)
+    if result["first_name_selection"][0] == "filter":
+        customers_query_constructor.add_condition_like(
+            DBFields.Customers.first_name,
+            result["first_name_string"][0],
+            at_beginning=("first_name_at_beginning" in result),
+            at_end=("first_name_at_end" in result)
+        )
+    if result["last_name_selection"][0] == "filter":
+        customers_query_constructor.add_condition_like(
+            DBFields.Customers.last_name,
+            result["last_name_string"][0],
+            at_beginning=("last_name_at_beginning" in result),
+            at_end=("last_name_at_end" in result)
+        )
+    if result["email_address_selection"][0] == "filter":
+        customers_query_constructor.add_condition_exact_value(
+            DBFields.Customers.email_address,
+            result["email_address_string"][0]
+        )
+    if result["phone_selection"][0] == "filter":
+        customers_query_constructor.add_condition_exact_value(
+            DBFields.Customers.phone,
+            result["phone_string"][0]
+        )
+    if result["date_registered_selection"][0] == "filter":
+        customers_query_constructor.add_condition_ranged_values(
+            DBFields.Customers.date_registered,
+            lower_limit=result["date_registered_lower_limit_string"][0],
+            upper_limit=result["date_registered_upper_limit_string"][0]
+        )
+    if result["location_selection"][0] == "filter":
+        pass
+    return render_template("customers.html",
+                           selection=get_selected_records(customers_query_constructor),
+                           form=form)
 
 
 @app.route("/products", methods=["GET", "POST"])
@@ -67,7 +108,7 @@ def show_products():
     form = ProductsDataFilterForm()
     if request.method == "GET":
         return render_template("products.html",
-                               selection=get_select_all_records(products_query_constructor),
+                               selection=get_selected_records(products_query_constructor),
                                form=form)
 
 
@@ -77,7 +118,7 @@ def show_customer_orders():
     form = CustomerOrdersDataFilterForm()
     if request.method == "GET":
         return render_template("customerOrders.html",
-                               selection=get_select_all_records(customer_orders_query_constructor),
+                               selection=get_selected_records(customer_orders_query_constructor),
                                form=form)
 
 
@@ -87,5 +128,5 @@ def show_company_orders():
     form = CompanyOrderDataFilterForm()
     if request.method == "GET":
         return render_template("companyOrders.html",
-                               selection=get_select_all_records(company_orders_query_constructor),
+                               selection=get_selected_records(company_orders_query_constructor),
                                form=form)
