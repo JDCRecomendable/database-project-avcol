@@ -12,163 +12,120 @@ from wtforms import StringField, RadioField, BooleanField
 from wtforms.fields.html5 import DateField, IntegerField, EmailField, TelField
 
 
-class CustomersDataForm(Form):
+def gen_beg_end_bool_fields() -> tuple:
+    return (BooleanField("String at beginning"),
+            BooleanField("String at end"))
+
+
+def gen_selection(label: str, ranged: bool = False) -> RadioField:
+    if ranged:
+        filter_label = "Filter by Range"
+    else:
+        filter_label = "Filter"
+    return RadioField(label,
+                      choices=[("noFilter", "Do not filter"), ("filter", filter_label)],
+                      default="noFilter")
+
+
+def gen_ranged_fields(field_name: str) -> tuple:
+    return (IntegerField("{} minimum".format(field_name)),
+            IntegerField("{} maximum".format(field_name)))
+
+
+def gen_ranged_date_fields(field_name: str) -> tuple:
+    return (DateField("{} from".format(field_name), format="%Y-%m-d"),
+            DateField("{} to".format(field_name), format="%Y-%m-d"))
+
+
+class CustomersDataBasicForm(Form):
     # First Name
-    first_name_selection = RadioField("Filter by First Name",
-                                      choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
-                                      default="noFilter")
+    first_name_selection = gen_selection("Filter by First Name")
     first_name_string = StringField("First Name")
-    first_name_at_beginning = BooleanField("String at beginning")
-    first_name_at_end = BooleanField("String at end")
+    first_name_at_beginning, first_name_at_end = gen_beg_end_bool_fields()
 
     # Last Name
-    last_name_selection = RadioField("Filter by Last Name",
-                                     choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
-                                     default="noFilter")
+    last_name_selection = gen_selection("Filter by Last Name")
     last_name_string = StringField("Last Name")
-    last_name_at_beginning = BooleanField("String at beginning")
-    last_name_at_end = BooleanField("String at end")
+    last_name_at_beginning, last_name_at_end = gen_beg_end_bool_fields()
 
     # Email Address
-    email_address_selection = RadioField("Filter by Email Address",
-                                         choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
-                                         default="noFilter")
+    email_address_selection = gen_selection("Filter by Email Address")
     email_address_string = EmailField("Email Address")
 
     # Phone Number
-    phone_selection = RadioField("Filter by Phone Number",
-                                 choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
-                                 default="noFilter")
+    phone_selection = gen_selection("Filter by Phone Number")
     phone_string = TelField("Phone Number")
 
     # Date Registered
-    date_registered_selection = RadioField("Filter by Date Registered",
-                                           choices=[("noFilter", "Do not filter"), ("filter", "Filter by Range")],
-                                           default="noFilter")
-    date_registered_lower_limit_string = DateField("Date Registered from", format="%Y-%m-d")
-    date_registered_upper_limit_string = DateField("Date Registered to", format="%Y-%m-d")
+    date_registered_selection = gen_selection("Filter by Date Registered", ranged=True)
+    date_registered_lower_limit_string, date_registered_upper_limit_string = gen_ranged_date_fields("Date Registered")
 
+
+class LocationDataBasicForm(Form):
     # Location
-    location_selection = RadioField("Filter by Location of Customer",
-                                    choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
-                                    default="noFilter")
+    location_selection = gen_selection("Filter by Location")
     location_place_no = StringField("Place No.")
     location_road_name = StringField("Road Name")
     location_city = StringField("City")
 
-    # In Customer Order? (for e.g. when finding out customers who ordered in a specific date or location) (continue)
-    # Bought Specific Product? (continue)
 
-
-class ProductsDataForm(Form):
+class ProductsDataBasicForm(Form):
     # GTIN-14
-    gtin_14_selection = RadioField("Filter by GTIN-14",
-                                   choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
-                                   default="noFilter")
+    gtin_14_selection = gen_selection("Filter by Product GTIN-14")
     gtin14_string = StringField("GTIN-14")
 
     # Name of Product
-    name_selection = RadioField("Filter by Name",
-                                choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
-                                default="noFilter")
-    name_at_beginning = BooleanField("String at beginning")
-    name_at_end = BooleanField("String at end")
+    name_selection = gen_selection("Filter by Product Name")
+    name_at_beginning, name_at_end = gen_beg_end_bool_fields()
+
+    # Description of Product
+    desc_selection = gen_selection("Filter by Product Description")
+    desc_at_beginning, desc_at_end = gen_beg_end_bool_fields()
 
     # Current Price
-    current_price_selection = RadioField("Filter by Current Price",
-                                         choices=[("noFilter", "Do not filter"), ("filter", "Filter by Range")],
-                                         default="noFilter")
-    current_price_lower_limit_string = IntegerField("Current Price minimum")
-    current_price_upper_limit_string = IntegerField("Current Price maximum")
+    current_price_selection = gen_selection("Filter by Current Price", ranged=True)
+    current_price_lower_limit_string, current_price_upper_limit_string = gen_ranged_fields("Current Price")
 
     # Qty in Stock
-    qty_in_stock_selection = RadioField("Filter by Qty in Stock",
-                                        choices=[("noFilter", "Do not filter"), ("filter", "Filter by Range")],
-                                        default="noFilter")
-    qty_in_stock_lower_limit_string = IntegerField("Qty in Stock minimum")
-    qty_in_stock_upper_limit_string = IntegerField("Qty in Stock maximum")
-
-    # In Company Orders? (for e.g. when finding products ordered in a specific date) (continue)
-    # In Customer Orders? (for e.g. when finding out customers who ordered products in a specific date or location)
-    # (continue)
-    # Ordered by Customer? (continue)
+    qty_in_stock_selection = gen_selection("Filter by Qty in Stock", ranged=True)
+    qty_in_stock_lower_limit_string, qty_in_stock_upper_limit_string = gen_ranged_fields("Qty in Stock")
 
 
-class OrdersDataForm(Form):
+class OrdersDataBasicForm(Form):
     # Date/Time Ordered
-    datetime_ordered_selection = RadioField("Filter by Date/Time Ordered",
-                                            choices=[("noFilter", "Do not filter"),
-                                                     ("filter", "Filter by Range of Dates")],
-                                            default="noFilter")
-    datetime_ordered_lower_limit_string = DateField("Date Ordered from", format="%Y-%m-d")
-    datetime_ordered_upper_limit_string = DateField("Date Ordered to", format="%Y-%m-d")
+    datetime_ordered_selection = gen_selection("Filter by Date Ordered", ranged=True)
+    datetime_ordered_lower_limit_string, datetime_ordered_upper_limit_string = gen_ranged_date_fields("Date Ordered")
 
     # Delivery Date
-    delivery_date_selection = RadioField("Filter by Delivery Date",
-                                         choices=[("noFilter", "Do not filter"),
-                                                  ("filter", "Filter by Range of Dates")],
-                                         default="noFilter")
-    delivery_date_lower_limit_string = DateField("Delivery Date from", format="%Y-%m-d")
-    delivery_date_upper_limit_string = DateField("Delivery Date to", format="%Y-%m-d")
+    delivery_date_selection = gen_selection("Filter by Delivery Date", ranged=True)
+    delivery_date_lower_limit_string, delivery_date_upper_limit_string = gen_ranged_date_fields("Delivery Date")
 
 
-class CustomerOrdersDataForm(OrdersDataForm):
-    # # Customer ID
-    # customer_id_selection = RadioField("Filter by Customer ID",
-    #                                    choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
-    #                                    default="noFilter")
-    # customer_id_string = IntegerField("Customer ID")
-    #
-    # # Customer First Name
-    # customer_first_name_selection = RadioField("Filter by Customer First Name",
-    #                                            choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
-    #                                            default="noFilter")
-    # customer_first_name_string = StringField("Customer First Name")
-    # customer_first_name_at_beginning = BooleanField("String at beginning")
-    # customer_first_name_at_end = BooleanField("String at end")
-    #
-    # # Customer Last Name
-    # customer_last_name_selection = RadioField("Filter by Customer Last Name",
-    #                                           choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
-    #                                           default="noFilter")
-    # customer_last_name_string = StringField("Customer Last Name")
-    # customer_last_name_at_beginning = BooleanField("String at beginning")
-    # customer_last_name_at_end = BooleanField("String at end")
-    #
-    # # Customer Email Address
-    # customer_email_address_selection = RadioField("Filter by Customer Email Address",
-    #                                               choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
-    #                                               default="noFilter")
-    # customer_email_address_string = EmailField("Customer Email Address", validators.Email("Invalid email address!"))
-
-    # Customer? (continue)
-
-    # Delivery Location
-    location_selection = RadioField("Filter by Delivery Location",
-                                    choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
-                                    default="noFilter")
-    location_place_no = StringField("Place No.")
-    location_road_name = StringField("Road Name")
-    location_city = StringField("City")
+class CustomerOrdersDataBasicForm(OrdersDataBasicForm):
+    pass
 
 
-class CompanyOrderDataForm(OrdersDataForm):
-    # Product GTIN-14
-    product_gtin14_selection = RadioField("Filter by Product Ordered",
-                                          choices=[("noFilter", "Do not filter"), ("filter", "Filter")],
-                                          default="noFilter")
-    product_gtin14_text = StringField("Product GTIN-14")
-
+class CompanyOrderDataBasicForm(OrdersDataBasicForm):
     # Qty Bought
-    qty_bought_selection = RadioField("Filter by Qty Bought",
-                                      choices=[("noFilter", "Do not filter"), ("filter", "Filter by Range")],
-                                      default="noFilter")
-    qty_bought_lower_limit_string = IntegerField("Qty Bought minimum")
-    qty_bought_upper_limit_string = IntegerField("Qty Bought maximum")
+    qty_bought_selection = gen_selection("Filter by Qty Bought", ranged=True)
+    qty_bought_lower_limit_string, qty_bought_upper_limit_string = gen_ranged_fields("Qty Bought")
 
     # Total Price Paid
-    price_paid_selection = RadioField("Filter by Price Paid",
-                                      choices=[("noFilter", "Do not filter"), ("filter", "Filter by Range")],
-                                      default="noFilter")
-    price_paid_lower_limit_string = IntegerField("Price Paid minimum")
-    price_paid_upper_limit_string = IntegerField("Price Paid maximum")
+    price_paid_selection = gen_selection("Filter by Price Paid", ranged=True)
+    price_paid_lower_limit_string, price_paid_upper_limit_string = gen_ranged_fields("Price Paid")
+
+
+class CustomersDataFilterForm(CustomersDataBasicForm, LocationDataBasicForm):
+    pass
+
+
+class ProductsDataFilterForm(ProductsDataBasicForm, CustomersDataBasicForm, CompanyOrderDataBasicForm):
+    pass
+
+
+class CustomerOrdersDataFilterForm(CustomerOrdersDataBasicForm, CustomersDataBasicForm, LocationDataBasicForm):
+    pass
+
+
+class CompanyOrdersDataFilterForm(CompanyOrderDataBasicForm, ProductsDataBasicForm):
+    pass

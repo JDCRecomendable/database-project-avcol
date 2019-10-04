@@ -11,7 +11,7 @@ from flask import Flask, request, render_template
 from database.query_constructors import QueryConstructor
 from base.constants import *
 from webfrontend.forms.select_filters import CustomersDataFilterForm, ProductsDataFilterForm
-from webfrontend.forms.select_filters import CustomerOrdersDataFilterForm, CompanyOrderDataFilterForm
+from webfrontend.forms.select_filters import CustomerOrdersDataFilterForm, CompanyOrdersDataFilterForm
 
 
 app = Flask(__name__)
@@ -163,7 +163,7 @@ def show_customer_orders():
 @app.route("/company-orders", methods=["GET", "POST"])
 def show_company_orders():
     company_orders_query_constructor.reset()
-    form = CompanyOrderDataFilterForm()
+    form = CompanyOrdersDataFilterForm()
     if request.method == "GET":
         return render_template("companyOrders.html",
                                selection=get_selected_records(company_orders_query_constructor),

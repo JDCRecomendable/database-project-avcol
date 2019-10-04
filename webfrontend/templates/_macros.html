@@ -22,7 +22,12 @@
 {% if field.errors %}
   <ul>
     {% for error in field.errors %}
-      <li>{{ error }}</li>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert">
+          <span>&times;</span>
+        </button>
+        {{ error }}
+      </div>
     {% endfor %}
   </ul>
 {% endif %}
@@ -40,4 +45,3 @@
   </span>
 </div>
 {% endmacro %}
-
