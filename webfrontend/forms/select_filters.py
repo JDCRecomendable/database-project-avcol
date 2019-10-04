@@ -9,8 +9,7 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 
 from wtforms import Form
 from wtforms import StringField, RadioField, BooleanField
-from wtforms.fields.html5 import DateField, IntegerField, EmailField, TelField
-from wtforms.validators import NumberRange
+from wtforms.fields.html5 import DateField, EmailField, TelField, IntegerField
 
 
 def gen_beg_end_bool_fields() -> tuple:
@@ -29,10 +28,8 @@ def gen_selection(label: str, ranged: bool = False) -> RadioField:
 
 
 def gen_ranged_fields(field_name: str) -> tuple:
-    return (IntegerField("{} minimum".format(field_name),
-                         validators=[NumberRange(min=0, message="Cannot go below zero!")]),
-            IntegerField("{} maximum".format(field_name),
-                         validators=[NumberRange(min=0, message="Cannot go below zero!")]))
+    return (IntegerField("{} minimum".format(field_name)),
+            IntegerField("{} maximum".format(field_name)))
 
 
 def gen_ranged_date_fields(field_name: str) -> tuple:
@@ -41,6 +38,10 @@ def gen_ranged_date_fields(field_name: str) -> tuple:
 
 
 class CustomersDataBasicForm(Form):
+    # ID
+    customer_id_selection = gen_selection("Filter by Customer ID")
+    customer_id_string = IntegerField("ID")
+
     # First Name
     first_name_selection = gen_selection("Filter by Customer First Name")
     first_name_string = StringField("First Name")
@@ -98,6 +99,10 @@ class ProductsDataBasicForm(Form):
 
 
 class CustomerOrdersDataBasicForm(Form):
+    # ID
+    customer_order_id_selection = gen_selection("Filter by Customer Order ID")
+    customer_order_id_string = IntegerField("Customer Order ID")
+
     # Date/Time Ordered
     customer_datetime_ordered_selection = gen_selection("Filter by Date Ordered by Customer", ranged=True)
     customer_datetime_ordered_lower_limit_string, customer_datetime_ordered_upper_limit_string =\
@@ -110,6 +115,10 @@ class CustomerOrdersDataBasicForm(Form):
 
 
 class CompanyOrderDataBasicForm(Form):
+    # ID
+    company_order_id_selection = gen_selection("Filter by Company Order ID")
+    company_order_id_string = IntegerField("Company Order ID")
+
     # Date/Time Ordered
     company_datetime_ordered_selection = gen_selection("Filter by Date Ordered by Company", ranged=True)
     company_datetime_ordered_lower_limit_string, company_datetime_ordered_upper_limit_string =\
@@ -125,11 +134,12 @@ class CompanyOrderDataBasicForm(Form):
     qty_bought_lower_limit_string, qty_bought_upper_limit_string = gen_ranged_fields("Qty Bought")
 
     # Total Price Paid
-    price_paid_selection = gen_selection("Filter by Price Paid by Company", ranged=True)
-    price_paid_lower_limit_string, price_paid_upper_limit_string = gen_ranged_fields("Price Paid")
+    total_price_paid_selection = gen_selection("Filter by Price Paid by Company", ranged=True)
+    total_price_paid_lower_limit_string, total_price_paid_upper_limit_string = gen_ranged_fields("Total Price Paid")
 
 
-class CustomersDataFilterForm(CustomersDataBasicForm, LocationDataBasicForm):
+class CustomersDataFilterForm(CustomersDataBasicForm, LocationDataBasicForm,
+                              CustomerOrdersDataBasicForm, ProductsDataBasicForm):
     pass
 
 

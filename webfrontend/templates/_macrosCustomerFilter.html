@@ -1,4 +1,10 @@
 {% macro customer_data_filter() %}
+<!-- ID -->
+<div class="shadow-sm p-2 m-2">
+  {{ render_label_and_filter_option(form.customer_id_selection) }}
+  {{ render_main_field(form.customer_id_string) }}
+</div>
+
 <!-- First Name -->
 <div class="shadow-sm p-2 m-2">
   {{ render_label_and_filter_option(form.first_name_selection) }}
