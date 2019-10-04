@@ -1,38 +1,38 @@
 {% macro customer_data_filter() %}
 <!-- ID -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.customer_id_selection) }}
   {{ render_main_field(form.customer_id_string) }}
 </div>
 
 <!-- First Name -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.first_name_selection) }}
   {{ render_main_field(form.first_name_string) }}
   {{ render_string_at_beg_end_options(form.first_name_at_beginning, form.first_name_at_end) }}
 </div>
 
 <!-- Last Name -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.last_name_selection) }}
   {{ render_main_field(form.last_name_string) }}
   {{ render_string_at_beg_end_options(form.last_name_at_beginning, form.last_name_at_end) }}
 </div>
 
 <!-- Email Address -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.email_address_selection) }}
   {{ render_main_field(form.email_address_string) }}
 </div>
 
 <!-- Phone -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.phone_selection) }}
   {{ render_main_field(form.phone_string) }}
 </div>
 
 <!-- Date Registered -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.date_registered_selection) }}
   {{ render_main_field(form.date_registered_lower_limit_string) }}
   {{ render_main_field(form.date_registered_upper_limit_string) }}

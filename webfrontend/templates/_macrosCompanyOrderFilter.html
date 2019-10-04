@@ -1,33 +1,33 @@
 {% macro company_order_data_filter() %}
 <!-- ID -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.company_order_id_selection) }}
   {{ render_main_field(form.company_order_id_string) }}
 </div>
 
 <!-- Date Ordered -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.company_datetime_ordered_selection) }}
   {{ render_main_field(form.company_datetime_ordered_lower_limit_string) }}
   {{ render_main_field(form.company_datetime_ordered_upper_limit_string) }}
 </div>
 
 <!-- Qty Bought -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.qty_bought_selection) }}
   {{ render_main_field(form.qty_bought_lower_limit_string) }}
   {{ render_main_field(form.qty_bought_upper_limit_string) }}
 </div>
 
 <!-- Total Price Paid -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.total_price_paid_selection) }}
   {{ render_main_field(form.total_price_paid_lower_limit_string) }}
   {{ render_main_field(form.total_price_paid_upper_limit_string) }}
 </div>
 
 <!-- Delivery Date -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.company_delivery_date_selection) }}
   {{ render_main_field(form.company_delivery_date_lower_limit_string) }}
   {{ render_main_field(form.company_delivery_date_upper_limit_string) }}

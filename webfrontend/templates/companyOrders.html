@@ -15,8 +15,17 @@
 {% endblock %}
 
 {% block filtering %}
-{{ company_order_data_filter() }}
-{{ product_data_filter() }}
+<h4>Filter by Company Order</h4>
+<div class="form-inline">
+  {{ company_order_data_filter() }}
+</div>
+<hr style="border-width: 3px">
+
+<h4>Filter by Product</h4>
+<div class="form-inline">
+  {{ product_data_filter() }}
+</div>
+<hr style="border-width: 3px">
 {% endblock filtering %}
 
 {% block tableheaders %}

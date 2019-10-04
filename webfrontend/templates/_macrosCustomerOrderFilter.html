@@ -1,19 +1,19 @@
 {% macro customer_order_data_filter() %}
 <!-- ID -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.customer_order_id_selection) }}
   {{ render_main_field(form.customer_order_id_string) }}
 </div>
 
 <!-- Date Ordered -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.customer_datetime_ordered_selection) }}
   {{ render_main_field(form.customer_datetime_ordered_lower_limit_string) }}
   {{ render_main_field(form.customer_datetime_ordered_upper_limit_string) }}
 </div>
 
 <!-- Delivery Date -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.customer_delivery_date_selection) }}
   {{ render_main_field(form.customer_delivery_date_lower_limit_string) }}
   {{ render_main_field(form.customer_delivery_date_upper_limit_string) }}

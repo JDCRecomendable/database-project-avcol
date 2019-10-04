@@ -1,34 +1,34 @@
 {% macro product_data_filter() %}
 <!-- GTIN-14 -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.gtin14_selection) }}
   {{ render_main_field(form.gtin14_string) }}
   {{ render_string_at_beg_end_options(form.gtin14_at_beginning, form.gtin14_at_end) }}
 </div>
 
 <!-- Product Name -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.name_selection) }}
   {{ render_main_field(form.name_string) }}
   {{ render_string_at_beg_end_options(form.name_at_beginning, form.name_at_end) }}
 </div>
 
 <!-- Product Description -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.desc_selection) }}
   {{ render_main_field(form.desc_string) }}
   {{ render_string_at_beg_end_options(form.desc_at_beginning, form.desc_at_end) }}
 </div>
 
 <!-- Product Current Price -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.current_price_selection) }}
   {{ render_main_field(form.current_price_lower_limit_string) }}
   {{ render_main_field(form.current_price_upper_limit_string) }}
 </div>
 
 <!-- Product Current Price -->
-<div class="shadow-sm p-2 m-2">
+<div class="shadow-sm border p-2 m-2">
   {{ render_label_and_filter_option(form.qty_in_stock_selection) }}
   {{ render_main_field(form.qty_in_stock_lower_limit_string) }}
   {{ render_main_field(form.qty_in_stock_upper_limit_string) }}

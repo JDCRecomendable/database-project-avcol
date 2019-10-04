@@ -18,11 +18,30 @@
 {% endblock %}
 
 {% block filtering %}
-{{ product_data_filter() }}
-{{ customer_data_filter() }}
-{{ location_data_filter() }}
-{{ customer_order_data_filter() }}
-{{ company_order_data_filter() }}
+<h4>Filter by Product</h4>
+<div class="form-inline">
+  {{ product_data_filter() }}
+</div>
+<hr style="border-width: 3px">
+
+<h4>Filter by Customer</h4>
+<div class="form-inline">
+  {{ customer_data_filter() }}
+  {{ location_data_filter() }}
+</div>
+<hr style="border-width: 3px">
+
+<h4>Filter by Customer Order</h4>
+<div class="form-inline">
+  {{ customer_order_data_filter() }}
+</div>
+<hr style="border-width: 3px">
+
+<h4>Filter by Company Order</h4>
+<div class="form-inline">
+  {{ company_order_data_filter() }}
+</div>
+<hr style="border-width: 3px">
 {% endblock filtering %}
 
 {% block tableheaders %}
