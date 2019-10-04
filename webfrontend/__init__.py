@@ -43,6 +43,11 @@ customer_orders_query_constructor = QueryConstructor(
     DBSchemaTableNames.schema
 )
 
+customer_order_items_query_constructor = QueryConstructor(
+    DBSchemaTableNames.customer_order_items,
+    DBSchemaTableNames.schema
+)
+
 company_orders_query_constructor = QueryConstructor(
     DBSchemaTableNames.company_orders,
     DBSchemaTableNames.schema
@@ -148,6 +153,12 @@ def show_products():
         return render_template("products.html",
                                selection=get_selected_records(products_query_constructor),
                                form=form)
+    if not form.validate():
+        return render_template("customers.html",
+                               selection=get_selected_records(customers_query_constructor),
+                               form=form)
+    result = request.form.to_dict(flat=False)
+    print(result)
 
 
 @app.route("/customer-orders", methods=["GET", "POST"])

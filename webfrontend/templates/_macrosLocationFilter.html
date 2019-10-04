@@ -1,0 +1,9 @@
+{% macro location_data_filter() %}
+<!-- Location -->
+<div class="shadow-sm p-2 m-2">
+  {{ render_label_and_filter_option(form.location_selection) }}
+  {{ render_main_field(form.location_place_no) }}
+  {{ render_main_field(form.location_road_name) }}
+  {{ render_main_field(form.location_city) }}
+</div>
+{% endmacro %}

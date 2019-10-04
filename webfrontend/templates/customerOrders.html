@@ -1,5 +1,9 @@
 {% extends "layoutDataTables.html" %}
 {% from "_macros.html" import render_label_and_filter_option, render_main_field, render_string_at_beg_end_options %}
+{% from "_macrosCustomerOrderFilter.html" import customer_order_data_filter with context %}
+{% from "_macrosCustomerFilter.html" import customer_data_filter with context %}
+{% from "_macrosLocationFilter.html" import location_data_filter with context %}
+{% from "_macrosProductFilter.html" import product_data_filter with context %}
 
 {% block title %}Customer Orders{% endblock %}
 {% block tablename %}Customer Orders{% endblock %}
@@ -13,7 +17,10 @@
 {% endblock %}
 
 {% block filtering %}
-Under Construction
+{{ customer_order_data_filter() }}
+{{ customer_data_filter() }}
+{{ location_data_filter() }}
+{{ product_data_filter() }}
 {% endblock filtering %}
 
 {% block tableheaders %}
