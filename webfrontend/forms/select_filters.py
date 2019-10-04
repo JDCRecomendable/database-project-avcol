@@ -119,11 +119,14 @@ class CustomersDataFilterForm(CustomersDataBasicForm, LocationDataBasicForm):
     pass
 
 
-class ProductsDataFilterForm(ProductsDataBasicForm, CustomersDataBasicForm, CompanyOrderDataBasicForm):
+class ProductsDataFilterForm(ProductsDataBasicForm, CustomersDataBasicForm,
+                             LocationDataBasicForm, CustomerOrdersDataBasicForm,
+                             CompanyOrderDataBasicForm):
     pass
 
 
-class CustomerOrdersDataFilterForm(CustomerOrdersDataBasicForm, CustomersDataBasicForm, LocationDataBasicForm):
+class CustomerOrdersDataFilterForm(CustomerOrdersDataBasicForm, CustomersDataBasicForm,
+                                   LocationDataBasicForm, ProductsDataBasicForm):
     pass
 
 
