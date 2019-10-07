@@ -12,6 +12,7 @@ from database.query_constructors import QueryConstructor
 from base.constants import *
 from webfrontend.forms.select_filters import CustomersDataFilterForm, ProductsDataFilterForm
 from webfrontend.forms.select_filters import CustomerOrdersDataFilterForm, CompanyOrdersDataFilterForm
+from webfrontend.forms.record_details import CustomerDetails
 
 
 app = Flask(__name__)
@@ -435,3 +436,11 @@ def show_company_orders():
     return render_template("companyOrders.html",
                            selection=get_selected_records(company_orders_query_constructor),
                            form=form)
+
+
+@app.route("/customers/<customer_id>", methods=["GET"])
+def show_customemr_details_view(customer_id):
+    form = CustomerDetails()
+    if request.method == "GET":
+        return render_template("customerDetailsView.html", form=form)
+    return "Test {}".format(customer_id)
