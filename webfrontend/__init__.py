@@ -112,13 +112,6 @@ def filter_customer_selection(form_result: dict) -> bool:
             form_result["phone_string"][0]
         )
         condition_count += 1
-    if form_result["date_registered_selection"][0] == "filter":
-        customers_query_constructor.add_condition_ranged_values(
-            DBFields.Customers.date_registered,
-            lower_limit=form_result["date_registered_lower_limit_string"][0],
-            upper_limit=form_result["date_registered_upper_limit_string"][0]
-        )
-        condition_count += 1
     return bool(condition_count)
 
 
@@ -172,13 +165,6 @@ def filter_product_selection(form_result: dict) -> bool:
             form_result["desc_string"][0],
             at_beginning=("desc_at_beginning" in form_result),
             at_end=("desc_at_end" in form_result)
-        )
-        condition_count += 1
-    if form_result["current_price_selection"][0]:
-        products_query_constructor.add_condition_ranged_values(
-            DBFields.Products.current_price,
-            lower_limit=form_result["current_price_lower_limit_string"][0],
-            upper_limit=form_result["current_price_upper_limit_string"][0]
         )
         condition_count += 1
     if form_result["qty_in_stock_selection"][0]:
@@ -251,13 +237,6 @@ def filter_company_order_selection(form_result: dict) -> bool:
             DBFields.CompanyOrders.qty_bought,
             lower_limit=form_result["qty_bought_lower_limit_string"][0],
             upper_limit=form_result["qty_bought_upper_limit_string"][0]
-        )
-        condition_count += 1
-    if form_result["total_price_paid_selection"][0] == "filter":
-        company_orders_query_constructor.add_condition_ranged_values(
-            DBFields.CompanyOrders.total_price_paid,
-            lower_limit=form_result["total_price_paid_lower_limit_string"][0],
-            upper_limit=form_result["total_price_paid_upper_limit_string"][0]
         )
         condition_count += 1
     return bool(condition_count)
@@ -499,7 +478,6 @@ def show_customer_details_view(customer_id):
         form.last_name_string.data = details[0][1]
         form.email_address_string.data = details[0][3]
         form.phone_string.data = details[0][4]
-        form.date_registered_string.data = details[0][5]
         return render_template("customerDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
     return selection[1]
 
@@ -526,10 +504,6 @@ def show_product_details_view(product_gtin14):
             result["desc_string"][0]
         )
         products_query_constructor.add_field_and_value(
-            DBFields.Products.current_price,
-            result["current_price_string"][0]
-        )
-        products_query_constructor.add_field_and_value(
             DBFields.Products.qty_in_stock,
             result["qty_in_stock_string"][0]
         )
@@ -550,8 +524,7 @@ def show_product_details_view(product_gtin14):
         form.gtin14_string.data = details[0][0]
         form.name_string.data = details[0][1]
         form.desc_string.data = details[0][2]
-        form.current_price_string.data = details[0][3]
-        form.qty_in_stock_string.data = details[0][4]
+        form.qty_in_stock_string.data = details[0][3]
         return render_template("productDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
     return selection[1]
 
@@ -602,8 +575,6 @@ def show_customer_order_details_view(customer_order_id):
         form.customer_order_id_string.data = details[0][0]
         form.customer_id_string.data = details[0][1]
         form.customer_order_datetime_ordered_string.data = details[0][2]
-        print(details[0][2])
-        print(details[0][2])
         form.customer_order_delivery_date_string.data = details[0][3]
         form.delivery_location_string.data = details[0][4]
         return render_template("customerOrderDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
@@ -632,10 +603,6 @@ def show_company_order_details_view(company_order_id):
             result["company_order_qty_bought"][0]
         )
         company_orders_query_constructor.add_field_and_value(
-            DBFields.CompanyOrders.total_price_paid,
-            result["company_order_total_price_paid"][0]
-        )
-        company_orders_query_constructor.add_field_and_value(
             DBFields.CompanyOrders.delivery_date,
             result["company_order_delivery_date"][0]
         )
@@ -657,27 +624,26 @@ def show_company_order_details_view(company_order_id):
         form.company_order_product_gtin14_string.data = details[0][1]
         form.company_order_datetime_ordered_string.data = details[0][2]
         form.company_order_qty_bought_string.data = details[0][3]
-        form.company_order_total_price_paid_string.data = details[0][4]
-        form.company_order_delivery_date_string.data = details[0][5]
+        form.company_order_delivery_date_string.data = details[0][4]
         return render_template("companyOrderDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
     return selection[1]
 
 
-@app.route("/customers/<customer_id>/delete", methods=["GET", "POST"])
-def delete_customer(customer_id):
-    pass
-
-
-@app.route("/products/<product_gtin14>/delete", methods=["GET", "POST"])
-def delete_product(product_gtin14):
-    pass
-
-
-@app.route("/customer-orders/<customer_order_id>/delete", methods=["GET", "POST"])
-def delete_customer_order(customer_order_id):
-    pass
-
-
-@app.route("/company-orders/<company_order_id>/delete", methods=["GET", "POST"])
-def delete_company_order(company_order_id):
-    pass
+# @app.route("/customers/<customer_id>/delete", methods=["GET", "POST"])
+# def delete_customer(customer_id):
+#     pass
+#
+#
+# @app.route("/products/<product_gtin14>/delete", methods=["GET", "POST"])
+# def delete_product(product_gtin14):
+#     pass
+#
+#
+# @app.route("/customer-orders/<customer_order_id>/delete", methods=["GET", "POST"])
+# def delete_customer_order(customer_order_id):
+#     pass
+#
+#
+# @app.route("/company-orders/<company_order_id>/delete", methods=["GET", "POST"])
+# def delete_company_order(company_order_id):
+#     pass

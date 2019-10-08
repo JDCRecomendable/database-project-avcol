@@ -60,10 +60,6 @@ class CustomersDataBasicForm(Form):
     phone_selection = gen_selection("Phone Number")
     phone_string = TelField("Phone Number")
 
-    # Date Registered
-    date_registered_selection = gen_selection("Date Registered", ranged=True)
-    date_registered_lower_limit_string, date_registered_upper_limit_string = gen_ranged_date_fields("Date Registered")
-
 
 class LocationDataBasicForm(Form):
     # Location
@@ -88,10 +84,6 @@ class ProductsDataBasicForm(Form):
     desc_selection = gen_selection("Description")
     desc_string = StringField("Product Description")
     desc_at_beginning, desc_at_end = gen_beg_end_bool_fields()
-
-    # Current Price
-    current_price_selection = gen_selection("Price", ranged=True)
-    current_price_lower_limit_string, current_price_upper_limit_string = gen_ranged_fields("Current Price")
 
     # Qty in Stock
     qty_in_stock_selection = gen_selection("Qty in Stock", ranged=True)
@@ -132,10 +124,6 @@ class CompanyOrderDataBasicForm(Form):
     # Qty Bought
     qty_bought_selection = gen_selection("Qty Bought by Company", ranged=True)
     qty_bought_lower_limit_string, qty_bought_upper_limit_string = gen_ranged_fields("Qty Bought")
-
-    # Total Price Paid
-    total_price_paid_selection = gen_selection("Price Paid by Company", ranged=True)
-    total_price_paid_lower_limit_string, total_price_paid_upper_limit_string = gen_ranged_fields("Total Price Paid")
 
 
 class CustomersDataFilterForm(CustomersDataBasicForm, LocationDataBasicForm,

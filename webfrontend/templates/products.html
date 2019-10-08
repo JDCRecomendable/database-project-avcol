@@ -47,7 +47,6 @@
 <th>GTIN-14</th>
 <th>Name of Product</th>
 <th>Description</th>
-<th>Price</th>
 <th>Qty in Stock</th>
 {% endblock %}
 
@@ -56,7 +55,6 @@
 <td>{{ record[1] }}</td>
 <td>{{ record[2] }}</td>
 <td>{{ record[3] }}</td>
-<td>{{ record[4] }}</td>
 <td>
   <div class="dropdown">
     <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
@@ -74,7 +72,7 @@
 $(document).ready(function() {
   $("#dataTable").DataTable({
     "columnDefs": [
-      { "orderable": false, "targets": 5 }
+      { "orderable": false, "targets": 4 }
     ]
   });
 }, 5000);

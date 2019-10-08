@@ -32,7 +32,6 @@
 <th>Product</th>
 <th>Date/Time Ordered</th>
 <th>Qty Bought</th>
-<th>Total Paid</th>
 <th>Delivery Date</th>
 {% endblock %}
 
@@ -42,7 +41,6 @@
 <td>{{ record[2] }}</td>
 <td>{{ record[3] }}</td>
 <td>{{ record[4] }}</td>
-<td>{{ record[5] }}</td>
 <td>
   <div class="dropdown">
     <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
@@ -60,7 +58,7 @@
 $(document).ready(function() {
   $("#dataTable").DataTable({
     "columnDefs": [
-      { "orderable": false, "targets": 6 }
+      { "orderable": false, "targets": 5 }
     ]
   });
 }, 5000);
