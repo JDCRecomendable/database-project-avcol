@@ -66,7 +66,7 @@
         <div class="collapse" id="filterData">
           <div class="container-fluid bg-light mb-3 py-3">
             <!-- Form for Filtering -->
-            <form action="{% block pageurl %}{% endblock %}" method="POST">
+            <form method="POST">
               {% block filtering %}{% endblock %}
               <input type="submit" value="Filter" class="btn btn-primary m-2 px-3">
             </form>
