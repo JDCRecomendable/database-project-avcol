@@ -463,6 +463,8 @@ def show_company_orders():
 def show_customer_details_view(customer_id):
     form = CustomerDetails()
     is_updated = -1
+    alert_msg = ""
+
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
         customers_query_constructor.reset()
@@ -487,12 +489,17 @@ def show_customer_details_view(customer_id):
             result["phone_string"][0]
         )
         is_updated = update_record(customers_query_constructor)
+
+        if is_updated[0] == 1:
+            alert_msg = is_updated[1]
+        is_updated = is_updated[0]
+
     customers_query_constructor.reset()
     customers_query_constructor.add_condition_exact_value(
         DBFields.Customers.id,
         customer_id
     )
-    details = get_selected_records(customers_query_constructor)
+    details = get_selected_records(customers_query_constructor)[1]
     form.customer_id_string.data = details[0][0]
     form.first_name_string.data = details[0][2]
     form.last_name_string.data = details[0][1]
@@ -500,4 +507,4 @@ def show_customer_details_view(customer_id):
     form.phone_string.data = details[0][4]
     form.date_registered_string.data = details[0][5]
     print("updated?", is_updated)
-    return render_template("customerDetailsView.html", form=form, updated=is_updated)
+    return render_template("customerDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
