@@ -67,6 +67,12 @@ def get_selected_records(query_constructor: QueryConstructor) -> list:
     return selection
 
 
+def update_record(query_constructor: QueryConstructor):
+    query = query_constructor.render_update_query()
+    print(query)
+    database_connector.execute_query(query, commit=True)
+
+
 def filter_customer_selection(form_result: dict) -> bool:
     """Add the conditions for customers to the SQL query constructor, if any, and return True if at least one condition
     is added.
@@ -455,4 +461,22 @@ def show_customer_details_view(customer_id):
     form.date_registered_string.data = details[0][5]
     if request.method == "GET":
         return render_template("customerDetailsView.html", form=form)
-    return "Test {}".format(customer_id)
+    result = request.form.to_dict(flat=False)
+    customers_query_constructor.add_field_and_value(
+        DBFields.Customers.first_name,
+        result["first_name_string"][0]
+    )
+    customers_query_constructor.add_field_and_value(
+        DBFields.Customers.last_name,
+        result["last_name_string"][0]
+    )
+    customers_query_constructor.add_field_and_value(
+        DBFields.Customers.email_address,
+        result["email_address_string"][0]
+    )
+    customers_query_constructor.add_field_and_value(
+        DBFields.Customers.phone,
+        result["phone_string"][0]
+    )
+    update_record(customers_query_constructor)
+    return render_template("customerDetailsView.html", form=form)
