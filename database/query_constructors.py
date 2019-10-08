@@ -98,6 +98,11 @@ class QueryConstructor:
         """Add a value to the query."""
         self.value_list.append(value)
 
+    def add_field_and_value(self, field: str, value: str):
+        """Add a field and a value to the query."""
+        self.add_field(field)
+        self.add_value(value)
+
     # Rendering the Queries
     def render_select_query(self) -> str:
         """Return constructed select SQL query."""
@@ -159,9 +164,10 @@ class QueryConstructor:
         if len(condition) > 0:
             condition = "WHERE ({})".format(condition)
 
-        set_result = '{} = "{}"'.format(fields[0], values[0])
-        for i in range(1, len(fields)):
-            set_result += ' {} = "{}"'.format(fields[i], values[i])
+        set_result = '{}="{}",'.format(fields[0], values[0])
+        for i in range(1, len(fields) - 1):
+            set_result += ' {}="{}",'.format(fields[i], values[i])
+        set_result += ' {}="{}"'.format(fields[len(fields) - 1], values[len(fields) - 1])
 
         return "UPDATE {}{} SET {} {}".format(
             schema_name,
