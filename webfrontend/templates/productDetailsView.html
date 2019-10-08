@@ -1,0 +1,20 @@
+{% extends "layoutDetailsView.html" %}
+{% from "_macrosDetailsForm.html" import render_label_and_input %}
+
+{% block title %}Product Details{% endblock %}
+{% block tablename %}Product{% endblock %}
+
+{% block navigation %}
+<li><a class="dropdown-item" href="/customers">Customers</a></li>
+<li><a class="dropdown-item text-info" href="/products">Products</a></li>
+<li><a class="dropdown-item" href="/customer-orders">Customer Orders</a></li>
+<li><a class="dropdown-item" href="/company-orders">Company Orders</a></li>
+{% endblock %}
+
+{% block details %}
+{{ render_label_and_input(form.gtin14_string, disabled_status=True) }}
+{{ render_label_and_input(form.name_string) }}
+{{ render_label_and_input(form.desc_string) }}
+{{ render_label_and_input(form.current_price_string) }}
+{{ render_label_and_input(form.qty_in_stock_string) }}
+{% endblock %}

@@ -12,7 +12,7 @@ from database.query_constructors import QueryConstructor
 from base.constants import *
 from webfrontend.forms.select_filters import CustomersDataFilterForm, ProductsDataFilterForm
 from webfrontend.forms.select_filters import CustomerOrdersDataFilterForm, CompanyOrdersDataFilterForm
-from webfrontend.forms.details_view import CustomerDetails
+from webfrontend.forms.details_view import CustomerDetails, ProductDetails
 
 
 app = Flask(__name__)
@@ -486,5 +486,53 @@ def show_customer_details_view(customer_id):
     form.email_address_string.data = details[0][3]
     form.phone_string.data = details[0][4]
     form.date_registered_string.data = details[0][5]
-    print("updated?", is_updated)
     return render_template("customerDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
+
+
+@app.route("/products/<product_gtin14>", methods=["GET", "POST"])
+def show_product_details_view(product_gtin14):
+    form = ProductDetails()
+    is_updated = -1
+    alert_msg = ""
+
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        products_query_constructor.reset()
+        products_query_constructor.add_condition_exact_value(
+            DBFields.Products.gtin14,
+            product_gtin14
+        )
+        products_query_constructor.add_field_and_value(
+            DBFields.Products.name,
+            result["name_string"][0]
+        )
+        products_query_constructor.add_field_and_value(
+            DBFields.Products.description,
+            result["desc_string"][0]
+        )
+        products_query_constructor.add_field_and_value(
+            DBFields.Products.current_price,
+            result["current_price_string"][0]
+        )
+        products_query_constructor.add_field_and_value(
+            DBFields.Products.qty_in_stock,
+            result["qty_in_stock_string"][0]
+        )
+        is_updated = update_record(products_query_constructor)
+
+        if is_updated[0] == 1:
+            alert_msg = is_updated[1]
+        is_updated = is_updated[0]
+
+    products_query_constructor.reset()
+    products_query_constructor.add_condition_exact_value(
+        DBFields.Products.gtin14,
+        product_gtin14
+    )
+    details = get_selected_records(products_query_constructor)[1]
+    form.gtin14_string.data = details[0][0]
+    form.name_string.data = details[0][1]
+    form.desc_string.data = details[0][2]
+    form.current_price_string.data = details[0][3]
+    form.qty_in_stock_string.data = details[0][4]
+    return render_template("productDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
