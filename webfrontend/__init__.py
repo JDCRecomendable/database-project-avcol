@@ -266,51 +266,46 @@ def filter_company_order_selection(form_result: dict) -> bool:
 @app.route("/customers", methods=["GET", "POST"])
 def show_customers():
     form = CustomersDataFilterForm()
-    if request.method == "GET" or (request.method == "POST" and not form.validate()):
-        customers_query_constructor.reset()
-        selection = get_selected_records(customers_query_constructor)
-        if selection[0] == 0:
-            return render_template("customers.html",
-                                   selection=selection[1],
-                                   form=form)
-    result = request.form.to_dict(flat=False)
-    filter_customer_selection(result)
-    if filter_location_selection(result):
-        locations_query_constructor.add_field(DBFields.Locations.id)
-        customer_locations_query_constructor.reset()
-        customer_locations_query_constructor.add_nested_query(
-            DBFields.CustomerLocations.location_id,
-            locations_query_constructor.render_select_query()
-        )
-        customer_locations_query_constructor.add_field(DBFields.CustomerLocations.customer_id)
-        customers_query_constructor.add_nested_query(
-            DBFields.Customers.id,
-            customer_locations_query_constructor.render_select_query()
-        )
-    if filter_customer_order_selection(result):
-        customer_orders_query_constructor.add_field(DBFields.CustomerOrders.customer_id)
-        customers_query_constructor.add_nested_query(
-            DBFields.Customers.id,
-            customer_orders_query_constructor.render_select_query()
-        )
-    if filter_product_selection(result):
-        products_query_constructor.add_field(DBFields.Products.gtin14)
-        customer_order_items_query_constructor.reset()
-        customer_order_items_query_constructor.add_nested_query(
-            DBFields.CustomerOrderItems.product_gtin14,
-            products_query_constructor.render_select_query()
-        )
-        customer_order_items_query_constructor.add_field(DBFields.CustomerOrderItems.customer_order_id)
-        customer_orders_query_constructor.reset()
-        customer_orders_query_constructor.add_nested_query(
-            DBFields.CustomerOrders.id,
-            customer_order_items_query_constructor.render_select_query()
-        )
-        customer_orders_query_constructor.add_field(DBFields.CustomerOrders.customer_id)
-        customers_query_constructor.add_nested_query(
-            DBFields.Customers.id,
-            customer_orders_query_constructor.render_select_query()
-        )
+    customers_query_constructor.reset()
+    if request.method == "POST" and form.validate():
+        result = request.form.to_dict(flat=False)
+        filter_customer_selection(result)
+        if filter_location_selection(result):
+            locations_query_constructor.add_field(DBFields.Locations.id)
+            customer_locations_query_constructor.reset()
+            customer_locations_query_constructor.add_nested_query(
+                DBFields.CustomerLocations.location_id,
+                locations_query_constructor.render_select_query()
+            )
+            customer_locations_query_constructor.add_field(DBFields.CustomerLocations.customer_id)
+            customers_query_constructor.add_nested_query(
+                DBFields.Customers.id,
+                customer_locations_query_constructor.render_select_query()
+            )
+        if filter_customer_order_selection(result):
+            customer_orders_query_constructor.add_field(DBFields.CustomerOrders.customer_id)
+            customers_query_constructor.add_nested_query(
+                DBFields.Customers.id,
+                customer_orders_query_constructor.render_select_query()
+            )
+        if filter_product_selection(result):
+            products_query_constructor.add_field(DBFields.Products.gtin14)
+            customer_order_items_query_constructor.reset()
+            customer_order_items_query_constructor.add_nested_query(
+                DBFields.CustomerOrderItems.product_gtin14,
+                products_query_constructor.render_select_query()
+            )
+            customer_order_items_query_constructor.add_field(DBFields.CustomerOrderItems.customer_order_id)
+            customer_orders_query_constructor.reset()
+            customer_orders_query_constructor.add_nested_query(
+                DBFields.CustomerOrders.id,
+                customer_order_items_query_constructor.render_select_query()
+            )
+            customer_orders_query_constructor.add_field(DBFields.CustomerOrders.customer_id)
+            customers_query_constructor.add_nested_query(
+                DBFields.Customers.id,
+                customer_orders_query_constructor.render_select_query()
+            )
     selection = get_selected_records(customers_query_constructor)
     if selection[0] == 0:
         return render_template("customers.html",
@@ -321,69 +316,64 @@ def show_customers():
 @app.route("/products", methods=["GET", "POST"])
 def show_products():
     form = ProductsDataFilterForm()
-    if request.method == "GET" or (request.method == "POST" and not form.validate()):
-        products_query_constructor.reset()
-        selection = get_selected_records(products_query_constructor)
-        if selection[0] == 0:
-            return render_template("products.html",
-                                   selection=selection[1],
-                                   form=form)
-    result = request.form.to_dict(flat=False)
-    filter_product_selection(result)
-    if filter_customer_selection(result):
-        customers_query_constructor.add_field(DBFields.Customers.id)
-        customer_orders_query_constructor.reset()
-        customer_orders_query_constructor.add_nested_query(
-            DBFields.CustomerOrders.customer_id,
-            customers_query_constructor.render_select_query()
-        )
-        customer_orders_query_constructor.add_field(DBFields.CustomerOrders.id)
-        customer_order_items_query_constructor.reset()
-        customer_order_items_query_constructor.add_nested_query(
-            DBFields.CustomerOrderItems.customer_order_id,
-            customer_orders_query_constructor.render_select_query()
-        )
-        customer_order_items_query_constructor.add_field(DBFields.CustomerOrderItems.product_gtin14)
-        products_query_constructor.add_nested_query(
-            DBFields.Products.gtin14,
-            customer_order_items_query_constructor.render_select_query()
-        )
-    if filter_location_selection(result):
-        locations_query_constructor.add_field(DBFields.Locations.id)
-        customer_orders_query_constructor.reset()
-        customer_orders_query_constructor.add_nested_query(
-            DBFields.CustomerOrders.delivery_location,
-            locations_query_constructor.render_select_query()
-        )
-        customer_orders_query_constructor.add_field(DBFields.CustomerOrders.id)
-        customer_order_items_query_constructor.reset()
-        customer_order_items_query_constructor.add_nested_query(
-            DBFields.CustomerOrderItems.customer_order_id,
-            customer_orders_query_constructor.render_select_query()
-        )
-        customer_order_items_query_constructor.add_field(DBFields.CustomerOrderItems.product_gtin14)
-        products_query_constructor.add_nested_query(
-            DBFields.Products.gtin14,
-            customer_order_items_query_constructor.render_select_query()
-        )
-    if filter_customer_order_selection(result):
-        customer_orders_query_constructor.add_field(DBFields.CustomerOrders.id)
-        customer_order_items_query_constructor.reset()
-        customer_order_items_query_constructor.add_nested_query(
-            DBFields.CustomerOrderItems.customer_order_id,
-            customer_orders_query_constructor.render_select_query()
-        )
-        customer_order_items_query_constructor.add_field(DBFields.CustomerOrderItems.product_gtin14)
-        products_query_constructor.add_nested_query(
-            DBFields.Products.gtin14,
-            customer_order_items_query_constructor.render_select_query()
-        )
-    if filter_company_order_selection(result):
-        company_orders_query_constructor.add_field(DBFields.CompanyOrders.product_gtin14)
-        products_query_constructor.add_nested_query(
-            DBFields.Products.gtin14,
-            company_orders_query_constructor.render_select_query()
-        )
+    products_query_constructor.reset()
+    if request.method == "POST" and form.validate():
+        result = request.form.to_dict(flat=False)
+        filter_product_selection(result)
+        if filter_customer_selection(result):
+            customers_query_constructor.add_field(DBFields.Customers.id)
+            customer_orders_query_constructor.reset()
+            customer_orders_query_constructor.add_nested_query(
+                DBFields.CustomerOrders.customer_id,
+                customers_query_constructor.render_select_query()
+            )
+            customer_orders_query_constructor.add_field(DBFields.CustomerOrders.id)
+            customer_order_items_query_constructor.reset()
+            customer_order_items_query_constructor.add_nested_query(
+                DBFields.CustomerOrderItems.customer_order_id,
+                customer_orders_query_constructor.render_select_query()
+            )
+            customer_order_items_query_constructor.add_field(DBFields.CustomerOrderItems.product_gtin14)
+            products_query_constructor.add_nested_query(
+                DBFields.Products.gtin14,
+                customer_order_items_query_constructor.render_select_query()
+            )
+        if filter_location_selection(result):
+            locations_query_constructor.add_field(DBFields.Locations.id)
+            customer_orders_query_constructor.reset()
+            customer_orders_query_constructor.add_nested_query(
+                DBFields.CustomerOrders.delivery_location,
+                locations_query_constructor.render_select_query()
+            )
+            customer_orders_query_constructor.add_field(DBFields.CustomerOrders.id)
+            customer_order_items_query_constructor.reset()
+            customer_order_items_query_constructor.add_nested_query(
+                DBFields.CustomerOrderItems.customer_order_id,
+                customer_orders_query_constructor.render_select_query()
+            )
+            customer_order_items_query_constructor.add_field(DBFields.CustomerOrderItems.product_gtin14)
+            products_query_constructor.add_nested_query(
+                DBFields.Products.gtin14,
+                customer_order_items_query_constructor.render_select_query()
+            )
+        if filter_customer_order_selection(result):
+            customer_orders_query_constructor.add_field(DBFields.CustomerOrders.id)
+            customer_order_items_query_constructor.reset()
+            customer_order_items_query_constructor.add_nested_query(
+                DBFields.CustomerOrderItems.customer_order_id,
+                customer_orders_query_constructor.render_select_query()
+            )
+            customer_order_items_query_constructor.add_field(DBFields.CustomerOrderItems.product_gtin14)
+            products_query_constructor.add_nested_query(
+                DBFields.Products.gtin14,
+                customer_order_items_query_constructor.render_select_query()
+            )
+        if filter_company_order_selection(result):
+            company_orders_query_constructor.add_field(DBFields.CompanyOrders.product_gtin14)
+            products_query_constructor.add_nested_query(
+                DBFields.Products.gtin14,
+                company_orders_query_constructor.render_select_query()
+            )
     selection = get_selected_records(products_query_constructor)
     if selection[0] == 0:
         return render_template("products.html",
@@ -394,39 +384,34 @@ def show_products():
 @app.route("/customer-orders", methods=["GET", "POST"])
 def show_customer_orders():
     form = CustomerOrdersDataFilterForm()
-    if request.method == "GET" or (request.method == "POST" and not form.validate()):
-        customer_orders_query_constructor.reset()
-        selection = get_selected_records(customer_orders_query_constructor)
-        if selection[0] == 0:
-            return render_template("customerOrders.html",
-                                   selection=selection[1],
-                                   form=form)
-    result = request.form.to_dict(flat=False)
-    filter_customer_order_selection(result)
-    if filter_customer_selection(result):
-        customers_query_constructor.add_field(DBFields.Customers.id)
-        customer_orders_query_constructor.add_nested_query(
-            DBFields.CustomerOrders.customer_id,
-            customers_query_constructor.render_select_query()
-        )
-    if filter_location_selection(result):
-        locations_query_constructor.add_field(DBFields.Locations.id)
-        customer_orders_query_constructor.add_nested_query(
-            DBFields.CustomerOrders.delivery_location,
-            locations_query_constructor.render_select_query()
-        )
-    if filter_product_selection(result):
-        products_query_constructor.add_field(DBFields.Products.gtin14)
-        customer_order_items_query_constructor.reset()
-        customer_order_items_query_constructor.add_nested_query(
-            DBFields.CustomerOrderItems.product_gtin14,
-            products_query_constructor.render_select_query()
-        )
-        customer_order_items_query_constructor.add_field(DBFields.CustomerOrderItems.customer_order_id)
-        customer_orders_query_constructor.add_nested_query(
-            DBFields.CustomerOrders.id,
-            customer_order_items_query_constructor.render_select_query()
-        )
+    customer_orders_query_constructor.reset()
+    if request.method == "POST" and form.validate():
+        result = request.form.to_dict(flat=False)
+        filter_customer_order_selection(result)
+        if filter_customer_selection(result):
+            customers_query_constructor.add_field(DBFields.Customers.id)
+            customer_orders_query_constructor.add_nested_query(
+                DBFields.CustomerOrders.customer_id,
+                customers_query_constructor.render_select_query()
+            )
+        if filter_location_selection(result):
+            locations_query_constructor.add_field(DBFields.Locations.id)
+            customer_orders_query_constructor.add_nested_query(
+                DBFields.CustomerOrders.delivery_location,
+                locations_query_constructor.render_select_query()
+            )
+        if filter_product_selection(result):
+            products_query_constructor.add_field(DBFields.Products.gtin14)
+            customer_order_items_query_constructor.reset()
+            customer_order_items_query_constructor.add_nested_query(
+                DBFields.CustomerOrderItems.product_gtin14,
+                products_query_constructor.render_select_query()
+            )
+            customer_order_items_query_constructor.add_field(DBFields.CustomerOrderItems.customer_order_id)
+            customer_orders_query_constructor.add_nested_query(
+                DBFields.CustomerOrders.id,
+                customer_order_items_query_constructor.render_select_query()
+            )
     selection = get_selected_records(customer_orders_query_constructor)
     if selection[0] == 0:
         return render_template("customerOrders.html",
@@ -437,21 +422,16 @@ def show_customer_orders():
 @app.route("/company-orders", methods=["GET", "POST"])
 def show_company_orders():
     form = CompanyOrdersDataFilterForm()
-    if request.method == "GET" or (request.method == "POST" and not form.validate()):
-        company_orders_query_constructor.reset()
-        selection = get_selected_records(company_orders_query_constructor)
-        if selection[0] == 0:
-            return render_template("companyOrders.html",
-                                   selection=selection[1],
-                                   form=form)
-    result = request.form.to_dict(flat=False)
-    filter_company_order_selection(result)
-    if filter_product_selection(result):
-        products_query_constructor.add_field(DBFields.Products.gtin14)
-        company_orders_query_constructor.add_nested_query(
-            DBFields.CompanyOrders.product_gtin14,
-            products_query_constructor.render_select_query()
-        )
+    company_orders_query_constructor.reset()
+    if request.method == "POST" and form.validate():
+        result = request.form.to_dict(flat=False)
+        filter_company_order_selection(result)
+        if filter_product_selection(result):
+            products_query_constructor.add_field(DBFields.Products.gtin14)
+            company_orders_query_constructor.add_nested_query(
+                DBFields.CompanyOrders.product_gtin14,
+                products_query_constructor.render_select_query()
+            )
     selection = get_selected_records(company_orders_query_constructor)
     if selection[0] == 0:
         return render_template("companyOrders.html",
