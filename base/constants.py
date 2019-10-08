@@ -90,7 +90,6 @@ class DBFields:
         first_name = "first_name"
         email_address = "email_address"
         phone = "phone"
-        date_registered = "date_registered"
 
     class CustomerLocations:
         customer_id = "customer_id"
@@ -106,7 +105,6 @@ class DBFields:
         customer_order_id = "customer_order_id"
         product_gtin14 = "product_gtin14"
         qty_bought = "qty_bought"
-        total_price_paid = "total_price_paid"
 
     class CustomerOrders:
         id = "id"
@@ -119,7 +117,6 @@ class DBFields:
         gtin14 = "gtin14"
         name = "name"
         description = "description"
-        current_price = "current_price"
         qty_in_stock = "qty_in_stock"
 
     class CompanyOrders:
@@ -127,7 +124,6 @@ class DBFields:
         product_gtin14 = "product_gtin14"
         datetime_ordered = "datetime_ordered"
         qty_bought = "qty_bought"
-        total_price_paid = "total_price_paid"
         delivery_date = "delivery_date"
 
 
