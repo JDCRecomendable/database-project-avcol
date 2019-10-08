@@ -42,9 +42,14 @@ class DatabaseConnector:
                 print_error(str(err))
             exit(1)
 
-    def execute_query(self, query, inputs=(), select=False, commit=False):
+    def execute_query(self, query, inputs=(), select=False, commit=False) -> tuple:
         """Execute a single SQL query. Optionally accepts a list or tuple of input parameters required by the query,
         and returns a list of tuples of data from the database if `select` is set to True.
+
+        Returns a tuple to indicate status of execution, where index 0 is the status code and index 1 is the
+        selected records or error message, if any. Otherwise, exit with status 1 when not connected to DB server.
+
+        Status codes are 0 by default, 1 when an error is encountered.
         """
         if self.db_is_connected:
             statement = query
@@ -56,15 +61,23 @@ class DatabaseConnector:
                 if commit:
                     self.cnx.commit()
                 if select:
-                    return self.cursor.fetchall()
+                    return 0, self.cursor.fetchall()
+                return (0,)
             except mysql.connector.Error as err:
                 print_error(str(err))
+                return 1, str(err)
         else:
             print_error(Msg.DatabaseConnector.not_connected)
             exit(1)
 
-    def execute_queries_sequentially(self, queries):
-        """Execute multiple SQL queries at the same time. Assumes that there is no input parameters."""
+    def execute_queries_sequentially(self, queries) -> tuple:
+        """Execute multiple SQL queries at the same time. Assumes that there is no input parameters.
+
+        Returns a tuple to indicate status of execution, where index 0 is the status code and index 1 is the
+        error message, if any, or exit with status 1 when not connected to DB server.
+
+        Status codes are 0 by default, 1 when an error is encountered.
+        """
         if self.db_is_connected:
             try:
                 statement = ""
@@ -79,8 +92,10 @@ class DatabaseConnector:
                     else:
                         statement += query.strip() + " "
                 self.cnx.commit()
+                return (0,)
             except mysql.connector.Error as err:
                 print_error(str(err))
+                return 1, str(err)
 
     def stop_connection(self):
         if self.db_is_connected:

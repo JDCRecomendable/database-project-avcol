@@ -52,6 +52,21 @@
 
     <div class="container-fluid">
       <!-- Main Content -->
+      {% if updated == 0 %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <button type="button" class="close" data-dismiss="alert">
+          <span>&times;</span>
+          </button>
+          Record updated.
+        </div>
+      {% elif updated == 1 %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <button type="button" class="close" data-dismiss="alert">
+          <span>&times;</span>
+          </button>
+          Failed to update record.
+        </div>
+      {% endif %}
       <main role="main" class="pt-3 px-4">
         <h3 class="offset-md-1 offset-lg-2">Details of {% block tablename %}{% endblock %} </h3>
         <form method="POST">
