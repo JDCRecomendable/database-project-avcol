@@ -653,3 +653,23 @@ def show_company_order_details_view(company_order_id):
         form.company_order_delivery_date_string.data = details[0][5]
         return render_template("companyOrderDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
     return selection[1]
+
+
+@app.route("/customers/<customer_id>/delete", methods=["GET", "POST"])
+def delete_customer(customer_id):
+    pass
+
+
+@app.route("/products/<product_gtin14>/delete", methods=["GET", "POST"])
+def delete_product(product_gtin14):
+    pass
+
+
+@app.route("/customer-orders/<customer_order_id>/delete", methods=["GET", "POST"])
+def delete_customer_order(customer_order_id):
+    pass
+
+
+@app.route("/company-orders/<company_order_id>/delete", methods=["GET", "POST"])
+def delete_company_order(company_order_id):
+    pass
