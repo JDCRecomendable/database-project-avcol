@@ -266,6 +266,8 @@ def filter_company_order_selection(form_result: dict) -> bool:
 @app.route("/customers", methods=["GET", "POST"])
 def show_customers():
     form = CustomersDataFilterForm()
+    is_filtered = -1
+
     customers_query_constructor.reset()
     if request.method == "POST" and form.validate():
         result = request.form.to_dict(flat=False)
@@ -306,17 +308,19 @@ def show_customers():
                 DBFields.Customers.id,
                 customer_orders_query_constructor.render_select_query()
             )
+        is_filtered = 0
+
     selection = get_selected_records(customers_query_constructor)
     if selection[0] == 0:
-        return render_template("customers.html",
-                               selection=selection[1],
-                               form=form)
+        return render_template("customers.html", selection=selection[1], form=form, filtered=is_filtered)
     return selection[1]
 
 
 @app.route("/products", methods=["GET", "POST"])
 def show_products():
     form = ProductsDataFilterForm()
+    is_filtered = -1
+
     products_query_constructor.reset()
     if request.method == "POST" and form.validate():
         result = request.form.to_dict(flat=False)
@@ -375,17 +379,19 @@ def show_products():
                 DBFields.Products.gtin14,
                 company_orders_query_constructor.render_select_query()
             )
+        is_filtered = 0
+
     selection = get_selected_records(products_query_constructor)
     if selection[0] == 0:
-        return render_template("products.html",
-                               selection=selection[1],
-                               form=form)
+        return render_template("products.html", selection=selection[1], form=form, filtered=is_filtered)
     return selection[1]
 
 
 @app.route("/customer-orders", methods=["GET", "POST"])
 def show_customer_orders():
     form = CustomerOrdersDataFilterForm()
+    is_filtered = -1
+
     customer_orders_query_constructor.reset()
     if request.method == "POST" and form.validate():
         result = request.form.to_dict(flat=False)
@@ -414,17 +420,19 @@ def show_customer_orders():
                 DBFields.CustomerOrders.id,
                 customer_order_items_query_constructor.render_select_query()
             )
+        is_filtered = 0
+
     selection = get_selected_records(customer_orders_query_constructor)
     if selection[0] == 0:
-        return render_template("customerOrders.html",
-                               selection=selection[1],
-                               form=form)
+        return render_template("customerOrders.html", selection=selection[1], form=form, filtered=is_filtered)
     return selection[1]
 
 
 @app.route("/company-orders", methods=["GET", "POST"])
 def show_company_orders():
     form = CompanyOrdersDataFilterForm()
+    is_filtered = -1
+
     company_orders_query_constructor.reset()
     if request.method == "POST" and form.validate():
         result = request.form.to_dict(flat=False)
@@ -435,11 +443,11 @@ def show_company_orders():
                 DBFields.CompanyOrders.product_gtin14,
                 products_query_constructor.render_select_query()
             )
+        is_filtered = 0
+
     selection = get_selected_records(company_orders_query_constructor)
     if selection[0] == 0:
-        return render_template("companyOrders.html",
-                               selection=selection[1],
-                               form=form)
+        return render_template("companyOrders.html", selection=selection[1], form=form, filtered=is_filtered)
     return selection[1]
 
 

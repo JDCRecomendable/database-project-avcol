@@ -52,6 +52,14 @@
 
     <div class="container-fluid">
       <!-- Main Content -->
+      {% if filtered == 0 %}
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+          <button type="button" class="close" data-dismiss="alert">
+          <span>&times;</span>
+          </button>
+          Data filtered.
+        </div>
+      {% endif %}
       <main role="main" class="pt-3 px-4">
         <div class="d-flex flex-wrap mb-3">
           <div class="flex-grow-1 mr-2">
