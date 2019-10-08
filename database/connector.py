@@ -62,7 +62,7 @@ class DatabaseConnector:
                     self.cnx.commit()
                 if select:
                     return 0, self.cursor.fetchall()
-                return (0,)
+                return 0,
             except mysql.connector.Error as err:
                 print_error(str(err))
                 return 1, str(err)
@@ -92,7 +92,7 @@ class DatabaseConnector:
                     else:
                         statement += query.strip() + " "
                 self.cnx.commit()
-                return (0,)
+                return 0,
             except mysql.connector.Error as err:
                 print_error(str(err))
                 return 1, str(err)
