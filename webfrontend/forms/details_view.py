@@ -40,6 +40,7 @@ class CustomerOrderDetails(Form):
 class CompanyOrderDetails(Form):
     company_order_id_string = IntegerField("Customer Order ID")
     company_order_product_gtin14_string = StringField("Product GTIN-14")
-    company_order_qty_bought = IntegerField("Qty Bought")
-    company_order_total_price_paid = IntegerField("Total Price Paid")
-    company_order_delivery_date = DateField("Delivery Date")
+    company_order_datetime_ordered_string = DateTimeField("Date/Time Ordered")
+    company_order_qty_bought_string = IntegerField("Qty Bought")
+    company_order_total_price_paid_string = IntegerField("Total Price Paid")
+    company_order_delivery_date_string = DateField("Delivery Date")

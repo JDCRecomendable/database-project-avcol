@@ -12,7 +12,7 @@ from database.query_constructors import QueryConstructor
 from base.constants import *
 from webfrontend.forms.select_filters import CustomersDataFilterForm, ProductsDataFilterForm
 from webfrontend.forms.select_filters import CustomerOrdersDataFilterForm, CompanyOrdersDataFilterForm
-from webfrontend.forms.details_view import CustomerDetails, ProductDetails
+from webfrontend.forms.details_view import CustomerDetails, ProductDetails, CustomerOrderDetails, CompanyOrderDetails
 
 
 app = Flask(__name__)
@@ -311,6 +311,7 @@ def show_customers():
         return render_template("customers.html",
                                selection=selection[1],
                                form=form)
+    return selection[1]
 
 
 @app.route("/products", methods=["GET", "POST"])
@@ -379,6 +380,7 @@ def show_products():
         return render_template("products.html",
                                selection=selection[1],
                                form=form)
+    return selection[1]
 
 
 @app.route("/customer-orders", methods=["GET", "POST"])
@@ -417,6 +419,7 @@ def show_customer_orders():
         return render_template("customerOrders.html",
                                selection=selection[1],
                                form=form)
+    return selection[1]
 
 
 @app.route("/company-orders", methods=["GET", "POST"])
@@ -437,6 +440,7 @@ def show_company_orders():
         return render_template("companyOrders.html",
                                selection=selection[1],
                                form=form)
+    return selection[1]
 
 
 @app.route("/customers/<customer_id>", methods=["GET", "POST"])
@@ -479,14 +483,17 @@ def show_customer_details_view(customer_id):
         DBFields.Customers.id,
         customer_id
     )
-    details = get_selected_records(customers_query_constructor)[1]
-    form.customer_id_string.data = details[0][0]
-    form.first_name_string.data = details[0][2]
-    form.last_name_string.data = details[0][1]
-    form.email_address_string.data = details[0][3]
-    form.phone_string.data = details[0][4]
-    form.date_registered_string.data = details[0][5]
-    return render_template("customerDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
+    selection = get_selected_records(customers_query_constructor)
+    if selection[0] == 0:
+        details = selection[1]
+        form.customer_id_string.data = details[0][0]
+        form.first_name_string.data = details[0][2]
+        form.last_name_string.data = details[0][1]
+        form.email_address_string.data = details[0][3]
+        form.phone_string.data = details[0][4]
+        form.date_registered_string.data = details[0][5]
+        return render_template("customerDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
+    return selection[1]
 
 
 @app.route("/products/<product_gtin14>", methods=["GET", "POST"])
@@ -529,10 +536,120 @@ def show_product_details_view(product_gtin14):
         DBFields.Products.gtin14,
         product_gtin14
     )
-    details = get_selected_records(products_query_constructor)[1]
-    form.gtin14_string.data = details[0][0]
-    form.name_string.data = details[0][1]
-    form.desc_string.data = details[0][2]
-    form.current_price_string.data = details[0][3]
-    form.qty_in_stock_string.data = details[0][4]
-    return render_template("productDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
+    selection = get_selected_records(products_query_constructor)
+    if selection[0] == 0:
+        details = selection[1]
+        form.gtin14_string.data = details[0][0]
+        form.name_string.data = details[0][1]
+        form.desc_string.data = details[0][2]
+        form.current_price_string.data = details[0][3]
+        form.qty_in_stock_string.data = details[0][4]
+        return render_template("productDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
+    return selection[1]
+
+
+@app.route("/customer-orders/<customer_order_id>", methods=["GET", "POST"])
+def show_customer_order_details_view(customer_order_id):
+    form = CustomerOrderDetails()
+    is_updated = -1
+    alert_msg = ""
+
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        customer_orders_query_constructor.reset()
+        customer_orders_query_constructor.add_condition_exact_value(
+            DBFields.CustomerOrders.id,
+            customer_order_id
+        )
+        customer_orders_query_constructor.add_field_and_value(
+            DBFields.CustomerOrders.customer_id,
+            result["customer_id_string"][0]
+        )
+        customer_orders_query_constructor.add_field_and_value(
+            DBFields.CustomerOrders.datetime_ordered,
+            result["customer_order_datetime_ordered_string"][0]
+        )
+        customer_orders_query_constructor.add_field_and_value(
+            DBFields.CustomerOrders.delivery_date,
+            result["customer_order_delivery_date_string"][0]
+        )
+        customer_orders_query_constructor.add_field_and_value(
+            DBFields.CustomerOrders.delivery_location,
+            result["delivery_location_string"][0]
+        )
+        is_updated = update_record(customer_orders_query_constructor)
+
+        if is_updated[0] == 1:
+            alert_msg = is_updated[1]
+        is_updated = is_updated[0]
+
+    customer_orders_query_constructor.reset()
+    customer_orders_query_constructor.add_condition_exact_value(
+        DBFields.CustomerOrders.id,
+        customer_order_id
+    )
+    selection = get_selected_records(customer_orders_query_constructor)
+    if selection[0] == 0:
+        details = selection[1]
+        form.customer_order_id_string.data = details[0][0]
+        form.customer_id_string.data = details[0][1]
+        form.customer_order_datetime_ordered_string.data = details[0][2]
+        print(details[0][2])
+        print(details[0][2])
+        form.customer_order_delivery_date_string.data = details[0][3]
+        form.delivery_location_string.data = details[0][4]
+        return render_template("customerOrderDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
+    return selection[1]
+
+
+@app.route("/company-orders/<company_order_id>", methods=["GET", "POST"])
+def show_company_order_details_view(company_order_id):
+    form = CompanyOrderDetails()
+    is_updated = -1
+    alert_msg = ""
+
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        company_orders_query_constructor.reset()
+        company_orders_query_constructor.add_condition_exact_value(
+            DBFields.CompanyOrders.id,
+            company_order_id
+        )
+        company_orders_query_constructor.add_field_and_value(
+            DBFields.CompanyOrders.product_gtin14,
+            result["company_order_product_gtin14_string"][0]
+        )
+        company_orders_query_constructor.add_field_and_value(
+            DBFields.CompanyOrders.qty_bought,
+            result["company_order_qty_bought"][0]
+        )
+        company_orders_query_constructor.add_field_and_value(
+            DBFields.CompanyOrders.total_price_paid,
+            result["company_order_total_price_paid"][0]
+        )
+        company_orders_query_constructor.add_field_and_value(
+            DBFields.CompanyOrders.delivery_date,
+            result["company_order_delivery_date"][0]
+        )
+        is_updated = update_record(company_orders_query_constructor)
+
+        if is_updated[0] == 1:
+            alert_msg = is_updated[1]
+        is_updated = is_updated[0]
+
+    company_orders_query_constructor.reset()
+    company_orders_query_constructor.add_condition_exact_value(
+        DBFields.CompanyOrders.id,
+        company_order_id
+    )
+    selection = get_selected_records(company_orders_query_constructor)
+    if selection[0] == 0:
+        details = selection[1]
+        form.company_order_id_string.data = details[0][0]
+        form.company_order_product_gtin14_string.data = details[0][1]
+        form.company_order_datetime_ordered_string.data = details[0][2]
+        form.company_order_qty_bought_string.data = details[0][3]
+        form.company_order_total_price_paid_string.data = details[0][4]
+        form.company_order_delivery_date_string.data = details[0][5]
+        return render_template("companyOrderDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
+    return selection[1]
