@@ -12,7 +12,7 @@ from database.query_constructors import QueryConstructor
 from base.constants import *
 from webfrontend.forms.select_filters import CustomersDataFilterForm, ProductsDataFilterForm
 from webfrontend.forms.select_filters import CustomerOrdersDataFilterForm, CompanyOrdersDataFilterForm
-from webfrontend.forms.record_details import CustomerDetails
+from webfrontend.forms.details_view import CustomerDetails
 
 
 app = Flask(__name__)
@@ -438,9 +438,21 @@ def show_company_orders():
                            form=form)
 
 
-@app.route("/customers/<customer_id>", methods=["GET"])
-def show_customemr_details_view(customer_id):
+@app.route("/customers/<customer_id>", methods=["GET", "POST"])
+def show_customer_details_view(customer_id):
     form = CustomerDetails()
+    customers_query_constructor.reset()
+    customers_query_constructor.add_condition_exact_value(
+        DBFields.Customers.id,
+        customer_id
+    )
+    details = get_selected_records(customers_query_constructor)
+    form.customer_id_string.data = details[0][0]
+    form.first_name_string.data = details[0][2]
+    form.last_name_string.data = details[0][1]
+    form.email_address_string.data = details[0][3]
+    form.phone_string.data = details[0][4]
+    form.date_registered_string.data = details[0][5]
     if request.method == "GET":
         return render_template("customerDetailsView.html", form=form)
     return "Test {}".format(customer_id)

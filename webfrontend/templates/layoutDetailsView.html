@@ -53,12 +53,13 @@
     <div class="container-fluid">
       <!-- Main Content -->
       <main role="main" class="pt-3 px-4">
-        <h3 class="offset-md-1 offset-lg-2">Details of Customer 1</h3>
-        <form>
+        <h3 class="offset-md-1 offset-lg-2">Details of {% block tablename %}{% endblock %} </h3>
+        <form method="POST">
           {% block details %}{% endblock %}
           <div class="form-group row">
             <div class="col-sm-9 offset-sm-3 col-md-7 offset-md-4 col-lg-5 offset-lg-5">
-              <button type="submit" class="btn btn-primary">Sign in</button>
+              <input type="submit" value="Update" class="btn btn-primary m-2 px-3">
+              <!-- <button type="submit" class="btn btn-primary">Update</button> -->
             </div>
           </div>
         </form>
