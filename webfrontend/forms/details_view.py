@@ -36,7 +36,7 @@ class CustomerOrderDetailsForm(Form):
 
 
 class CompanyOrderDetailsForm(Form):
-    company_order_id_string = IntegerField("Customer Order ID")
+    company_order_id_string = IntegerField("Company Order ID")
     company_order_product_gtin14_string = StringField("Product GTIN-14")
     company_order_datetime_ordered_string = DateTimeField("Date/Time Ordered")
     company_order_qty_bought_string = IntegerField("Qty Bought")
