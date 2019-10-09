@@ -655,7 +655,6 @@ def delete_customer(customer_id):
                 DBFields.Customers.id,
                 customer_id
             )
-            print(customers_query_constructor.render_delete_query())
             is_deleted = delete_record(customers_query_constructor)
             if is_deleted[0] == 1:
                 flash_danger(FLASH_RECORD_NOT_DELETED)
@@ -669,14 +668,68 @@ def delete_customer(customer_id):
 
 @app.route("/products/<product_gtin14>/delete", methods=["GET", "POST"])
 def delete_product(product_gtin14):
-    pass
+    form = ProductDetailsForm()
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        response_product_id = result["gtin14_string"][0]
+        if product_gtin14 == response_product_id:
+            products_query_constructor.reset()
+            products_query_constructor.add_condition_exact_value(
+                DBFields.Products.gtin14,
+                product_gtin14
+            )
+            is_deleted = delete_record(products_query_constructor)
+            if is_deleted[0] == 1:
+                flash_danger(FLASH_RECORD_NOT_DELETED)
+            else:
+                flash_info(FLASH_RECORD_DELETED)
+                return redirect(url_for("show_products"))
+        else:
+            flash_danger(FLASH_RECORD_ID_NO_MATCH)
+    return render_template("deletion/product.html", field=form.gtin14_string)
 
 
 @app.route("/customer-orders/<customer_order_id>/delete", methods=["GET", "POST"])
 def delete_customer_order(customer_order_id):
-    pass
+    form = CustomerOrderDetailsForm()
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        response_customer_order_id = result["customer_order_id_string"][0]
+        if customer_order_id == response_customer_order_id:
+            customer_orders_query_constructor.reset()
+            customer_orders_query_constructor.add_condition_exact_value(
+                DBFields.CustomerOrders.id,
+                customer_order_id
+            )
+            is_deleted = delete_record(customer_orders_query_constructor)
+            if is_deleted[0] == 1:
+                flash_danger(FLASH_RECORD_NOT_DELETED)
+            else:
+                flash_info(FLASH_RECORD_DELETED)
+                return redirect(url_for("show_customer_orders"))
+        else:
+            flash_danger(FLASH_RECORD_ID_NO_MATCH)
+    return render_template("deletion/customerOrder.html", field=form.customer_order_id_string)
 
 
 @app.route("/company-orders/<company_order_id>/delete", methods=["GET", "POST"])
 def delete_company_order(company_order_id):
-    pass
+    form = CompanyOrderDetailsForm()
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        response_company_order_id = result["company_order_id_string"][0]
+        if company_order_id == response_company_order_id:
+            company_orders_query_constructor.reset()
+            company_orders_query_constructor.add_condition_exact_value(
+                DBFields.CompanyOrders.id,
+                company_order_id
+            )
+            is_deleted = delete_record(company_orders_query_constructor)
+            if is_deleted[0] == 1:
+                flash_danger(FLASH_RECORD_NOT_DELETED)
+            else:
+                flash_info(FLASH_RECORD_DELETED)
+                return redirect(url_for("show_company_orders"))
+        else:
+            flash_danger(FLASH_RECORD_ID_NO_MATCH)
+    return render_template("deletion/companyOrder.html", field=form.company_order_id_string)

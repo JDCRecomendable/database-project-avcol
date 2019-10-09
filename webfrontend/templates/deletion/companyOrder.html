@@ -1,12 +1,12 @@
 {% extends "deletion/__layout.html" %}
 
-{% block title %}Delete Customer{% endblock %}
+{% block title %}Delete Company Order{% endblock %}
 {% block fieldname %}ID{% endblock %}
-{% block entitytype %}customer{% endblock %}
+{% block entitytype %}company order{% endblock %}
 
 {% block navigation %}
-<li><a class="dropdown-item text-info" href="/customers">Customers</a></li>
+<li><a class="dropdown-item" href="/customers">Customers</a></li>
 <li><a class="dropdown-item" href="/products">Products</a></li>
 <li><a class="dropdown-item" href="/customer-orders">Customer Orders</a></li>
-<li><a class="dropdown-item" href="/company-orders">Company Orders</a></li>
+<li><a class="dropdown-item text-info" href="/company-orders">Company Orders</a></li>
 {% endblock %}
