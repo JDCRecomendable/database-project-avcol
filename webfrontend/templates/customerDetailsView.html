@@ -4,6 +4,11 @@
 {% block title %}Customer Details{% endblock %}
 {% block tablename %}Customer{% endblock %}
 
+{% block importedstylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+{% endblock %}
+
 {% block navigation %}
 <li><a class="dropdown-item text-info" href="/customers">Customers</a></li>
 <li><a class="dropdown-item" href="/products">Products</a></li>
@@ -17,4 +22,36 @@
 {{ render_label_and_input(form.last_name_string) }}
 {{ render_label_and_input(form.email_address_string) }}
 {{ render_label_and_input(form.phone_string) }}
+{% endblock %}
+
+{% block specialcontent %}
+<h4>Locations of Customer</h4>
+<div class="table-responsive">
+  <table id="dataTable" class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Place No.</th>
+        <th>Road Name</th>
+        <th>City</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in locations %}
+        <tr>
+          <td>{{ record[0] }}</td>
+          <td>{{ record[3] }}</td>
+          <td>{{ record[2] }}</td>
+          <td>{{ record[1] }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block importedscripts %}
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 {% endblock %}
