@@ -24,8 +24,9 @@ database_connector = None
 
 FLASH_DATA_FILTERED = "Data filtered."
 FLASH_ERROR = "Error: {}"
-FLASH_RECORD_DELETED = "Data successfully deleted."
-FLASH_RECORD_ID_NO_MATCH = "Data not deleted. ID entered does not match the actual ID."
+FLASH_RECORD_DELETED = "Record successfully deleted."
+FLASH_RECORD_NOT_DELETED = "Record not deleted. Any orders pending related to this record?"
+FLASH_RECORD_ID_NO_MATCH = "Record not deleted. ID entered does not match the actual ID."
 
 
 def flash_success(message):
@@ -90,6 +91,11 @@ def get_selected_records(query_constructor: QueryConstructor) -> list:
 
 def update_record(query_constructor: QueryConstructor):
     query = query_constructor.render_update_query()
+    return database_connector.execute_query(query, commit=True)
+
+
+def delete_record(query_constructor: QueryConstructor):
+    query = query_constructor.render_delete_query()
     return database_connector.execute_query(query, commit=True)
 
 
@@ -664,9 +670,14 @@ def delete_customer(customer_id):
                 customer_id
             )
             print(customers_query_constructor.render_delete_query())
-            flash_info(FLASH_RECORD_DELETED)
-            return redirect(url_for("show_customers"))
-        flash_danger(FLASH_RECORD_ID_NO_MATCH)
+            is_deleted = delete_record(customers_query_constructor)
+            if is_deleted[0] == 1:
+                flash_danger(FLASH_RECORD_NOT_DELETED)
+            else:
+                flash_info(FLASH_RECORD_DELETED)
+                return redirect(url_for("show_customers"))
+        else:
+            flash_danger(FLASH_RECORD_ID_NO_MATCH)
     return render_template("deletion/customer.html", field=form.customer_id_string)
 
 
