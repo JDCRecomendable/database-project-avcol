@@ -17,6 +17,7 @@ config_exists = check_if_config_exists(Config.file_path)
 if not config_exists:
     config[Config.Headers.system] = Config.DefaultKeyValuePairs.system
     config[Config.Headers.database] = Config.DefaultKeyValuePairs.database
+    config[Config.Headers.web_interface] = Config.DefaultKeyValuePairs.web_interface
     with open(Config.file_path, "w+", newline=Config.newline_char) as config_file:
         config.write(config_file)
 
@@ -63,7 +64,8 @@ def main_activity():
 
     # Set-Up Database Connector in and Activate Web Interface
     webfrontend.database_connector = database_connector
-    webfrontend.app.run(debug=True)
+    webfrontend.app.run(debug=True, host=config[Config.Headers.web_interface][Config.Keys.WebInterface.host],
+                        port=config[Config.Headers.web_interface][Config.Keys.WebInterface.port])
 
     # Stop Connection to Database
     database_connector.stop_connection()

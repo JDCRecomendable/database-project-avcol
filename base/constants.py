@@ -15,6 +15,7 @@ class Config:
     class Headers:
         system = "SYSTEM"
         database = "DATABASE"
+        web_interface = "WEB_INTERFACE"
 
     class Keys:
         class System:
@@ -25,6 +26,10 @@ class Config:
             password = "password"
             host = "host"
 
+        class WebInterface:
+            host = "host"
+            port = "port"
+
     class DefaultKeyValuePairs:
         system = {
             "is_initialised": "0"
@@ -33,6 +38,10 @@ class Config:
             "username": "root",
             "password": "abc123",
             "host": "127.0.0.1"
+        }
+        web_interface = {
+            "host": "127.0.0.1",
+            "port": "5000"
         }
 
 
