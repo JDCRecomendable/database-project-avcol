@@ -32,37 +32,37 @@ class QueryConstructor:
         self.condition = ""
 
     # Adding Conditions
-    def add_condition_exact_value(self, variable: str, value: str):
+    def add_condition_exact_value(self, field: str, value: str):
         """Add a condition to go along with the SQL query, where the value for the condition is a single fixed value.
-        :type variable: str
+        :type field: str
         :type value: str
         """
         if self.condition:
             self._add_and()
-        self.condition += '({} = "{}")'.format(variable, value)
+        self.condition += '({} = "{}")'.format(field, value)
 
-    def add_condition_ranged_values(self, variable: str, lower_limit: str = "", upper_limit: str = ""):
-        """Add a condition to go along with the SQL query, where there is a range of values for the variable in
+    def add_condition_ranged_values(self, field: str, lower_limit: str = "", upper_limit: str = ""):
+        """Add a condition to go along with the SQL query, where there is a range of values for the field in
         question.
-        :type variable: str
+        :type field: str
         :type lower_limit: str
         :type upper_limit: str
         """
         if self.condition and (lower_limit or upper_limit):
             self._add_and()
         if not lower_limit and upper_limit:
-            self.condition += '({} <= "{}")'.format(variable, upper_limit)
+            self.condition += '({} <= "{}")'.format(field, upper_limit)
         elif not upper_limit and lower_limit:
-            self.condition += '({} >= "{}")'.format(variable, lower_limit)
+            self.condition += '({} >= "{}")'.format(field, lower_limit)
         elif lower_limit and upper_limit:
-            self.condition += '({} BETWEEN "{}" AND "{}")'.format(variable, lower_limit, upper_limit)
+            self.condition += '({} BETWEEN "{}" AND "{}")'.format(field, lower_limit, upper_limit)
         else:
             print_error(Msg.DatabaseQueryConstructor.missing_ranged_values_limits)
 
-    def add_condition_like(self, variable: str, like_value: str, at_beginning: bool = False, at_end: bool = False):
+    def add_condition_like(self, field: str, like_value: str, at_beginning: bool = False, at_end: bool = False):
         """Add a condition to go along with the SQL query, where the value for the condition would be a subset
         of the full value.
-        :type variable: str
+        :type field: str
         :type like_value: str
         :type at_beginning: bool
         :type at_end: bool
@@ -75,16 +75,16 @@ class QueryConstructor:
             like_value += "%"
         elif not at_beginning and at_end:
             like_value = "%" + like_value
-        self.condition += '({} LIKE "{}")'.format(variable, like_value)
+        self.condition += '({} LIKE "{}")'.format(field, like_value)
 
-    def add_nested_query(self, variable: str, select_statement: str):
+    def add_nested_query(self, field: str, select_statement: str):
         """Add a select query as a nested query in the existing SQL query.
-        :type variable: str
+        :type field: str
         :type select_statement: str
         """
         if self.condition:
             self._add_and()
-        self.condition += '({} IN ({}))'.format(variable, select_statement)
+        self.condition += '({} IN ({}))'.format(field, select_statement)
 
     def _add_and(self):
         self.condition += " AND "
