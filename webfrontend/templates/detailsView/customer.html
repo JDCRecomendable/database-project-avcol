@@ -2,7 +2,8 @@
 {% from "detailsView/_macros.html" import render_label_and_input %}
 
 {% block title %}Customer Details{% endblock %}
-{% block tablename %}Customer{% endblock %}
+{% block entityname %}Customer {{ customer_id }}{% endblock %}
+{% block deletelink %}/customers/{{ customer_id }}/delete{% endblock %}
 
 {% block importedstylesheets %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">

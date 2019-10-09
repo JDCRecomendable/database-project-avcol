@@ -1,0 +1,8 @@
+{% macro render_label_and_input(field) %}
+<div class="form-group row">
+  {{ field.label(class="col-sm-3 offset-md-1 offset-lg-2 col-form-label") }}
+  <div class="col-sm-9 col-md-7 col-lg-5">
+    {{ field(**kwargs)|safe }}
+  </div>
+</div>
+{% endmacro %}

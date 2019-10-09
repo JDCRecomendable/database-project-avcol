@@ -7,7 +7,7 @@ Licensed under the GNU General Public License Version 3.
 This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
-from flask import Flask, request, render_template
+from flask import Flask, flash, request, render_template, redirect, url_for
 from database.query_constructors import QueryConstructor
 from base.constants import *
 from webfrontend.forms.select_filters import CustomersDataFilterForm, ProductsDataFilterForm
@@ -244,7 +244,7 @@ def filter_company_order_selection(form_result: dict) -> bool:
 
 
 @app.route("/customers", methods=["GET", "POST"])
-def show_customers():
+def show_customers(alert_msg=""):
     form = CustomersDataFilterForm()
     is_filtered = -1
 
@@ -292,7 +292,8 @@ def show_customers():
 
     selection = get_selected_records(customers_query_constructor)
     if selection[0] == 0:
-        return render_template("dataTables/customers.html", selection=selection[1], form=form, filtered=is_filtered)
+        return render_template("dataTables/customers.html", selection=selection[1], form=form, filtered=is_filtered,
+                               alert_msg=alert_msg)
     return selection[1]
 
 
@@ -494,7 +495,8 @@ def show_customer_details_view(customer_id):
         form.email_address_string.data = details[0][3]
         form.phone_string.data = details[0][4]
         return render_template("detailsView/customer.html", form=form, updated=is_updated,
-                               alert_msg=alert_msg, table_exists=True, locations=location_selection[1])
+                               alert_msg=alert_msg, customer_id=customer_id, table_exists=True,
+                               locations=location_selection[1])
     return "{}\n{}".format(selection[1], location_selection[1])
 
 
@@ -542,7 +544,7 @@ def show_product_details_view(product_gtin14):
         form.desc_string.data = details[0][2]
         form.qty_in_stock_string.data = details[0][3]
         return render_template("detailsView/product.html", form=form, updated=is_updated,
-                               alert_msg=alert_msg, table_exists=False)
+                               alert_msg=alert_msg, product_gtin14=product_gtin14, table_exists=False)
     return selection[1]
 
 
@@ -595,7 +597,7 @@ def show_customer_order_details_view(customer_order_id):
         form.customer_order_delivery_date_string.data = details[0][3]
         form.delivery_location_string.data = details[0][4]
         return render_template("detailsView/customerOrder.html", form=form, updated=is_updated,
-                               alert_msg=alert_msg, table_exists=False)
+                               alert_msg=alert_msg, customer_order_id=customer_order_id, table_exists=False)
     return selection[1]
 
 
@@ -644,13 +646,26 @@ def show_company_order_details_view(company_order_id):
         form.company_order_qty_bought_string.data = details[0][3]
         form.company_order_delivery_date_string.data = details[0][4]
         return render_template("detailsView/companyOrder.html", form=form, updated=is_updated,
-                               alert_msg=alert_msg, table_exists=False)
+                               alert_msg=alert_msg, company_order_id=company_order_id, table_exists=False)
     return selection[1]
 
 
 @app.route("/customers/<customer_id>/delete", methods=["GET", "POST"])
 def delete_customer(customer_id):
-    form = CustomerDetailsForm
+    form = CustomerDetailsForm()
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        response_customer_id = result["customer_id_string"][0]
+        if customer_id == response_customer_id:
+            customers_query_constructor.reset()
+            customers_query_constructor.add_condition_exact_value(
+                DBFields.Customers.id,
+                customer_id
+            )
+            print(customers_query_constructor.render_delete_query())
+            return redirect(url_for("show_customers", alert_msg="Deleted {}".format(customer_id)))
+        return "not match"
+    return render_template("deletion/customer.html", field=form.customer_id_string)
 
 
 @app.route("/products/<product_gtin14>/delete", methods=["GET", "POST"])

@@ -67,11 +67,18 @@
         </div>
       {% endif %}
       <main role="main" class="pt-3 px-4">
-        <h3 class="offset-md-1 offset-lg-2">Details of {% block tablename %}{% endblock %}</h3>
+        <div class="d-flex flex-wrap mb-3">
+          <div class="flex-grow-1 mr-2">
+            <h3 class="offset-md-1 offset-lg-2">Details of {% block entityname %}{% endblock %}</h3>
+          </div>
+        </div>
         <form method="POST">
           {% block details %}{% endblock %}
           <div class="form-group row">
             <div class="col-sm-9 offset-sm-3 col-md-7 offset-md-4 col-lg-5 offset-lg-5">
+              <a class="btn btn-outline-danger" type="button" href="{% block deletelink %}{% endblock %}">
+                Delete
+              </a>
               <input type="submit" value="Update" class="btn btn-primary m-2 px-3">
             </div>
           </div>

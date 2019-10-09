@@ -2,7 +2,8 @@
 {% from "detailsView/_macros.html" import render_label_and_input %}
 
 {% block title %}Product Details{% endblock %}
-{% block tablename %}Product{% endblock %}
+{% block entityname %}Product {{ product_gtin14 }}{% endblock %}
+{% block deletelink %}/products/{{ product_gtin14 }}/delete{% endblock %}
 
 {% block navigation %}
 <li><a class="dropdown-item" href="/customers">Customers</a></li>

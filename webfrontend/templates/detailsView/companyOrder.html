@@ -1,8 +1,9 @@
 {% extends "detailsView/__layout.html" %}
 {% from "detailsView/_macros.html" import render_label_and_input %}
 
-{% block title %}Customer Order Details{% endblock %}
-{% block tablename %}Customer Order{% endblock %}
+{% block title %}Company Order Details{% endblock %}
+{% block entityname %}Company Order {{ company_order_id }}{% endblock %}
+{% block deletelink %}/company-orders/{{ company_order_id }}/delete{% endblock %}
 
 {% block navigation %}
 <li><a class="dropdown-item" href="/customers">Customers</a></li>
