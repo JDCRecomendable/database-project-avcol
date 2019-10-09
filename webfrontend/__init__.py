@@ -12,7 +12,8 @@ from database.query_constructors import QueryConstructor
 from base.constants import *
 from webfrontend.forms.select_filters import CustomersDataFilterForm, ProductsDataFilterForm
 from webfrontend.forms.select_filters import CustomerOrdersDataFilterForm, CompanyOrdersDataFilterForm
-from webfrontend.forms.details_view import CustomerDetails, ProductDetails, CustomerOrderDetails, CompanyOrderDetails
+from webfrontend.forms.details_view import CustomerDetailsForm, ProductDetailsForm
+from webfrontend.forms.details_view import CustomerOrderDetailsForm, CompanyOrderDetailsForm
 
 
 app = Flask(__name__)
@@ -432,7 +433,7 @@ def show_company_orders():
 
 @app.route("/customers/<customer_id>", methods=["GET", "POST"])
 def show_customer_details_view(customer_id):
-    form = CustomerDetails()
+    form = CustomerDetailsForm()
     is_updated = -1
     alert_msg = ""
 
@@ -499,7 +500,7 @@ def show_customer_details_view(customer_id):
 
 @app.route("/products/<product_gtin14>", methods=["GET", "POST"])
 def show_product_details_view(product_gtin14):
-    form = ProductDetails()
+    form = ProductDetailsForm()
     is_updated = -1
     alert_msg = ""
 
@@ -547,7 +548,7 @@ def show_product_details_view(product_gtin14):
 
 @app.route("/customer-orders/<customer_order_id>", methods=["GET", "POST"])
 def show_customer_order_details_view(customer_order_id):
-    form = CustomerOrderDetails()
+    form = CustomerOrderDetailsForm()
     is_updated = -1
     alert_msg = ""
 
@@ -600,7 +601,7 @@ def show_customer_order_details_view(customer_order_id):
 
 @app.route("/company-orders/<company_order_id>", methods=["GET", "POST"])
 def show_company_order_details_view(company_order_id):
-    form = CompanyOrderDetails()
+    form = CompanyOrderDetailsForm()
     is_updated = -1
     alert_msg = ""
 
@@ -647,21 +648,21 @@ def show_company_order_details_view(company_order_id):
     return selection[1]
 
 
-# @app.route("/customers/<customer_id>/delete", methods=["GET", "POST"])
-# def delete_customer(customer_id):
-#     pass
-#
-#
-# @app.route("/products/<product_gtin14>/delete", methods=["GET", "POST"])
-# def delete_product(product_gtin14):
-#     pass
-#
-#
-# @app.route("/customer-orders/<customer_order_id>/delete", methods=["GET", "POST"])
-# def delete_customer_order(customer_order_id):
-#     pass
-#
-#
-# @app.route("/company-orders/<company_order_id>/delete", methods=["GET", "POST"])
-# def delete_company_order(company_order_id):
-#     pass
+@app.route("/customers/<customer_id>/delete", methods=["GET", "POST"])
+def delete_customer(customer_id):
+    form = CustomerDetailsForm
+
+
+@app.route("/products/<product_gtin14>/delete", methods=["GET", "POST"])
+def delete_product(product_gtin14):
+    pass
+
+
+@app.route("/customer-orders/<customer_order_id>/delete", methods=["GET", "POST"])
+def delete_customer_order(customer_order_id):
+    pass
+
+
+@app.route("/company-orders/<company_order_id>/delete", methods=["GET", "POST"])
+def delete_company_order(company_order_id):
+    pass

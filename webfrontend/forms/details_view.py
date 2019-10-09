@@ -12,7 +12,7 @@ from wtforms import StringField, TextAreaField
 from wtforms.fields.html5 import DateField, DateTimeField, EmailField, TelField, IntegerField
 
 
-class CustomerDetails(Form):
+class CustomerDetailsForm(Form):
     customer_id_string = IntegerField("ID")
     first_name_string = StringField("First Name")
     last_name_string = StringField("Last Name")
@@ -20,14 +20,14 @@ class CustomerDetails(Form):
     phone_string = TelField("Phone Number")
 
 
-class ProductDetails(Form):
+class ProductDetailsForm(Form):
     gtin14_string = StringField("ID")
     name_string = StringField("Product Name")
     desc_string = TextAreaField("Product Description")
     qty_in_stock_string = IntegerField("Qty in Stock")
 
 
-class CustomerOrderDetails(Form):
+class CustomerOrderDetailsForm(Form):
     customer_order_id_string = IntegerField("Customer Order ID")
     customer_id_string = IntegerField("Customer ID")
     customer_order_datetime_ordered_string = DateTimeField("Date/Time Ordered")
@@ -35,7 +35,7 @@ class CustomerOrderDetails(Form):
     delivery_location_string = IntegerField("Delivery Location")
 
 
-class CompanyOrderDetails(Form):
+class CompanyOrderDetailsForm(Form):
     company_order_id_string = IntegerField("Customer Order ID")
     company_order_product_gtin14_string = StringField("Product GTIN-14")
     company_order_datetime_ordered_string = DateTimeField("Date/Time Ordered")
