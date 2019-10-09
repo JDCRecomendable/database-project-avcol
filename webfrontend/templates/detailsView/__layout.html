@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <!-- Copyright (c) 2019 Jared Recomendable. All rights reserved. -->
+{% from "/_macros.html" import flash_messages %}
 <html>
   <head>
     <meta charset="utf-8">
@@ -50,22 +51,8 @@
     </nav>
 
     <div class="container-fluid">
+      {{ flash_messages() }}
       <!-- Main Content -->
-      {% if updated == 0 %}
-        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-          <button type="button" class="close" data-dismiss="alert">
-          <span>&times;</span>
-          </button>
-          Record updated.
-        </div>
-      {% elif updated == 1 %}
-        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-          <button type="button" class="close" data-dismiss="alert">
-          <span>&times;</span>
-          </button>
-          Failed to update record. {{ alert_msg }}
-        </div>
-      {% endif %}
       <main role="main" class="pt-3 px-4">
         <div class="d-flex flex-wrap mb-3">
           <div class="flex-grow-1 mr-2">

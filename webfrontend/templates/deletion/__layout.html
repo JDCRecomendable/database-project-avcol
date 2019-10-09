@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <!-- Copyright (c) 2019 Jared Recomendable. All rights reserved. -->
+{% from "/_macros.html" import flash_messages %}
 <html>
   <head>
     <meta charset="utf-8">
@@ -49,6 +50,7 @@
     </nav>
 
     <div class="container-fluid">
+      {{ flash_messages() }}
       <!-- Main Content -->
       <main role="main" class="pt-3 px-4">
         <h3 class="offset-md-2 offset-lg-3">Confirm Deletion</h3>

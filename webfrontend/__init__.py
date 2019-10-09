@@ -8,6 +8,7 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
 from flask import Flask, flash, request, render_template, redirect, url_for
+from os import urandom
 from database.query_constructors import QueryConstructor
 from base.constants import *
 from webfrontend.forms.select_filters import CustomersDataFilterForm, ProductsDataFilterForm
@@ -17,7 +18,26 @@ from webfrontend.forms.details_view import CustomerOrderDetailsForm, CompanyOrde
 
 
 app = Flask(__name__)
+app.secret_key = urandom(16)
 database_connector = None
+
+
+FLASH_DATA_FILTERED = "Data filtered."
+FLASH_ERROR = "Error: {}"
+FLASH_RECORD_DELETED = "Data successfully deleted."
+FLASH_RECORD_ID_NO_MATCH = "Data not deleted. ID entered does not match the actual ID."
+
+
+def flash_success(message):
+    flash(message, "success")
+
+
+def flash_info(message):
+    flash(message, "info")
+
+
+def flash_danger(message):
+    flash(message, "danger")
 
 
 customers_query_constructor = QueryConstructor(
@@ -244,9 +264,8 @@ def filter_company_order_selection(form_result: dict) -> bool:
 
 
 @app.route("/customers", methods=["GET", "POST"])
-def show_customers(alert_msg=""):
+def show_customers():
     form = CustomersDataFilterForm()
-    is_filtered = -1
 
     customers_query_constructor.reset()
     if request.method == "POST" and form.validate():
@@ -288,19 +307,17 @@ def show_customers(alert_msg=""):
                 DBFields.Customers.id,
                 customer_orders_query_constructor.render_select_query()
             )
-        is_filtered = 0
+        flash_success(FLASH_DATA_FILTERED)
 
     selection = get_selected_records(customers_query_constructor)
     if selection[0] == 0:
-        return render_template("dataTables/customers.html", selection=selection[1], form=form, filtered=is_filtered,
-                               alert_msg=alert_msg)
+        return render_template("dataTables/customers.html", selection=selection[1], form=form)
     return selection[1]
 
 
 @app.route("/products", methods=["GET", "POST"])
 def show_products():
     form = ProductsDataFilterForm()
-    is_filtered = -1
 
     products_query_constructor.reset()
     if request.method == "POST" and form.validate():
@@ -360,18 +377,17 @@ def show_products():
                 DBFields.Products.gtin14,
                 company_orders_query_constructor.render_select_query()
             )
-        is_filtered = 0
+        flash_success(FLASH_DATA_FILTERED)
 
     selection = get_selected_records(products_query_constructor)
     if selection[0] == 0:
-        return render_template("dataTables/products.html", selection=selection[1], form=form, filtered=is_filtered)
+        return render_template("dataTables/products.html", selection=selection[1], form=form)
     return selection[1]
 
 
 @app.route("/customer-orders", methods=["GET", "POST"])
 def show_customer_orders():
     form = CustomerOrdersDataFilterForm()
-    is_filtered = -1
 
     customer_orders_query_constructor.reset()
     if request.method == "POST" and form.validate():
@@ -401,18 +417,17 @@ def show_customer_orders():
                 DBFields.CustomerOrders.id,
                 customer_order_items_query_constructor.render_select_query()
             )
-        is_filtered = 0
+        flash_success(FLASH_DATA_FILTERED)
 
     selection = get_selected_records(customer_orders_query_constructor)
     if selection[0] == 0:
-        return render_template("dataTables/customerOrders.html", selection=selection[1], form=form, filtered=is_filtered)
+        return render_template("dataTables/customerOrders.html", selection=selection[1], form=form)
     return selection[1]
 
 
 @app.route("/company-orders", methods=["GET", "POST"])
 def show_company_orders():
     form = CompanyOrdersDataFilterForm()
-    is_filtered = -1
 
     company_orders_query_constructor.reset()
     if request.method == "POST" and form.validate():
@@ -424,19 +439,17 @@ def show_company_orders():
                 DBFields.CompanyOrders.product_gtin14,
                 products_query_constructor.render_select_query()
             )
-        is_filtered = 0
+        flash_success(FLASH_DATA_FILTERED)
 
     selection = get_selected_records(company_orders_query_constructor)
     if selection[0] == 0:
-        return render_template("dataTables/companyOrders.html", selection=selection[1], form=form, filtered=is_filtered)
+        return render_template("dataTables/companyOrders.html", selection=selection[1], form=form)
     return selection[1]
 
 
 @app.route("/customers/<customer_id>", methods=["GET", "POST"])
 def show_customer_details_view(customer_id):
     form = CustomerDetailsForm()
-    is_updated = -1
-    alert_msg = ""
 
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
@@ -464,8 +477,7 @@ def show_customer_details_view(customer_id):
         is_updated = update_record(customers_query_constructor)
 
         if is_updated[0] == 1:
-            alert_msg = is_updated[1]
-        is_updated = is_updated[0]
+            flash_danger(FLASH_ERROR.format(is_updated[1]))
 
     customers_query_constructor.reset()
     customers_query_constructor.add_condition_exact_value(
@@ -494,8 +506,7 @@ def show_customer_details_view(customer_id):
         form.last_name_string.data = details[0][1]
         form.email_address_string.data = details[0][3]
         form.phone_string.data = details[0][4]
-        return render_template("detailsView/customer.html", form=form, updated=is_updated,
-                               alert_msg=alert_msg, customer_id=customer_id, table_exists=True,
+        return render_template("detailsView/customer.html", form=form, customer_id=customer_id, table_exists=True,
                                locations=location_selection[1])
     return "{}\n{}".format(selection[1], location_selection[1])
 
@@ -503,8 +514,6 @@ def show_customer_details_view(customer_id):
 @app.route("/products/<product_gtin14>", methods=["GET", "POST"])
 def show_product_details_view(product_gtin14):
     form = ProductDetailsForm()
-    is_updated = -1
-    alert_msg = ""
 
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
@@ -528,8 +537,7 @@ def show_product_details_view(product_gtin14):
         is_updated = update_record(products_query_constructor)
 
         if is_updated[0] == 1:
-            alert_msg = is_updated[1]
-        is_updated = is_updated[0]
+            flash_danger(FLASH_ERROR.format(is_updated[1]))
 
     products_query_constructor.reset()
     products_query_constructor.add_condition_exact_value(
@@ -543,16 +551,13 @@ def show_product_details_view(product_gtin14):
         form.name_string.data = details[0][1]
         form.desc_string.data = details[0][2]
         form.qty_in_stock_string.data = details[0][3]
-        return render_template("detailsView/product.html", form=form, updated=is_updated,
-                               alert_msg=alert_msg, product_gtin14=product_gtin14, table_exists=False)
+        return render_template("detailsView/product.html", form=form, product_gtin14=product_gtin14, table_exists=False)
     return selection[1]
 
 
 @app.route("/customer-orders/<customer_order_id>", methods=["GET", "POST"])
 def show_customer_order_details_view(customer_order_id):
     form = CustomerOrderDetailsForm()
-    is_updated = -1
-    alert_msg = ""
 
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
@@ -580,8 +585,7 @@ def show_customer_order_details_view(customer_order_id):
         is_updated = update_record(customer_orders_query_constructor)
 
         if is_updated[0] == 1:
-            alert_msg = is_updated[1]
-        is_updated = is_updated[0]
+            flash_danger(FLASH_ERROR.format(is_updated[1]))
 
     customer_orders_query_constructor.reset()
     customer_orders_query_constructor.add_condition_exact_value(
@@ -596,16 +600,14 @@ def show_customer_order_details_view(customer_order_id):
         form.customer_order_datetime_ordered_string.data = details[0][2]
         form.customer_order_delivery_date_string.data = details[0][3]
         form.delivery_location_string.data = details[0][4]
-        return render_template("detailsView/customerOrder.html", form=form, updated=is_updated,
-                               alert_msg=alert_msg, customer_order_id=customer_order_id, table_exists=False)
+        return render_template("detailsView/customerOrder.html", form=form, customer_order_id=customer_order_id,
+                               table_exists=False)
     return selection[1]
 
 
 @app.route("/company-orders/<company_order_id>", methods=["GET", "POST"])
 def show_company_order_details_view(company_order_id):
     form = CompanyOrderDetailsForm()
-    is_updated = -1
-    alert_msg = ""
 
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
@@ -629,8 +631,7 @@ def show_company_order_details_view(company_order_id):
         is_updated = update_record(company_orders_query_constructor)
 
         if is_updated[0] == 1:
-            alert_msg = is_updated[1]
-        is_updated = is_updated[0]
+            flash_danger(FLASH_ERROR.format(is_updated[1]))
 
     company_orders_query_constructor.reset()
     company_orders_query_constructor.add_condition_exact_value(
@@ -645,8 +646,8 @@ def show_company_order_details_view(company_order_id):
         form.company_order_datetime_ordered_string.data = details[0][2]
         form.company_order_qty_bought_string.data = details[0][3]
         form.company_order_delivery_date_string.data = details[0][4]
-        return render_template("detailsView/companyOrder.html", form=form, updated=is_updated,
-                               alert_msg=alert_msg, company_order_id=company_order_id, table_exists=False)
+        return render_template("detailsView/companyOrder.html", form=form, company_order_id=company_order_id,
+                               table_exists=False)
     return selection[1]
 
 
@@ -663,8 +664,9 @@ def delete_customer(customer_id):
                 customer_id
             )
             print(customers_query_constructor.render_delete_query())
-            return redirect(url_for("show_customers", alert_msg="Deleted {}".format(customer_id)))
-        return "not match"
+            flash_info(FLASH_RECORD_DELETED)
+            return redirect(url_for("show_customers"))
+        flash_danger(FLASH_RECORD_ID_NO_MATCH)
     return render_template("deletion/customer.html", field=form.customer_id_string)
 
 
