@@ -585,7 +585,14 @@ def show_customer_order_details_view(customer_order_id):
         customer_order_id
     )
     selection = get_selected_records(customer_orders_query_constructor)
-    if selection[0] == 0:
+    customer_order_items_query_constructor.reset()
+    customer_order_items_query_constructor.add_condition_exact_value(
+        DBFields.CustomerOrderItems.customer_order_id,
+        customer_order_id
+    )
+    customer_order_items_selection = get_selected_records(customer_order_items_query_constructor)
+
+    if selection[0] == 0 and customer_order_items_selection[0] == 0:
         details = selection[1]
         form.customer_order_id_string.data = details[0][0]
         form.customer_id_string.data = details[0][1]
@@ -593,8 +600,8 @@ def show_customer_order_details_view(customer_order_id):
         form.customer_order_delivery_date_string.data = details[0][3]
         form.delivery_location_string.data = details[0][4]
         return render_template("detailsView/customerOrder.html", form=form, customer_order_id=customer_order_id,
-                               table_exists=False)
-    return selection[1]
+                               table_exists=True, customer_order_items=customer_order_items_selection[1])
+    return "{}\n{}".format(selection[1], customer_order_items_selection[1])
 
 
 @app.route("/company-orders/<company_order_id>", methods=["GET", "POST"])
