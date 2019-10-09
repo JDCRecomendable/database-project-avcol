@@ -1,13 +1,11 @@
 {% macro render_label_and_input(field, disabled_status=False) %}
-<div class="form-group row">
+<div class="form-group row mr-0">
   {{ field.label(class="col-sm-3 offset-md-1 offset-lg-2 col-form-label") }}
-  <div class="col-sm-9 col-md-7 col-lg-5">
-    {% if not disabled_status %}
-      {{ field(**kwargs)|safe }}
-    {% else %}
-      {{ field(disabled="disabled", **kwargs)|safe }}
-    {% endif %}
-  </div>
+  {% if not disabled_status %}
+    {{ field(class="px-1 col-sm-9 col-md-7 col-lg-5", **kwargs)|safe }}
+  {% else %}
+    {{ field(class="px-1 col-sm-9 col-md-7 col-lg-5", disabled="disabled", **kwargs)|safe }}
+  {% endif %}
 </div>
 {% if field.errors %}
   <ul>
