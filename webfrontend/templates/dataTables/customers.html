@@ -1,9 +1,9 @@
-{% extends "layoutDataTables.html" %}
-{% from "_macrosFilterForm.html" import render_label_and_filter_option, render_main_field, render_string_at_beg_end_options %}
-{% from "_macrosCustomerFilter.html" import customer_data_filter with context %}
-{% from "_macrosLocationFilter.html" import location_data_filter with context %}
-{% from "_macrosCustomerOrderFilter.html" import customer_order_data_filter with context %}
-{% from "_macrosProductFilter.html" import product_data_filter with context %}
+{% extends "dataTables/__layout.html" %}
+{% from "dataTables/_macros.html" import render_label_and_filter_option, render_main_field, render_string_at_beg_end_options %}
+{% from "dataTables/_macrosCustomerFilter.html" import customer_data_filter with context %}
+{% from "dataTables/_macrosLocationFilter.html" import location_data_filter with context %}
+{% from "dataTables/_macrosCustomerOrderFilter.html" import customer_order_data_filter with context %}
+{% from "dataTables/_macrosProductFilter.html" import product_data_filter with context %}
 
 {% block title %}Customers{% endblock %}
 {% block tablename %}Customers{% endblock %}

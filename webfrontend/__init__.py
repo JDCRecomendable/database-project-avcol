@@ -291,7 +291,7 @@ def show_customers():
 
     selection = get_selected_records(customers_query_constructor)
     if selection[0] == 0:
-        return render_template("customers.html", selection=selection[1], form=form, filtered=is_filtered)
+        return render_template("dataTables/customers.html", selection=selection[1], form=form, filtered=is_filtered)
     return selection[1]
 
 
@@ -362,7 +362,7 @@ def show_products():
 
     selection = get_selected_records(products_query_constructor)
     if selection[0] == 0:
-        return render_template("products.html", selection=selection[1], form=form, filtered=is_filtered)
+        return render_template("dataTables/products.html", selection=selection[1], form=form, filtered=is_filtered)
     return selection[1]
 
 
@@ -403,7 +403,7 @@ def show_customer_orders():
 
     selection = get_selected_records(customer_orders_query_constructor)
     if selection[0] == 0:
-        return render_template("customerOrders.html", selection=selection[1], form=form, filtered=is_filtered)
+        return render_template("dataTables/customerOrders.html", selection=selection[1], form=form, filtered=is_filtered)
     return selection[1]
 
 
@@ -426,7 +426,7 @@ def show_company_orders():
 
     selection = get_selected_records(company_orders_query_constructor)
     if selection[0] == 0:
-        return render_template("companyOrders.html", selection=selection[1], form=form, filtered=is_filtered)
+        return render_template("dataTables/companyOrders.html", selection=selection[1], form=form, filtered=is_filtered)
     return selection[1]
 
 
@@ -492,8 +492,8 @@ def show_customer_details_view(customer_id):
         form.last_name_string.data = details[0][1]
         form.email_address_string.data = details[0][3]
         form.phone_string.data = details[0][4]
-        return render_template("customerDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg,
-                               table_exists=True, locations=location_selection[1])
+        return render_template("detailsView/customer.html", form=form, updated=is_updated,
+                               alert_msg=alert_msg, table_exists=True, locations=location_selection[1])
     return "{}\n{}".format(selection[1], location_selection[1])
 
 
@@ -540,8 +540,8 @@ def show_product_details_view(product_gtin14):
         form.name_string.data = details[0][1]
         form.desc_string.data = details[0][2]
         form.qty_in_stock_string.data = details[0][3]
-        return render_template("productDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg,
-                               table_exists=False)
+        return render_template("detailsView/product.html", form=form, updated=is_updated,
+                               alert_msg=alert_msg, table_exists=False)
     return selection[1]
 
 
@@ -593,8 +593,8 @@ def show_customer_order_details_view(customer_order_id):
         form.customer_order_datetime_ordered_string.data = details[0][2]
         form.customer_order_delivery_date_string.data = details[0][3]
         form.delivery_location_string.data = details[0][4]
-        return render_template("customerOrderDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg,
-                               table_exists=False)
+        return render_template("detailsView/customerOrder.html", form=form, updated=is_updated,
+                               alert_msg=alert_msg, table_exists=False)
     return selection[1]
 
 
@@ -642,8 +642,8 @@ def show_company_order_details_view(company_order_id):
         form.company_order_datetime_ordered_string.data = details[0][2]
         form.company_order_qty_bought_string.data = details[0][3]
         form.company_order_delivery_date_string.data = details[0][4]
-        return render_template("companyOrderDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg,
-                               table_exists=False)
+        return render_template("detailsView/companyOrder.html", form=form, updated=is_updated,
+                               alert_msg=alert_msg, table_exists=False)
     return selection[1]
 
 
