@@ -143,7 +143,7 @@ def filter_product_selection(form_result: dict) -> bool:
     """
     products_query_constructor.reset()
     condition_count = 0
-    if form_result["gtin14_selection"][0]:
+    if form_result["gtin14_selection"][0] == "filter":
         products_query_constructor.add_condition_like(
             DBFields.Products.gtin14,
             form_result["gtin14_string"][0],
@@ -151,7 +151,7 @@ def filter_product_selection(form_result: dict) -> bool:
             at_end=("gtin14_at_end" in form_result)
         )
         condition_count += 1
-    if form_result["name_selection"][0]:
+    if form_result["name_selection"][0] == "filter":
         products_query_constructor.add_condition_like(
             DBFields.Products.name,
             form_result["name_string"][0],
@@ -159,7 +159,7 @@ def filter_product_selection(form_result: dict) -> bool:
             at_end=("name_at_end" in form_result)
         )
         condition_count += 1
-    if form_result["desc_selection"][0]:
+    if form_result["desc_selection"][0] == "filter":
         products_query_constructor.add_condition_like(
             DBFields.Products.description,
             form_result["desc_string"][0],
@@ -167,7 +167,7 @@ def filter_product_selection(form_result: dict) -> bool:
             at_end=("desc_at_end" in form_result)
         )
         condition_count += 1
-    if form_result["qty_in_stock_selection"][0]:
+    if form_result["qty_in_stock_selection"][0] == "filter":
         products_query_constructor.add_condition_ranged_values(
             DBFields.Products.qty_in_stock,
             lower_limit=form_result["qty_in_stock_lower_limit_string"][0],
@@ -471,15 +471,30 @@ def show_customer_details_view(customer_id):
         customer_id
     )
     selection = get_selected_records(customers_query_constructor)
-    if selection[0] == 0:
+
+    customer_locations_query_constructor.reset()
+    customer_locations_query_constructor.add_condition_exact_value(
+        DBFields.CustomerLocations.customer_id,
+        customer_id
+    )
+    customer_locations_query_constructor.add_field(DBFields.CustomerLocations.location_id)
+    locations_query_constructor.reset()
+    locations_query_constructor.add_nested_query(
+        DBFields.Locations.id,
+        customer_locations_query_constructor.render_select_query()
+    )
+    location_selection = get_selected_records(locations_query_constructor)
+
+    if selection[0] == 0 and location_selection[0] == 0:
         details = selection[1]
         form.customer_id_string.data = details[0][0]
         form.first_name_string.data = details[0][2]
         form.last_name_string.data = details[0][1]
         form.email_address_string.data = details[0][3]
         form.phone_string.data = details[0][4]
-        return render_template("customerDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
-    return selection[1]
+        return render_template("customerDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg,
+                               table_exists=True, locations=location_selection[1])
+    return "{}\n{}".format(selection[1], location_selection[1])
 
 
 @app.route("/products/<product_gtin14>", methods=["GET", "POST"])
@@ -525,7 +540,8 @@ def show_product_details_view(product_gtin14):
         form.name_string.data = details[0][1]
         form.desc_string.data = details[0][2]
         form.qty_in_stock_string.data = details[0][3]
-        return render_template("productDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
+        return render_template("productDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg,
+                               table_exists=False)
     return selection[1]
 
 
@@ -577,7 +593,8 @@ def show_customer_order_details_view(customer_order_id):
         form.customer_order_datetime_ordered_string.data = details[0][2]
         form.customer_order_delivery_date_string.data = details[0][3]
         form.delivery_location_string.data = details[0][4]
-        return render_template("customerOrderDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
+        return render_template("customerOrderDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg,
+                               table_exists=False)
     return selection[1]
 
 
@@ -625,7 +642,8 @@ def show_company_order_details_view(company_order_id):
         form.company_order_datetime_ordered_string.data = details[0][2]
         form.company_order_qty_bought_string.data = details[0][3]
         form.company_order_delivery_date_string.data = details[0][4]
-        return render_template("companyOrderDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg)
+        return render_template("companyOrderDetailsView.html", form=form, updated=is_updated, alert_msg=alert_msg,
+                               table_exists=False)
     return selection[1]
 
 
