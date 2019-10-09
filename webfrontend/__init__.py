@@ -78,23 +78,26 @@ company_orders_query_constructor = QueryConstructor(
 
 
 def get_selected_records(query_constructor: QueryConstructor) -> list:
-    """Get the select query for a particular table, using the QueryConstructor object assigned to it.
+    """Return selected records.
     :type query_constructor: QueryConstructor
     """
     query = query_constructor.render_select_query()
-    selection = database_connector.execute_query(
-        query,
-        select=True
-    )
+    selection = database_connector.execute_query(query, select=True)
     return selection
 
 
 def update_record(query_constructor: QueryConstructor):
+    """Update record(s) that the query_constructor will select, given condition(s) set to it.
+    :type query_constructor: QueryConstructor
+    """
     query = query_constructor.render_update_query()
     return database_connector.execute_query(query, commit=True)
 
 
 def delete_record(query_constructor: QueryConstructor):
+    """Delete record(s) that the query_constructor will select, given condition(s) set to it.
+    :type query_constructor: QueryConstructor
+    """
     query = query_constructor.render_delete_query()
     return database_connector.execute_query(query, commit=True)
 
