@@ -28,53 +28,36 @@ FLASH_RECORD_DELETED = "Record successfully deleted."
 FLASH_RECORD_NOT_DELETED = "Record not deleted. Any orders pending related to this record?"
 FLASH_RECORD_ID_NO_MATCH = "Record not deleted. ID entered does not match the actual ID."
 
+customers_query_constructor = QueryConstructor(DBSchemaTableNames.customers, DBSchemaTableNames.schema)
+locations_query_constructor = QueryConstructor(DBSchemaTableNames.locations, DBSchemaTableNames.schema)
+customer_locations_query_constructor = QueryConstructor(DBSchemaTableNames.customer_locations,
+                                                        DBSchemaTableNames.schema)
+products_query_constructor = QueryConstructor(DBSchemaTableNames.products, DBSchemaTableNames.schema)
+customer_orders_query_constructor = QueryConstructor(DBSchemaTableNames.customer_orders, DBSchemaTableNames.schema)
+customer_order_items_query_constructor = QueryConstructor(DBSchemaTableNames.customer_order_items,
+                                                          DBSchemaTableNames.schema)
+company_orders_query_constructor = QueryConstructor(DBSchemaTableNames.company_orders, DBSchemaTableNames.schema)
 
-def flash_success(message):
+
+def flash_success(message: str):
+    """Add success message to next request. Assumes that the next request supports rendering flashed messages.
+    :type message: str
+    """
     flash(message, "success")
 
 
-def flash_info(message):
+def flash_info(message: str):
+    """Add info message to next request. Assumes that the next request supports rendering flashed messages.
+    :type message: str
+    """
     flash(message, "info")
 
 
-def flash_danger(message):
+def flash_danger(message: str):
+    """Add danger message to next request. Assumes that the next request supports rendering flashed messages.
+    :type message: str
+    """
     flash(message, "danger")
-
-
-customers_query_constructor = QueryConstructor(
-    DBSchemaTableNames.customers,
-    DBSchemaTableNames.schema
-)
-
-locations_query_constructor = QueryConstructor(
-    DBSchemaTableNames.locations,
-    DBSchemaTableNames.schema
-)
-
-customer_locations_query_constructor = QueryConstructor(
-    DBSchemaTableNames.customer_locations,
-    DBSchemaTableNames.schema
-)
-
-products_query_constructor = QueryConstructor(
-    DBSchemaTableNames.products,
-    DBSchemaTableNames.schema
-)
-
-customer_orders_query_constructor = QueryConstructor(
-    DBSchemaTableNames.customer_orders,
-    DBSchemaTableNames.schema
-)
-
-customer_order_items_query_constructor = QueryConstructor(
-    DBSchemaTableNames.customer_order_items,
-    DBSchemaTableNames.schema
-)
-
-company_orders_query_constructor = QueryConstructor(
-    DBSchemaTableNames.company_orders,
-    DBSchemaTableNames.schema
-)
 
 
 def get_selected_records(query_constructor: QueryConstructor) -> list:
