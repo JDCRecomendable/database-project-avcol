@@ -7,30 +7,27 @@ Licensed under the GNU General Public License Version 3.
 This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
-from flask import Flask, flash, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for
 from os import urandom
 from datetime import datetime
-from database.query_constructors import QueryConstructor
+
 from base.constants import *
-from base.utils import get_text_file_lines_as_single_line
+from webfrontend.constants import *
+import webfrontend.utils
+from webfrontend.utils import flash_success, flash_info, flash_danger, QueryConstructor
+from webfrontend.utils import get_selected_records, update_record, add_record, delete_record
+from webfrontend.utils import filter_customer_selection, filter_product_selection
+from webfrontend.utils import filter_customer_order_selection, filter_company_order_selection
+from webfrontend.utils import filter_location_selection
+
 from webfrontend.forms.select_filters import CustomersDataFilterForm, ProductsDataFilterForm
 from webfrontend.forms.select_filters import CustomerOrdersDataFilterForm, CompanyOrdersDataFilterForm
-from webfrontend.forms.details_view import CustomerDetailsForm, ProductDetailsForm
-from webfrontend.forms.details_view import CustomerOrderDetailsForm, CompanyOrderDetailsForm
+from webfrontend.forms.data_fields import CustomerDetailsForm, ProductDetailsForm
+from webfrontend.forms.data_fields import CustomerOrderDetailsForm, CompanyOrderDetailsForm
 
 
 app = Flask(__name__)
 app.secret_key = urandom(16)
-database_connector = None
-
-
-FLASH_DATA_FILTERED = "Data filtered."
-FLASH_ERROR = "Error: {}"
-FLASH_RECORD_UPDATED = "Record successfully updated."
-FLASH_RECORD_ADDED = "Record successfully added."
-FLASH_RECORD_DELETED = "Record successfully deleted."
-FLASH_RECORD_NOT_DELETED = "Record not deleted. Any orders pending related to this record?"
-FLASH_RECORD_ID_NO_MATCH = "Record not deleted. ID entered does not match the actual ID."
 
 customers_query_constructor = QueryConstructor(DBSchemaTableNames.customers, DBSchemaTableNames.schema)
 locations_query_constructor = QueryConstructor(DBSchemaTableNames.locations, DBSchemaTableNames.schema)
@@ -42,230 +39,13 @@ customer_order_items_query_constructor = QueryConstructor(DBSchemaTableNames.cus
                                                           DBSchemaTableNames.schema)
 company_orders_query_constructor = QueryConstructor(DBSchemaTableNames.company_orders, DBSchemaTableNames.schema)
 
-
-def flash_success(message: str):
-    """Add success message to next request. Assumes that the next request supports rendering flashed messages.
-    :type message: str
-    """
-    flash(message, "success")
-
-
-def flash_info(message: str):
-    """Add info message to next request. Assumes that the next request supports rendering flashed messages.
-    :type message: str
-    """
-    flash(message, "info")
-
-
-def flash_danger(message: str):
-    """Add danger message to next request. Assumes that the next request supports rendering flashed messages.
-    :type message: str
-    """
-    flash(message, "danger")
-
-
-def get_selected_records(query_constructor: QueryConstructor) -> list:
-    """Return selected records.
-    :type query_constructor: QueryConstructor
-    """
-    query = query_constructor.render_select_query()
-    selection = database_connector.execute_query(query, select=True)
-    return selection
-
-
-def update_record(query_constructor: QueryConstructor):
-    """Update record(s) that the query_constructor will select, given condition(s) set to it.
-    :type query_constructor: QueryConstructor
-    """
-    query = query_constructor.render_update_query()
-    return database_connector.execute_query(query, commit=True)
-
-
-def add_record(insert_query_filepath: str, values: list):
-    """Add a record to the appropriate table that the insert query refers to.
-    :type insert_query_filepath: str
-    :type values: list
-    """
-    query = get_text_file_lines_as_single_line(insert_query_filepath)
-    return database_connector.execute_query(query.format(*values), commit=True)
-
-
-def delete_record(query_constructor: QueryConstructor):
-    """Delete record(s) that the query_constructor will select, given condition(s) set to it.
-    :type query_constructor: QueryConstructor
-    """
-    query = query_constructor.render_delete_query()
-    return database_connector.execute_query(query, commit=True)
-
-
-def filter_customer_selection(form_result: dict) -> bool:
-    """Add the conditions for customers to the SQL query constructor, if any, and return True if at least one condition
-    is added.
-    """
-    customers_query_constructor.reset()
-    condition_count = 0
-    if form_result["customer_id_selection"][0] == "filter":
-        customers_query_constructor.add_condition_exact_value(
-            DBFields.Customers.id,
-            form_result["customer_id_string"][0]
-        )
-        condition_count += 1
-    if form_result["first_name_selection"][0] == "filter":
-        customers_query_constructor.add_condition_like(
-            DBFields.Customers.first_name,
-            form_result["first_name_string"][0],
-            at_beginning=("first_name_at_beginning" in form_result),
-            at_end=("first_name_at_end" in form_result)
-        )
-        condition_count += 1
-    if form_result["last_name_selection"][0] == "filter":
-        customers_query_constructor.add_condition_like(
-            DBFields.Customers.last_name,
-            form_result["last_name_string"][0],
-            at_beginning=("last_name_at_beginning" in form_result),
-            at_end=("last_name_at_end" in form_result)
-        )
-        condition_count += 1
-    if form_result["email_address_selection"][0] == "filter":
-        customers_query_constructor.add_condition_exact_value(
-            DBFields.Customers.email_address,
-            form_result["email_address_string"][0]
-        )
-        condition_count += 1
-    if form_result["phone_selection"][0] == "filter":
-        customers_query_constructor.add_condition_exact_value(
-            DBFields.Customers.phone,
-            form_result["phone_string"][0]
-        )
-        condition_count += 1
-    return bool(condition_count)
-
-
-def filter_location_selection(form_result: dict) -> bool:
-    """Add the conditions for locations to the SQL query constructor, if any, and return True if at least one condition
-    is added.
-    """
-    locations_query_constructor.reset()
-    if form_result["location_selection"][0] == "filter":
-        locations_query_constructor.add_condition_like(
-            DBFields.Locations.place_no,
-            form_result["location_place_no"][0]
-        )
-        locations_query_constructor.add_condition_like(
-            DBFields.Locations.road_name,
-            form_result["location_road_name"][0]
-        )
-        locations_query_constructor.add_condition_like(
-            DBFields.Locations.city,
-            form_result["location_city"][0]
-        )
-        return True
-    return False
-
-
-def filter_product_selection(form_result: dict) -> bool:
-    """Add the condition for products to the SQL query constructor, if any, and return True if at least one condition
-    is added.
-    """
-    products_query_constructor.reset()
-    condition_count = 0
-    if form_result["gtin14_selection"][0] == "filter":
-        products_query_constructor.add_condition_like(
-            DBFields.Products.gtin14,
-            form_result["gtin14_string"][0],
-            at_beginning=("gtin14_at_beginning" in form_result),
-            at_end=("gtin14_at_end" in form_result)
-        )
-        condition_count += 1
-    if form_result["name_selection"][0] == "filter":
-        products_query_constructor.add_condition_like(
-            DBFields.Products.name,
-            form_result["name_string"][0],
-            at_beginning=("name_at_beginning" in form_result),
-            at_end=("name_at_end" in form_result)
-        )
-        condition_count += 1
-    if form_result["desc_selection"][0] == "filter":
-        products_query_constructor.add_condition_like(
-            DBFields.Products.description,
-            form_result["desc_string"][0],
-            at_beginning=("desc_at_beginning" in form_result),
-            at_end=("desc_at_end" in form_result)
-        )
-        condition_count += 1
-    if form_result["qty_in_stock_selection"][0] == "filter":
-        products_query_constructor.add_condition_ranged_values(
-            DBFields.Products.qty_in_stock,
-            lower_limit=form_result["qty_in_stock_lower_limit_string"][0],
-            upper_limit=form_result["qty_in_stock_upper_limit_string"][0]
-        )
-        condition_count += 1
-    return bool(condition_count)
-
-
-def filter_customer_order_selection(form_result: dict) -> bool:
-    """Add the condition for customer orders to the SQL query constructor, if any, and return True if at least one
-    condition is added.
-    """
-    customer_orders_query_constructor.reset()
-    condition_count = 0
-    if form_result["customer_order_id_selection"][0] == "filter":
-        customer_orders_query_constructor.add_condition_exact_value(
-            DBFields.CustomerOrders.id,
-            form_result["customer_order_id_string"][0]
-        )
-        condition_count += 1
-    if form_result["customer_datetime_ordered_selection"][0] == "filter":
-        customer_orders_query_constructor.add_condition_ranged_values(
-            DBFields.CustomerOrders.datetime_ordered,
-            lower_limit=form_result["customer_datetime_ordered_lower_limit_string"][0],
-            upper_limit=form_result["customer_datetime_ordered_upper_limit_string"][0]
-        )
-        condition_count += 1
-    if form_result["customer_delivery_date_selection"][0] == "filter":
-        customer_orders_query_constructor.add_condition_ranged_values(
-            DBFields.CustomerOrders.delivery_date,
-            lower_limit=form_result["customer_delivery_date_lower_limit_string"][0],
-            upper_limit=form_result["customer_delivery_date_upper_limit_string"][0]
-        )
-        condition_count += 1
-    return bool(condition_count)
-
-
-def filter_company_order_selection(form_result: dict) -> bool:
-    """Add the condition for company orders to the SQL query constructor, if any, and return True if at least one
-    condition is added.
-    """
-    company_orders_query_constructor.reset()
-    condition_count = 0
-    if form_result["company_order_id_selection"][0] == "filter":
-        company_orders_query_constructor.add_condition_exact_value(
-            DBFields.CompanyOrders.id,
-            form_result["company_order_id_string"][0]
-        )
-        condition_count += 1
-    if form_result["company_datetime_ordered_selection"][0] == "filter":
-        company_orders_query_constructor.add_condition_ranged_values(
-            DBFields.CompanyOrders.datetime_ordered,
-            lower_limit=form_result["company_datetime_ordered_lower_limit_string"][0],
-            upper_limit=form_result["company_datetime_ordered_upper_limit_string"][0]
-        )
-        condition_count += 1
-    if form_result["company_delivery_date_selection"][0] == "filter":
-        company_orders_query_constructor.add_condition_ranged_values(
-            DBFields.CompanyOrders.delivery_date,
-            lower_limit=form_result["company_delivery_date_lower_limit_string"][0],
-            upper_limit=form_result["company_delivery_date_upper_limit_string"][0]
-        )
-        condition_count += 1
-    if form_result["qty_bought_selection"][0] == "filter":
-        company_orders_query_constructor.add_condition_ranged_values(
-            DBFields.CompanyOrders.qty_bought,
-            lower_limit=form_result["qty_bought_lower_limit_string"][0],
-            upper_limit=form_result["qty_bought_upper_limit_string"][0]
-        )
-        condition_count += 1
-    return bool(condition_count)
+webfrontend.utils.customers_query_constructor = customers_query_constructor
+webfrontend.utils.locations_query_constructor = locations_query_constructor
+webfrontend.utils.customer_locations_query_constructor = customer_locations_query_constructor
+webfrontend.utils.products_query_constructor = products_query_constructor
+webfrontend.utils.customer_orders_query_constructor = customer_orders_query_constructor
+webfrontend.utils.customer_order_items_query_constructor = customer_order_items_query_constructor
+webfrontend.utils.company_orders_query_constructor = company_orders_query_constructor
 
 
 @app.route("/customers", methods=["GET", "POST"])
@@ -455,7 +235,7 @@ def show_company_orders():
 
 
 @app.route("/customers/<customer_id>", methods=["GET", "POST"])
-def show_customer_details_view(customer_id):
+def show_customer_details(customer_id):
     form = CustomerDetailsForm()
 
     if request.method == "POST":
@@ -521,7 +301,7 @@ def show_customer_details_view(customer_id):
 
 
 @app.route("/products/<product_gtin14>", methods=["GET", "POST"])
-def show_product_details_view(product_gtin14):
+def show_product_details(product_gtin14):
     form = ProductDetailsForm()
 
     if request.method == "POST":
@@ -567,7 +347,7 @@ def show_product_details_view(product_gtin14):
 
 
 @app.route("/customer-orders/<customer_order_id>", methods=["GET", "POST"])
-def show_customer_order_details_view(customer_order_id):
+def show_customer_order_details(customer_order_id):
     form = CustomerOrderDetailsForm()
 
     if request.method == "POST":
@@ -618,7 +398,7 @@ def show_customer_order_details_view(customer_order_id):
 
 
 @app.route("/company-orders/<company_order_id>", methods=["GET", "POST"])
-def show_company_order_details_view(company_order_id):
+def show_company_order_details(company_order_id):
     form = CompanyOrderDetailsForm()
 
     if request.method == "POST":
@@ -690,7 +470,7 @@ def add_customer():
                 flash_danger(FLASH_ERROR.format(selection[1]))
             else:
                 customer_id = selection[1][0][0]
-                return redirect(url_for("show_customer_details_view", customer_id=customer_id))
+                return redirect(url_for("show_customer_detail", customer_id=customer_id))
     return render_template("addition/customer.html", form=form)
 
 
@@ -721,7 +501,7 @@ def add_product():
                 flash_danger(FLASH_ERROR.format(selection[1]))
             else:
                 product_gtin14 = selection[1][0][0]
-                return redirect(url_for("show_product_details_view", product_gtin14=product_gtin14))
+                return redirect(url_for("show_product_detail", product_gtin14=product_gtin14))
     return render_template("addition/product.html", form=form)
 
 
@@ -758,7 +538,7 @@ def add_customer_order():
                 flash_danger(FLASH_ERROR.format(selection[1]))
             else:
                 customer_order_id = selection[1][0][0]
-                return redirect(url_for("show_customer_order_details_view", customer_order_id=customer_order_id))
+                return redirect(url_for("show_customer_order_detail", customer_order_id=customer_order_id))
     return render_template("addition/customerOrder.html", form=form)
 
 
@@ -795,7 +575,7 @@ def add_company_order():
                 flash_danger(FLASH_ERROR.format(selection[1]))
             else:
                 company_order_id = selection[1][0][0]
-                return redirect(url_for("show_company_order_details_view", company_order_id=company_order_id))
+                return redirect(url_for("show_company_order_detail", company_order_id=company_order_id))
     return render_template("addition/companyOrder.html", form=form)
 
 

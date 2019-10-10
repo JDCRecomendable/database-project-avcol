@@ -59,11 +59,12 @@ def main_activity():
         add_sample_data(DBQueryFilePath.add_customer_order_item,
                         SampleDataFilepath.customer_order_items, database_connector)
         config[Config.Headers.system][Config.Keys.System.is_initialised] = "1"
+        # noinspection PyShadowingNames
         with open(Config.file_path, "w+", newline=Config.newline_char) as config_file:
             config.write(config_file)
 
     # Set-Up Database Connector in and Activate Web Interface
-    webfrontend.database_connector = database_connector
+    webfrontend.utils.database_connector = database_connector
     webfrontend.app.run(debug=True, host=config[Config.Headers.web_interface][Config.Keys.WebInterface.host],
                         port=config[Config.Headers.web_interface][Config.Keys.WebInterface.port])
 
