@@ -617,7 +617,7 @@ def delete_customer(customer_id):
                 return redirect(url_for("show_customers"))
         else:
             flash_danger(FLASH_RECORD_ID_NO_MATCH)
-    return render_template("deletion/customer.html", field=form.customer_id_string)
+    return render_template("deletion/customer.html", field=form.customer_id_string, record_id=customer_id)
 
 
 @app.route("/products/<product_gtin14>/delete", methods=["GET", "POST"])
@@ -640,7 +640,7 @@ def delete_product(product_gtin14):
                 return redirect(url_for("show_products"))
         else:
             flash_danger(FLASH_RECORD_ID_NO_MATCH)
-    return render_template("deletion/product.html", field=form.gtin14_string)
+    return render_template("deletion/product.html", field=form.gtin14_string, record_id=product_gtin14)
 
 
 @app.route("/customer-orders/<customer_order_id>/delete", methods=["GET", "POST"])
@@ -663,7 +663,8 @@ def delete_customer_order(customer_order_id):
                 return redirect(url_for("show_customer_orders"))
         else:
             flash_danger(FLASH_RECORD_ID_NO_MATCH)
-    return render_template("deletion/customerOrder.html", field=form.customer_order_id_string)
+    return render_template("deletion/customerOrder.html", field=form.customer_order_id_string,
+                           record_id=customer_order_id)
 
 
 @app.route("/company-orders/<company_order_id>/delete", methods=["GET", "POST"])
@@ -686,4 +687,4 @@ def delete_company_order(company_order_id):
                 return redirect(url_for("show_company_orders"))
         else:
             flash_danger(FLASH_RECORD_ID_NO_MATCH)
-    return render_template("deletion/companyOrder.html", field=form.company_order_id_string)
+    return render_template("deletion/companyOrder.html", field=form.company_order_id_string, record_id=company_order_id)

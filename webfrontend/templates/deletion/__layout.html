@@ -57,7 +57,7 @@
         <form method="POST">
           <div class="form-group row">
             <div class="mr-0 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-              <em>To confirm the deletion, enter the {% block fieldname %}{% endblock %} of the {% block recordtype %}{% endblock %}. <strong>This cannot be undone.</strong></em>
+              <em>To confirm the deletion, enter the {% block fieldname %}{% endblock %} (<strong>{{ record_id }}</strong>) of the {% block recordtype %}{% endblock %}. <strong>This cannot be undone.</strong></em>
             </div>
             <div class="mr-0 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
               <em>If there are any pending orders related to this record, deletion will not proceed.</em>
