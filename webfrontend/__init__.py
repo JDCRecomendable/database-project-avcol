@@ -7,28 +7,35 @@ Licensed under the GNU General Public License Version 3.
 This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
+# Import Utils from System
 from flask import Flask, request, render_template, redirect, url_for
 from os import urandom
 from datetime import datetime
 
+# Import Utils and Constants from Application
 from base.constants import *
 from webfrontend.constants import *
 import webfrontend.utils
 from webfrontend.utils import flash_success, flash_info, flash_danger, QueryConstructor
+
+# Import Database Actions
 from webfrontend.utils import get_selected_records, update_record, add_record, delete_record
 from webfrontend.utils import filter_customer_selection, filter_product_selection
 from webfrontend.utils import filter_customer_order_selection, filter_company_order_selection
 from webfrontend.utils import filter_location_selection
 
+# Import Web Interface Forms
 from webfrontend.forms.select_filters import CustomersDataFilterForm, ProductsDataFilterForm
 from webfrontend.forms.select_filters import CustomerOrdersDataFilterForm, CompanyOrdersDataFilterForm
 from webfrontend.forms.data_fields import CustomerDetailsForm, ProductDetailsForm
 from webfrontend.forms.data_fields import CustomerOrderDetailsForm, CompanyOrderDetailsForm
 
 
+# Prepare Flask (Web Interface) App
 app = Flask(__name__)
 app.secret_key = urandom(16)
 
+# Create the Query Constructor Objects
 customers_query_constructor = QueryConstructor(DBSchemaTableNames.customers, DBSchemaTableNames.schema)
 locations_query_constructor = QueryConstructor(DBSchemaTableNames.locations, DBSchemaTableNames.schema)
 customer_locations_query_constructor = QueryConstructor(DBSchemaTableNames.customer_locations,
@@ -39,6 +46,7 @@ customer_order_items_query_constructor = QueryConstructor(DBSchemaTableNames.cus
                                                           DBSchemaTableNames.schema)
 company_orders_query_constructor = QueryConstructor(DBSchemaTableNames.company_orders, DBSchemaTableNames.schema)
 
+# Assign the Query Constructor Objects as Variables in Utils for use
 webfrontend.utils.customers_query_constructor = customers_query_constructor
 webfrontend.utils.locations_query_constructor = locations_query_constructor
 webfrontend.utils.customer_locations_query_constructor = customer_locations_query_constructor
@@ -48,6 +56,8 @@ webfrontend.utils.customer_order_items_query_constructor = customer_order_items_
 webfrontend.utils.company_orders_query_constructor = company_orders_query_constructor
 
 
+# WEB INTERFACE ROUTING
+# Show Data
 @app.route("/customers", methods=["GET", "POST"])
 def show_customers():
     form = CustomersDataFilterForm()
@@ -234,6 +244,8 @@ def show_company_orders():
     return selection[1]
 
 
+# WEB INTERFACE ROUTING
+# Show Record Details
 @app.route("/customers/<customer_id>", methods=["GET", "POST"])
 def show_customer_details(customer_id):
     form = CustomerDetailsForm()
@@ -441,6 +453,8 @@ def show_company_order_details(company_order_id):
     return selection[1]
 
 
+# WEB INTERFACE ROUTING
+# Add Records
 @app.route("/customers/add", methods=["GET", "POST"])
 def add_customer():
     form = CustomerDetailsForm()
@@ -579,6 +593,8 @@ def add_company_order():
     return render_template("addition/companyOrder.html", form=form)
 
 
+# WEB INTERFACE ROUTING
+# Delete Records
 @app.route("/customers/<customer_id>/delete", methods=["GET", "POST"])
 def delete_customer(customer_id):
     form = CustomerDetailsForm()
