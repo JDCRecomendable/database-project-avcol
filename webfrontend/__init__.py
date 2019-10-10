@@ -286,6 +286,7 @@ def show_customer_details(customer_id):
         customer_id
     )
     selection = get_selected_records(customers_query_constructor)
+    details = selection[1]
 
     customer_locations_query_constructor.reset()
     customer_locations_query_constructor.add_condition_exact_value(
@@ -300,7 +301,10 @@ def show_customer_details(customer_id):
     )
     location_selection = get_selected_records(locations_query_constructor)
 
-    if selection[0] == 0 and location_selection[0] == 0:
+    if selection[0] == 0 and not details:
+        flash_danger(FLASH_RECORD_NOT_EXISTS)
+        return redirect(url_for("list_customers"))
+    elif selection[0] == 0 and location_selection[0] == 0:
         details = selection[1]
         form.customer_id_string.data = details[0][0]
         form.first_name_string.data = details[0][2]
@@ -348,7 +352,12 @@ def show_product_details(product_gtin14):
         product_gtin14
     )
     selection = get_selected_records(products_query_constructor)
-    if selection[0] == 0:
+    details = selection[1]
+
+    if selection[0] == 0 and not details:
+        flash_danger(FLASH_RECORD_NOT_EXISTS)
+        return redirect(url_for("list_products"))
+    elif selection[0] == 0:
         details = selection[1]
         form.gtin14_string.data = details[0][0]
         form.name_string.data = details[0][1]
@@ -390,6 +399,8 @@ def show_customer_order_details(customer_order_id):
         customer_order_id
     )
     selection = get_selected_records(customer_orders_query_constructor)
+    details = selection[1]
+
     customer_order_items_query_constructor.reset()
     customer_order_items_query_constructor.add_condition_exact_value(
         DBFields.CustomerOrderItems.customer_order_id,
@@ -397,7 +408,10 @@ def show_customer_order_details(customer_order_id):
     )
     customer_order_items_selection = get_selected_records(customer_order_items_query_constructor)
 
-    if selection[0] == 0 and customer_order_items_selection[0] == 0:
+    if selection[0] == 0 and not details:
+        flash_danger(FLASH_RECORD_NOT_EXISTS)
+        return redirect(url_for("list_customer_orders"))
+    elif selection[0] == 0 and customer_order_items_selection[0] == 0:
         details = selection[1]
         form.customer_order_id_string.data = details[0][0]
         form.customer_id_string.data = details[0][1]
@@ -441,7 +455,12 @@ def show_company_order_details(company_order_id):
         company_order_id
     )
     selection = get_selected_records(company_orders_query_constructor)
-    if selection[0] == 0:
+    details = selection[1]
+
+    if selection[0] == 0 and not details:
+        flash_danger(FLASH_RECORD_NOT_EXISTS)
+        return redirect(url_for("list_company_orders"))
+    elif selection[0] == 0:
         details = selection[1]
         form.company_order_id_string.data = details[0][0]
         form.company_order_product_gtin14_string.data = details[0][1]
@@ -510,6 +529,7 @@ def add_product():
                 gtin14
             )
             products_query_constructor.add_field(DBFields.Products.gtin14)
+
             selection = get_selected_records(products_query_constructor)
             if selection[0] == 1:
                 flash_danger(FLASH_ERROR.format(selection[1]))
@@ -599,6 +619,19 @@ def add_company_order():
 # Delete Records
 @app.route("/customers/<customer_id>/delete", methods=["GET", "POST"])
 def delete_customer(customer_id):
+    customers_query_constructor.reset()
+    customers_query_constructor.add_condition_exact_value(
+        DBFields.Customers.id,
+        customer_id
+    )
+    selection = get_selected_records(customers_query_constructor)
+    if selection[0] == 0 and not selection[1]:
+        flash_danger(FLASH_RECORD_NOT_EXISTS)
+        return redirect(url_for("list_customers"))
+    elif selection[0] == 1:
+        flash_danger(FLASH_ERROR.format(selection[1]))
+        return redirect(url_for("list_customers"))
+
     form = CustomerDetailsForm()
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
@@ -622,6 +655,19 @@ def delete_customer(customer_id):
 
 @app.route("/products/<product_gtin14>/delete", methods=["GET", "POST"])
 def delete_product(product_gtin14):
+    products_query_constructor.reset()
+    products_query_constructor.add_condition_exact_value(
+        DBFields.Products.gtin14,
+        product_gtin14
+    )
+    selection = get_selected_records(products_query_constructor)
+    if selection[0] == 0 and not selection[1]:
+        flash_danger(FLASH_RECORD_NOT_EXISTS)
+        return redirect(url_for("list_products"))
+    elif selection[0] == 1:
+        flash_danger(FLASH_ERROR.format(selection[1]))
+        return redirect(url_for("list_products"))
+
     form = ProductDetailsForm()
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
@@ -645,6 +691,19 @@ def delete_product(product_gtin14):
 
 @app.route("/customer-orders/<customer_order_id>/delete", methods=["GET", "POST"])
 def delete_customer_order(customer_order_id):
+    customer_orders_query_constructor.reset()
+    customer_orders_query_constructor.add_condition_exact_value(
+        DBFields.CustomerOrders.id,
+        customer_order_id
+    )
+    selection = get_selected_records(customer_orders_query_constructor)
+    if selection[0] == 0 and not selection[1]:
+        flash_danger(FLASH_RECORD_NOT_EXISTS)
+        return redirect(url_for("list_customer_orders"))
+    elif selection[0] == 1:
+        flash_danger(FLASH_ERROR.format(selection[1]))
+        return redirect(url_for("list_customer_orders"))
+
     form = CustomerOrderDetailsForm()
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
@@ -669,6 +728,19 @@ def delete_customer_order(customer_order_id):
 
 @app.route("/company-orders/<company_order_id>/delete", methods=["GET", "POST"])
 def delete_company_order(company_order_id):
+    company_orders_query_constructor.reset()
+    company_orders_query_constructor.add_condition_exact_value(
+        DBFields.CompanyOrders.id,
+        company_order_id
+    )
+    selection = get_selected_records(company_orders_query_constructor)
+    if selection[0] == 0 and not selection[1]:
+        flash_danger(FLASH_RECORD_NOT_EXISTS)
+        return redirect(url_for("list_company_orders"))
+    elif selection[0] == 1:
+        flash_danger(FLASH_ERROR.format(selection[1]))
+        return redirect(url_for("list_company_orders"))
+
     form = CompanyOrderDetailsForm()
     if request.method == "POST":
         result = request.form.to_dict(flat=False)

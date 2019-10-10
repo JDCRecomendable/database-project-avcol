@@ -9,6 +9,7 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 
 FLASH_ERROR = "Error: {}"
 FLASH_DATA_FILTERED = "Data filtered."
+FLASH_RECORD_NOT_EXISTS = "Record does not exist."
 FLASH_RECORD_UPDATED = "Record successfully updated."
 FLASH_RECORD_ADDED = "Record successfully added."
 FLASH_RECORD_DELETED = "Record successfully deleted."
