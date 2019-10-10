@@ -21,7 +21,7 @@ class CustomerDetailsForm(Form):
 
 
 class ProductDetailsForm(Form):
-    gtin14_string = StringField("ID")
+    gtin14_string = StringField("GTIN-14")
     name_string = StringField("Product Name")
     desc_string = TextAreaField("Product Description")
     qty_in_stock_string = IntegerField("Qty in Stock")
