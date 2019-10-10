@@ -92,12 +92,15 @@
                   {{ record }}
                   {% endblock %}
                   <td>
-                    <button class="btn btn-info" onclick="window.location.href='/{{ link_name }}/{{ record[0] }}';">
-                      <i class="fa fa-info-circle"></i>
-                    </button>
-                    <button class="btn btn-danger" onclick="window.location.href='/{{ link_name }}/{{ record[0] }}/delete';">
-                      <i class="fa fa-trash"></i>
-                    </button>
+                    <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-ellipsis-v"></i>
+                      </button>
+                      <ul class="dropdown-menu shadow">
+                        <li><a class="dropdown-item" href="/{{ link_name }}/{{ record[0] }}">Details...</a></li>
+                        <li><a class="dropdown-item text-danger" href="/{{ link_name }}/{{ record[0] }}/delete">Delete</a></li>
+                      </ul>
+                    </div>
                   </td>
                 </tr>
               {% endfor %}
