@@ -1,0 +1,18 @@
+{% extends "addition/__layout.html" %}
+{% from "detailsView/_macros.html" import render_label_and_input %}
+
+{% block title %}Add New Customer{% endblock %}
+
+{% block navigation %}
+<li><a class="dropdown-item text-info" href="/customers">Customers</a></li>
+<li><a class="dropdown-item" href="/products">Products</a></li>
+<li><a class="dropdown-item" href="/customer-orders">Customer Orders</a></li>
+<li><a class="dropdown-item" href="/company-orders">Company Orders</a></li>
+{% endblock %}
+
+{% block details %}
+{{ render_label_and_input(form.first_name_string) }}
+{{ render_label_and_input(form.last_name_string) }}
+{{ render_label_and_input(form.email_address_string) }}
+{{ render_label_and_input(form.phone_string) }}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "detailsView/__layout.html" %}
+{% from "detailsView/_macros.html" import render_label_and_input, render_label_and_linked_input %}
+
+{% block title %}Company Order Details{% endblock %}
+{% block entityname %}Company Order {{ company_order_id }}{% endblock %}
+{% block deletelink %}/company-orders/{{ company_order_id }}/delete{% endblock %}
+
+{% block navigation %}
+<li><a class="dropdown-item" href="/customers">Customers</a></li>
+<li><a class="dropdown-item" href="/products">Products</a></li>
+<li><a class="dropdown-item" href="/customer-orders">Customer Orders</a></li>
+<li><a class="dropdown-item text-info" href="/company-orders">Company Orders</a></li>
+{% endblock %}
+
+{% block details %}
+{{ render_label_and_input(form.company_order_product_gtin14_string) }}
+{{ render_label_and_input(form.company_order_qty_bought_string) }}
+{{ render_label_and_input(form.company_order_delivery_date_string) }}
+{% endblock %}

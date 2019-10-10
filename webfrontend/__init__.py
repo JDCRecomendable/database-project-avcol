@@ -9,8 +9,10 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 
 from flask import Flask, flash, request, render_template, redirect, url_for
 from os import urandom
+from datetime import datetime
 from database.query_constructors import QueryConstructor
 from base.constants import *
+from base.utils import get_text_file_lines_as_single_line
 from webfrontend.forms.select_filters import CustomersDataFilterForm, ProductsDataFilterForm
 from webfrontend.forms.select_filters import CustomerOrdersDataFilterForm, CompanyOrdersDataFilterForm
 from webfrontend.forms.details_view import CustomerDetailsForm, ProductDetailsForm
@@ -25,6 +27,7 @@ database_connector = None
 FLASH_DATA_FILTERED = "Data filtered."
 FLASH_ERROR = "Error: {}"
 FLASH_RECORD_UPDATED = "Record successfully updated."
+FLASH_RECORD_ADDED = "Record successfully added."
 FLASH_RECORD_DELETED = "Record successfully deleted."
 FLASH_RECORD_NOT_DELETED = "Record not deleted. Any orders pending related to this record?"
 FLASH_RECORD_ID_NO_MATCH = "Record not deleted. ID entered does not match the actual ID."
@@ -76,6 +79,15 @@ def update_record(query_constructor: QueryConstructor):
     """
     query = query_constructor.render_update_query()
     return database_connector.execute_query(query, commit=True)
+
+
+def add_record(insert_query_filepath: str, values: list):
+    """Add a record to the appropriate table that the insert query refers to.
+    :type insert_query_filepath: str
+    :type values: list
+    """
+    query = get_text_file_lines_as_single_line(insert_query_filepath)
+    return database_connector.execute_query(query.format(*values), commit=True)
 
 
 def delete_record(query_constructor: QueryConstructor):
@@ -648,6 +660,39 @@ def show_company_order_details_view(company_order_id):
                                table_exists=False)
     return selection[1]
 
+
+@app.route("/customers/add", methods=["GET", "POST"])
+def add_customer():
+    form = CustomerDetailsForm()
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        # datetime_now = str(datetime.now())[:19]
+        first_name = result["first_name_string"][0]
+        last_name = result["last_name_string"][0]
+        email_address = result["email_address_string"][0]
+        phone = result["phone_string"][0]
+        values = [first_name, last_name, email_address, phone]
+        is_added = add_record(DBQueryFilePath.add_customer, values)
+        if is_added[0] == 1:
+            flash_danger(FLASH_ERROR.format(is_added[1]))
+        else:
+            flash_success(FLASH_RECORD_ADDED)
+            customers_query_constructor.reset()
+            customers_query_constructor.add_condition_exact_value(
+                DBFields.Customers.email_address,
+                email_address
+            )
+            customers_query_constructor.add_field(
+                DBFields.Customers.id
+            )
+
+            selection = get_selected_records(customers_query_constructor)
+            if selection[0] == 1:
+                flash_danger(FLASH_ERROR.format(selection[1]))
+            else:
+                customer_id = selection[1][0][0]
+                return redirect(url_for("show_customer_details_view", customer_id=customer_id))
+    return render_template("addition/customer.html", form=form)
 
 @app.route("/customers/<customer_id>/delete", methods=["GET", "POST"])
 def delete_customer(customer_id):
