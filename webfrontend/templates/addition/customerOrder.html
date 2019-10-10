@@ -4,6 +4,10 @@
 {% block title %}Customer Order Details{% endblock %}
 {% block recordtype %}Customer Order{% endblock %}
 
+{% block importedstylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+
 {% block navigation %}
 <li><a class="dropdown-item" href="/customers">Customers</a></li>
 <li><a class="dropdown-item" href="/products">Products</a></li>
@@ -15,4 +19,10 @@
 {{ render_label_and_input(form.customer_id_string) }}
 {{ render_label_and_input(form.customer_order_delivery_date_string) }}
 {{ render_label_and_input(form.delivery_location_string) }}
+{% endblock %}
+
+{% block extralinks %}
+<button class="btn btn-secondary mr-2" type="button" onclick="window.open('/customers');">
+  Customers <i class="fa fa-external-link"></i>
+</button>
 {% endblock %}
