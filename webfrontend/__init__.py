@@ -24,6 +24,7 @@ database_connector = None
 
 FLASH_DATA_FILTERED = "Data filtered."
 FLASH_ERROR = "Error: {}"
+FLASH_RECORD_UPDATED = "Record successfully updated."
 FLASH_RECORD_DELETED = "Record successfully deleted."
 FLASH_RECORD_NOT_DELETED = "Record not deleted. Any orders pending related to this record?"
 FLASH_RECORD_ID_NO_MATCH = "Record not deleted. ID entered does not match the actual ID."
@@ -470,6 +471,8 @@ def show_customer_details_view(customer_id):
 
         if is_updated[0] == 1:
             flash_danger(FLASH_ERROR.format(is_updated[1]))
+        else:
+            flash_success(FLASH_RECORD_UPDATED)
 
     customers_query_constructor.reset()
     customers_query_constructor.add_condition_exact_value(
@@ -530,6 +533,8 @@ def show_product_details_view(product_gtin14):
 
         if is_updated[0] == 1:
             flash_danger(FLASH_ERROR.format(is_updated[1]))
+        else:
+            flash_success(FLASH_RECORD_UPDATED)
 
     products_query_constructor.reset()
     products_query_constructor.add_condition_exact_value(
@@ -559,14 +564,6 @@ def show_customer_order_details_view(customer_order_id):
             customer_order_id
         )
         customer_orders_query_constructor.add_field_and_value(
-            DBFields.CustomerOrders.customer_id,
-            result["customer_id_string"][0]
-        )
-        customer_orders_query_constructor.add_field_and_value(
-            DBFields.CustomerOrders.datetime_ordered,
-            result["customer_order_datetime_ordered_string"][0]
-        )
-        customer_orders_query_constructor.add_field_and_value(
             DBFields.CustomerOrders.delivery_date,
             result["customer_order_delivery_date_string"][0]
         )
@@ -578,6 +575,8 @@ def show_customer_order_details_view(customer_order_id):
 
         if is_updated[0] == 1:
             flash_danger(FLASH_ERROR.format(is_updated[1]))
+        else:
+            flash_success(FLASH_RECORD_UPDATED)
 
     customer_orders_query_constructor.reset()
     customer_orders_query_constructor.add_condition_exact_value(
@@ -616,21 +615,19 @@ def show_company_order_details_view(company_order_id):
             company_order_id
         )
         company_orders_query_constructor.add_field_and_value(
-            DBFields.CompanyOrders.product_gtin14,
-            result["company_order_product_gtin14_string"][0]
-        )
-        company_orders_query_constructor.add_field_and_value(
             DBFields.CompanyOrders.qty_bought,
-            result["company_order_qty_bought"][0]
+            result["company_order_qty_bought_string"][0]
         )
         company_orders_query_constructor.add_field_and_value(
             DBFields.CompanyOrders.delivery_date,
-            result["company_order_delivery_date"][0]
+            result["company_order_delivery_date_string"][0]
         )
         is_updated = update_record(company_orders_query_constructor)
 
         if is_updated[0] == 1:
             flash_danger(FLASH_ERROR.format(is_updated[1]))
+        else:
+            flash_success(FLASH_RECORD_UPDATED)
 
     company_orders_query_constructor.reset()
     company_orders_query_constructor.add_condition_exact_value(
