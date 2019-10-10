@@ -706,11 +706,17 @@ def add_product():
         description = result["desc_string"][0]
         qty_in_stock = result["qty_in_stock_string"][0]
         values = [gtin14, name, description, qty_in_stock]
-        is_added = add_product(DBQueryFilePath.add_product, values)
+        is_added = add_record(DBQueryFilePath.add_product, values)
         if is_added[0] == 1:
             flash_danger(FLASH_ERROR.format(is_added[1]))
         else:
             flash_success(FLASH_RECORD_ADDED)
+            products_query_constructor.reset()
+            products_query_constructor.add_condition_exact_value(
+                DBFields.Products.gtin14,
+                gtin14
+            )
+            products_query_constructor.add_field(DBFields.Products.gtin14)
             selection = get_selected_records(products_query_constructor)
             if selection[0] == 1:
                 flash_danger(FLASH_ERROR.format(selection[1]))
