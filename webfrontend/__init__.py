@@ -694,6 +694,32 @@ def add_customer():
                 return redirect(url_for("show_customer_details_view", customer_id=customer_id))
     return render_template("addition/customer.html", form=form)
 
+
+@app.route("/products/add", methods=["GET", "POST"])
+def add_product():
+    form = ProductDetailsForm()
+    form.qty_in_stock_string.data = 0
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        gtin14 = result["gtin14_string"][0]
+        name = result["name_string"][0]
+        description = result["desc_string"][0]
+        qty_in_stock = result["qty_in_stock_string"][0]
+        values = [gtin14, name, description, qty_in_stock]
+        is_added = add_product(DBQueryFilePath.add_product, values)
+        if is_added[0] == 1:
+            flash_danger(FLASH_ERROR.format(is_added[1]))
+        else:
+            flash_success(FLASH_RECORD_ADDED)
+            selection = get_selected_records(products_query_constructor)
+            if selection[0] == 1:
+                flash_danger(FLASH_ERROR.format(selection[1]))
+            else:
+                product_gtin14 = selection[1][0][0]
+                return redirect(url_for("show_product_details_view", product_gtin14=product_gtin14))
+    return render_template("addition/product.html", form=form)
+
+
 @app.route("/customers/<customer_id>/delete", methods=["GET", "POST"])
 def delete_customer(customer_id):
     form = CustomerDetailsForm()

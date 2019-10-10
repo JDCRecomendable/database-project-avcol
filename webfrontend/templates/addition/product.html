@@ -1,9 +1,8 @@
-{% extends "detailsView/__layout.html" %}
+{% extends "addition/__layout.html" %}
 {% from "detailsView/_macros.html" import render_label_and_input %}
 
-{% block title %}Product Details{% endblock %}
-{% block entityname %}Product {{ product_gtin14 }}{% endblock %}
-{% block deletelink %}/products/{{ product_gtin14 }}/delete{% endblock %}
+{% block title %}Add New Product{% endblock %}
+{% block entitytype %}Product{% endblock %}
 
 {% block navigation %}
 <li><a class="dropdown-item" href="/customers">Customers</a></li>
@@ -13,7 +12,7 @@
 {% endblock %}
 
 {% block details %}
-{{ render_label_and_input(form.gtin14_string, disabled_status=True) }}
+{{ render_label_and_input(form.gtin14_string) }}
 {{ render_label_and_input(form.name_string) }}
 {{ render_label_and_input(form.desc_string) }}
 {{ render_label_and_input(form.qty_in_stock_string) }}
