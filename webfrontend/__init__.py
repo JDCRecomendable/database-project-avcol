@@ -522,6 +522,7 @@ def add_product():
 @app.route("/customer-orders/add", methods=["GET", "POST"])
 def add_customer_order():
     form = CustomerOrderDetailsForm()
+    form.customer_order_delivery_date_string.data = datetime.now()
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
         datetime_ordered = str(datetime.now())[:19]
@@ -559,6 +560,7 @@ def add_customer_order():
 @app.route("/company-orders/add", methods=["GET", "POST"])
 def add_company_order():
     form = CompanyOrderDetailsForm()
+    form.company_order_delivery_date_string.data = datetime.now()
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
         datetime_ordered = str(datetime.now())[:19]
