@@ -61,7 +61,10 @@
           </div>
           <div>
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#filterData">
-              Filter Data
+                <i class="fa fa-filter"></i>
+            </button>
+            <button class="btn btn-success" type="button" onclick="window.location.href='{% block deletelink %}{% endblock %}';">
+              <i class="fa fa-plus"></i>
             </button>
           </div>
         </div>
@@ -88,6 +91,17 @@
                   {% block tablebody scoped %}
                   {{ record }}
                   {% endblock %}
+                  <td>
+                    <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-ellipsis-v"></i>
+                      </button>
+                      <ul class="dropdown-menu shadow">
+                        <li><a class="dropdown-item" href="/{{ link_name }}/{{ record[0] }}">Details...</a></li>
+                        <li><a class="dropdown-item text-danger" href="/{{ link_name }}/{{ record[0] }}/delete">Delete</a></li>
+                      </ul>
+                    </div>
+                  </td>
                 </tr>
               {% endfor %}
             </tbody>

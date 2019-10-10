@@ -50,17 +50,6 @@
 <td>{{ record[1] }}</td>
 <td>{{ record[3] }}</td>
 <td>{{ record[4] }}</td>
-<td>
-  <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-      <i class="fa fa-ellipsis-v"></i>
-    </button>
-    <ul class="dropdown-menu shadow">
-      <li><a class="dropdown-item" href="/customers/{{ record[0] }}">Details...</a></li>
-      <li><a class="dropdown-item text-danger" href="/customers/{{ record[0] }}/delete">Delete</a></li>
-    </ul>
-  </div>
-</td>
 {% endblock %}
 
 {% block datatablescript %}

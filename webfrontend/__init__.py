@@ -304,7 +304,7 @@ def show_customers():
 
     selection = get_selected_records(customers_query_constructor)
     if selection[0] == 0:
-        return render_template("dataTables/customers.html", selection=selection[1], form=form)
+        return render_template("dataTables/customers.html", selection=selection[1], form=form, link_name="customers")
     return selection[1]
 
 
@@ -374,7 +374,7 @@ def show_products():
 
     selection = get_selected_records(products_query_constructor)
     if selection[0] == 0:
-        return render_template("dataTables/products.html", selection=selection[1], form=form)
+        return render_template("dataTables/products.html", selection=selection[1], form=form, link_name="products")
     return selection[1]
 
 
@@ -414,7 +414,8 @@ def show_customer_orders():
 
     selection = get_selected_records(customer_orders_query_constructor)
     if selection[0] == 0:
-        return render_template("dataTables/customerOrders.html", selection=selection[1], form=form)
+        return render_template("dataTables/customerOrders.html", selection=selection[1], form=form,
+                               link_name="customer-orders")
     return selection[1]
 
 
@@ -436,7 +437,8 @@ def show_company_orders():
 
     selection = get_selected_records(company_orders_query_constructor)
     if selection[0] == 0:
-        return render_template("dataTables/companyOrders.html", selection=selection[1], form=form)
+        return render_template("dataTables/companyOrders.html", selection=selection[1], form=form,
+                               link_name="company-orders")
     return selection[1]
 
 
