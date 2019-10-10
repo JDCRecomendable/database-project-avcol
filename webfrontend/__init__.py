@@ -762,6 +762,43 @@ def add_customer_order():
     return render_template("addition/customerOrder.html", form=form)
 
 
+@app.route("/company-orders/add", methods=["GET", "POST"])
+def add_company_order():
+    form = CompanyOrderDetailsForm()
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        datetime_ordered = str(datetime.now())[:19]
+        product_gtin14 = result["company_order_product_gtin14_string"][0]
+        qty_bought = result["company_order_qty_bought_string"][0]
+        delivery_date = result["company_order_delivery_date_string"][0]
+        values = [product_gtin14, datetime_ordered, qty_bought, delivery_date]
+        is_added = add_record(DBQueryFilePath.add_company_order, values)
+        if is_added[0] == 1:
+            flash_danger(FLASH_ERROR.format(is_added[1]))
+        else:
+            flash_success(FLASH_RECORD_ADDED)
+            company_orders_query_constructor.reset()
+            company_orders_query_constructor.add_condition_exact_value(
+                DBFields.CompanyOrders.product_gtin14,
+                product_gtin14
+            )
+            company_orders_query_constructor.add_condition_exact_value(
+                DBFields.CompanyOrders.datetime_ordered,
+                datetime_ordered
+            )
+            company_orders_query_constructor.add_field(
+                DBFields.CompanyOrders.id
+            )
+
+            selection = get_selected_records(company_orders_query_constructor)
+            if selection[0] == 1:
+                flash_danger(FLASH_ERROR.format(selection[1]))
+            else:
+                company_order_id = selection[1][0][0]
+                return redirect(url_for("show_company_order_details_view", company_order_id=company_order_id))
+    return render_template("addition/companyOrder.html", form=form)
+
+
 @app.route("/customers/<customer_id>/delete", methods=["GET", "POST"])
 def delete_customer(customer_id):
     form = CustomerDetailsForm()
