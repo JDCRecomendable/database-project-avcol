@@ -484,7 +484,7 @@ def add_customer():
                 flash_danger(FLASH_ERROR.format(selection[1]))
             else:
                 customer_id = selection[1][0][0]
-                return redirect(url_for("show_customer_detail", customer_id=customer_id))
+                return redirect(url_for("show_customer_details", customer_id=customer_id))
     return render_template("addition/customer.html", form=form)
 
 
@@ -515,7 +515,7 @@ def add_product():
                 flash_danger(FLASH_ERROR.format(selection[1]))
             else:
                 product_gtin14 = selection[1][0][0]
-                return redirect(url_for("show_product_detail", product_gtin14=product_gtin14))
+                return redirect(url_for("show_product_details", product_gtin14=product_gtin14))
     return render_template("addition/product.html", form=form)
 
 
@@ -552,7 +552,7 @@ def add_customer_order():
                 flash_danger(FLASH_ERROR.format(selection[1]))
             else:
                 customer_order_id = selection[1][0][0]
-                return redirect(url_for("show_customer_order_detail", customer_order_id=customer_order_id))
+                return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
     return render_template("addition/customerOrder.html", form=form)
 
 
@@ -589,7 +589,7 @@ def add_company_order():
                 flash_danger(FLASH_ERROR.format(selection[1]))
             else:
                 company_order_id = selection[1][0][0]
-                return redirect(url_for("show_company_order_detail", company_order_id=company_order_id))
+                return redirect(url_for("show_company_order_details", company_order_id=company_order_id))
     return render_template("addition/companyOrder.html", form=form)
 
 
