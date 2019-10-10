@@ -1,5 +1,5 @@
 {% extends "detailsView/__layout.html" %}
-{% from "detailsView/_macros.html" import render_label_and_input %}
+{% from "detailsView/_macros.html" import render_label_and_input, render_label_and_linked_input %}
 
 {% block title %}Company Order Details{% endblock %}
 {% block entityname %}Company Order {{ company_order_id }}{% endblock %}
@@ -14,7 +14,7 @@
 
 {% block details %}
 {{ render_label_and_input(form.company_order_id_string, disabled_status=True) }}
-{{ render_label_and_input(form.company_order_product_gtin14_string, disabled_status=True) }}
+{{ render_label_and_linked_input(form.company_order_product_gtin14_string, "/products/") }}
 {{ render_label_and_input(form.company_order_datetime_ordered_string, disabled_status=True) }}
 {{ render_label_and_input(form.company_order_qty_bought_string) }}
 {{ render_label_and_input(form.company_order_delivery_date_string) }}
