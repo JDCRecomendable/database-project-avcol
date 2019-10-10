@@ -666,7 +666,6 @@ def add_customer():
     form = CustomerDetailsForm()
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
-        # datetime_now = str(datetime.now())[:19]
         first_name = result["first_name_string"][0]
         last_name = result["last_name_string"][0]
         email_address = result["email_address_string"][0]
@@ -724,6 +723,43 @@ def add_product():
                 product_gtin14 = selection[1][0][0]
                 return redirect(url_for("show_product_details_view", product_gtin14=product_gtin14))
     return render_template("addition/product.html", form=form)
+
+
+@app.route("/customer-orders/add", methods=["GET", "POST"])
+def add_customer_order():
+    form = CustomerOrderDetailsForm()
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        datetime_ordered = str(datetime.now())[:19]
+        customer_id = result["customer_id_string"][0]
+        delivery_date = result["customer_order_delivery_date_string"][0]
+        delivery_location = result["delivery_location_string"][0]
+        values = [customer_id, datetime_ordered, delivery_date, delivery_location]
+        is_added = add_record(DBQueryFilePath.add_customer_order, values)
+        if is_added[0] == 1:
+            flash_danger(FLASH_ERROR.format(is_added[1]))
+        else:
+            flash_success(FLASH_RECORD_ADDED)
+            customer_orders_query_constructor.reset()
+            customer_orders_query_constructor.add_condition_exact_value(
+                DBFields.CustomerOrders.customer_id,
+                customer_id
+            )
+            customer_orders_query_constructor.add_condition_exact_value(
+                DBFields.CustomerOrders.datetime_ordered,
+                datetime_ordered
+            )
+            customer_orders_query_constructor.add_field(
+                DBFields.CustomerOrders.id
+            )
+
+            selection = get_selected_records(customer_orders_query_constructor)
+            if selection[0] == 1:
+                flash_danger(FLASH_ERROR.format(selection[1]))
+            else:
+                customer_order_id = selection[1][0][0]
+                return redirect(url_for("show_customer_order_details_view", customer_order_id=customer_order_id))
+    return render_template("addition/customerOrder.html", form=form)
 
 
 @app.route("/customers/<customer_id>/delete", methods=["GET", "POST"])
