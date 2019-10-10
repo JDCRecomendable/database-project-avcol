@@ -58,7 +58,7 @@ webfrontend.utils.company_orders_query_constructor = company_orders_query_constr
 
 # WEB INTERFACE ROUTING
 # Show Data
-@app.route("/customers", methods=["GET", "POST"])
+@app.route("/customers/", methods=["GET", "POST"])
 def show_customers():
     form = CustomersDataFilterForm()
 
@@ -110,7 +110,7 @@ def show_customers():
     return selection[1]
 
 
-@app.route("/products", methods=["GET", "POST"])
+@app.route("/products/", methods=["GET", "POST"])
 def show_products():
     form = ProductsDataFilterForm()
 
@@ -180,7 +180,7 @@ def show_products():
     return selection[1]
 
 
-@app.route("/customer-orders", methods=["GET", "POST"])
+@app.route("/customer-orders/", methods=["GET", "POST"])
 def show_customer_orders():
     form = CustomerOrdersDataFilterForm()
 
@@ -221,7 +221,7 @@ def show_customer_orders():
     return selection[1]
 
 
-@app.route("/company-orders", methods=["GET", "POST"])
+@app.route("/company-orders/", methods=["GET", "POST"])
 def show_company_orders():
     form = CompanyOrdersDataFilterForm()
 
