@@ -63,9 +63,9 @@
           {% block details %}{% endblock %}
           <div class="form-group row mr-0">
             <div class="px-0 col-sm-9 offset-sm-3 col-md-7 offset-md-4 col-lg-5 offset-lg-5">
-              <a class="btn btn-outline-danger" type="button" href="{% block deletelink %}{% endblock %}">
+              <button class="btn btn-outline-danger" type="button" onclick="window.location.href='{% block deletelink %}{% endblock %}';">
                 Delete
-              </a>
+              </button>
               <input type="submit" value="Update" class="btn btn-primary m-2 px-3">
             </div>
           </div>

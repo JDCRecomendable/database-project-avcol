@@ -1,5 +1,6 @@
 {% extends "detailsView/__layout.html" %}
 {% from "detailsView/_macros.html" import render_label_and_input %}
+{% from "detailsView/_macros.html" import render_label_and_linked_input %}
 
 {% block title %}Customer Order Details{% endblock %}
 {% block entityname %}Customer Order {{ customer_order_id }}{% endblock %}
@@ -19,7 +20,7 @@
 
 {% block details %}
 {{ render_label_and_input(form.customer_order_id_string, disabled_status=True) }}
-{{ render_label_and_input(form.customer_id_string, disabled_status=True) }}
+{{ render_label_and_linked_input(form.customer_id_string, "/customers/") }}
 {{ render_label_and_input(form.customer_order_datetime_ordered_string, disabled_status=True) }}
 {{ render_label_and_input(form.customer_order_delivery_date_string) }}
 {{ render_label_and_input(form.delivery_location_string) }}
@@ -38,7 +39,7 @@
     <tbody>
       {% for record in customer_order_items %}
         <tr>
-          <td>{{ record[1] }}</td>
+          <td><a href="/products/{{ record[1] }}" target="_blank">{{ record[1] }}</a></td>
           <td>{{ record[2] }}</td>
         </tr>
       {% endfor %}
