@@ -27,7 +27,16 @@
 {% endblock %}
 
 {% block specialcontent %}
-<h4 class="px-0 col-sm-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">Locations of Customer</h4>
+<div class="d-flex flex-wrap mb-3 px-0 col-sm-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+  <div class="flex-grow-1 mr-2">
+    <h4>Locations of Customer</h4>
+  </div>
+  <div>
+    <button class="btn btn-success" type="button" onclick="window.location.href='/customers/{{ customer_id }}/add-location';">
+      <i class="fa fa-plus"></i>
+    </button>
+  </div>
+</div>
 <div class="table-responsive px-0 col-sm-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
   <table id="dataTable" class="table table-striped table-sm">
     <thead>
