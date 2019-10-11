@@ -3,7 +3,8 @@
 
 {% block title %}Product Details{% endblock %}
 {% block recordname %}Product {{ product_gtin14 }}{% endblock %}
-{% block deletelink %}/products/{{ product_gtin14 }}/delete{% endblock %}
+{% block returnlink %}products{% endblock %}
+{% block deletelink %}products/{{ product_gtin14 }}{% endblock %}
 
 {% block navigation %}
 <li><a class="dropdown-item" href="/customers">Customers</a></li>

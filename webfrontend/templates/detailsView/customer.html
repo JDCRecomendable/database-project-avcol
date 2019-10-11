@@ -3,7 +3,8 @@
 
 {% block title %}Customer Details{% endblock %}
 {% block recordname %}Customer {{ customer_id }}{% endblock %}
-{% block deletelink %}/customers/{{ customer_id }}/delete{% endblock %}
+{% block returnlink %}customers{% endblock %}
+{% block deletelink %}customers/{{ customer_id }}{% endblock %}
 
 {% block importedstylesheets %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">

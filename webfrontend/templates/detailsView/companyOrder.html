@@ -3,7 +3,8 @@
 
 {% block title %}Company Order Details{% endblock %}
 {% block recordname %}Company Order {{ company_order_id }}{% endblock %}
-{% block deletelink %}/company-orders/{{ company_order_id }}/delete{% endblock %}
+{% block returnlink %}company-orders{% endblock %}
+{% block deletelink %}company-orders/{{ company_order_id }}{% endblock %}
 
 {% block navigation %}
 <li><a class="dropdown-item" href="/customers">Customers</a></li>
