@@ -758,6 +758,30 @@ def delete_customer(customer_id):
     return render_template("deletion/customer.html", field=form.customer_id_string, record_id=customer_id)
 
 
+@app.route("/customers/<customer_id>/delete-location/<location_id>")
+def delete_customer_location(customer_id,  location_id):
+    customer_locations_query_constructor.reset()
+    customer_locations_query_constructor.add_condition_exact_value(DBFields.CustomerLocations.location_id, location_id)
+    selection = get_selected_records(customer_locations_query_constructor)
+    if selection[0] == 1:
+        flash_danger(FLASH_ERROR.format(selection[1]))
+        return redirect(url_for("show_customer_details", customer_id=customer_id))
+    count = len(selection[1])
+    customer_locations_query_constructor.add_condition_exact_value(DBFields.CustomerLocations.customer_id, customer_id)
+    is_deleted = delete_record(customer_locations_query_constructor)
+    if is_deleted[0] == 1:
+        flash_danger(FLASH_RECORD_NOT_DELETED)
+    else:
+        flash_info(FLASH_RECORD_DELETED)
+        if not count > 1:
+            locations_query_constructor.reset()
+            locations_query_constructor.add_condition_exact_value(DBFields.Locations.id, location_id)
+            is_deleted = delete_record(locations_query_constructor)
+            if is_deleted[0] == 1:
+                flash_danger(is_deleted[1])
+    return redirect(url_for("show_customer_details", customer_id=customer_id))
+
+
 @app.route("/products/<product_gtin14>/delete", methods=["GET", "POST"])
 def delete_product(product_gtin14):
     products_query_constructor.reset()
@@ -831,6 +855,25 @@ def delete_customer_order(customer_order_id):
             return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
     return render_template("deletion/customerOrder.html", field=form.customer_order_id_string,
                            record_id=customer_order_id)
+
+
+@app.route("/customer-orders/<customer_order_id>/delete-item/<product_gtin14>")
+def delete_customer_order_item(customer_order_id, product_gtin14):
+    customer_order_items_query_constructor.reset()
+    customer_order_items_query_constructor.add_condition_exact_value(
+        DBFields.CustomerOrderItems.customer_order_id,
+        customer_order_id
+    )
+    customer_order_items_query_constructor.add_condition_exact_value(
+        DBFields.CustomerOrderItems.product_gtin14,
+        product_gtin14
+    )
+    is_deleted = delete_record(customer_order_items_query_constructor)
+    if is_deleted[0] == 1:
+        flash_danger(FLASH_RECORD_NOT_DELETED)
+    else:
+        flash_info(FLASH_RECORD_DELETED)
+    return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
 
 
 @app.route("/company-orders/<company_order_id>/delete", methods=["GET", "POST"])

@@ -43,6 +43,7 @@
       <tr>
         <th>Product GTIN-14</th>
         <th>Qty Ordered</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -50,6 +51,11 @@
         <tr>
           <td><a href="/products/{{ record[1] }}" target="_blank">{{ record[1] }}</a></td>
           <td>{{ record[2] }}</td>
+          <td>
+            <button class="btn btn-danger" type="button" onclick="window.location.href='/customer-orders/{{ customer_order_id }}/delete-item/{{ record[1] }}';">
+              <i class="fa fa-minus"></i>
+            </button>
+          </td>
         </tr>
       {% endfor %}
     </tbody>
@@ -63,7 +69,11 @@
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 <script>
   $(document).ready(function() {
-    $("#dataTable").DataTable();
+    $("#dataTable").DataTable({
+      "columnDefs": [
+        { "orderable": false, "targets": 2 }
+      ]
+    });
   }, 5000);
 </script>
 {% endblock %}
