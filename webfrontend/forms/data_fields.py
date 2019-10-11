@@ -20,6 +20,13 @@ class CustomerDetailsForm(Form):
     phone_string = TelField("Phone Number")
 
 
+class CustomerLocationsDetailsForm(Form):
+    customer_id_string = IntegerField("Customer ID*")
+    city_name_string = StringField("City Name*")
+    road_name_string = StringField("Road Name*")
+    place_no_string = StringField("Place No*")
+
+
 class ProductDetailsForm(Form):
     gtin14_string = StringField("GTIN-14*")
     name_string = StringField("Product Name*")
@@ -33,6 +40,12 @@ class CustomerOrderDetailsForm(Form):
     customer_order_datetime_ordered_string = DateTimeField("Date/Time Ordered*")
     customer_order_delivery_date_string = DateField("Delivery Date*")
     delivery_location_string = IntegerField("Delivery Location*")
+
+
+class CustomerOrderItemDetailsForm(Form):
+    customer_order_id_string = IntegerField("Customer Order ID*")
+    product_gtin14_string = StringField("GTIN-14*")
+    qty_bought_string = IntegerField("Qty Bought*")
 
 
 class CompanyOrderDetailsForm(Form):

@@ -1,0 +1,29 @@
+{% extends "addition/__layout.html" %}
+{% from "detailsView/_macros.html" import render_label_and_input %}
+
+{% block title %}Add New Customer Order Item{% endblock %}
+{% block recordtype %}Customer Order Item{% endblock %}
+{% block cancellink %}customer-orders/{{ form.customer_order_id_string.data }}{% endblock %}
+
+{% block importedstylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+
+{% block navigation %}
+<li><a class="dropdown-item" href="/customers">Customers</a></li>
+<li><a class="dropdown-item" href="/products">Products</a></li>
+<li><a class="dropdown-item text-info" href="/customer-orders">Customer Orders</a></li>
+<li><a class="dropdown-item" href="/company-orders">Company Orders</a></li>
+{% endblock %}
+
+{% block details %}
+{{ render_label_and_input(form.customer_order_id_string) }}
+{{ render_label_and_input(form.product_gtin14_string) }}
+{{ render_label_and_input(form.qty_bought_string) }}
+{% endblock %}
+
+{% block extralinks %}
+<button class="btn btn-secondary mr-2" type="button" onclick="window.open('/products');">
+  Products <i class="fa fa-external-link"></i>
+</button>
+{% endblock %}
