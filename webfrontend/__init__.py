@@ -246,7 +246,7 @@ def list_company_orders():
 
 
 # WEB INTERFACE ROUTING
-# Show Record Details
+# Show/Update Record Details (except Customer Order Items)
 @app.route("/customers/<customer_id>", methods=["GET", "POST"])
 def show_customer_details(customer_id):
     form = CustomerDetailsForm()
@@ -717,6 +717,61 @@ def add_company_order():
                 company_order_id = selection[1][0][0]
                 return redirect(url_for("show_company_order_details", company_order_id=company_order_id))
     return render_template("addition/companyOrder.html", form=form)
+
+
+# WEB INTERFACE ROUTING
+# Update Customer Order Items
+@app.route("/customer-orders/<customer_order_id>/update-item/<product_gtin14>", methods=["GET", "POST"])
+def update_customer_order_item(customer_order_id, product_gtin14):
+    form = CustomerOrderItemDetailsForm()
+
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        customer_order_items_query_constructor.reset()
+        customer_order_items_query_constructor.add_condition_exact_value(
+            DBFields.CustomerOrderItems.customer_order_id,
+            customer_order_id
+        )
+        customer_order_items_query_constructor.add_condition_exact_value(
+            DBFields.CustomerOrderItems.product_gtin14,
+            product_gtin14
+        )
+        customer_order_items_query_constructor.add_field_and_value(
+            DBFields.CustomerOrderItems.product_gtin14,
+            result["product_gtin14_string"][0]
+        )
+        customer_order_items_query_constructor.add_field_and_value(
+            DBFields.CustomerOrderItems.qty_bought,
+            result["qty_bought_string"][0]
+        )
+        is_updated = update_record(customer_order_items_query_constructor)
+
+        if is_updated[0] == 1:
+            flash_danger(FLASH_ERROR.format(is_updated[1]))
+        else:
+            flash_success(FLASH_RECORD_UPDATED)
+            return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
+
+    customer_order_items_query_constructor.reset()
+    customer_order_items_query_constructor.add_condition_exact_value(
+        DBFields.CustomerOrderItems.customer_order_id,
+        customer_order_id
+    )
+    customer_order_items_query_constructor.add_condition_exact_value(
+        DBFields.CustomerOrderItems.product_gtin14,
+        product_gtin14
+    )
+    selection = get_selected_records(customer_order_items_query_constructor)
+    details = selection[1]
+
+    if selection[0] == 1 or (selection[0] == 0 and not details):
+        flash_danger(FLASH_RECORD_NOT_EXISTS)
+        return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
+    else:
+        form.customer_order_id_string.data = details[0][0]
+        form.product_gtin14_string.data = details[0][1]
+        form.qty_bought_string.data = details[0][2]
+        return render_template("update/customerOrderItem.html", form=form)
 
 
 # WEB INTERFACE ROUTING

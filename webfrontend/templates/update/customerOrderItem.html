@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2019 Jared Recomendable. -->
+{% from "/_macros.html" import flash_messages %}
+{% from "detailsView/_macros.html" import render_label_and_input %}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Online Shop Logistics Management">
+    <meta name="author" content="Jared Recomendable">
+    <title>Online Shop Logistics Management - Update Customer Order Item</title>
+
+    <!-- Include Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+      <span class="navbar-brand">Online Shop<br>Logistics Management</span>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item mx-2">
+            <div class="dropdown">
+              <a class="nav-link active dropdown-toggle" data-toggle="dropdown">
+                Data
+              </a>
+              <ul class="dropdown-menu shadow">
+                <li><a class="dropdown-item" href="/customers">Customers</a></li>
+                <li><a class="dropdown-item" href="/products">Products</a></li>
+                <li><a class="dropdown-item text-info" href="/customer-orders">Customer Orders</a></li>
+                <li><a class="dropdown-item" href="/company-orders">Company Orders</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item mx-2">
+            <div class="dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown">
+                Bulk Operations
+              </a>
+              <ul class="dropdown-menu shadow">
+                <li><a class="dropdown-item" href="#!">Update Records</a></li>
+                <li><a class="dropdown-item" href="#!">Delete Records</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item mx-2"><a class="nav-link" href="#">Reports</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      {{ flash_messages() }}
+      <!-- Main Content -->
+      <main role="main" class="pt-3 px-4">
+        <div class="d-flex flex-wrap mb-3">
+          <div class="flex-grow-1 mr-2">
+            <h3 class="offset-md-1 offset-lg-2">Update Customer Order Item</h3>
+          </div>
+        </div>
+        <form method="POST">
+          {{ render_label_and_input(form.customer_order_id_string, disabled_status=True) }}
+          {{ render_label_and_input(form.product_gtin14_string) }}
+          {{ render_label_and_input(form.qty_bought_string) }}
+          <div class="form-group row mr-0">
+            <div class="px-0 col-sm-9 offset-sm-3 col-md-7 offset-md-4 col-lg-5 offset-lg-5">
+              <p><em>* Mandatory fields</em></p>
+            </div>
+          </div>
+          <div class="form-group row mr-0">
+            <div class="px-0 col-sm-9 offset-sm-3 col-md-7 offset-md-4 col-lg-5 offset-lg-5">
+              <button class="btn btn-outline-secondary mr-2" type="button" onclick="window.location.href='/customer-orders/{{ form.customer_order_id_string.data }}';">
+                Cancel
+              </button>
+              <button class="btn btn-secondary mr-2" type="button" onclick="window.open('/products');">
+                Products <i class="fa fa-external-link"></i>
+              </button>
+              <input type="submit" value="Update" class="btn btn-success m-0 px-3">
+            </div>
+          </div>
+        </form>
+      </main>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -52,6 +52,9 @@
           <td><a href="/products/{{ record[1] }}" target="_blank">{{ record[1] }}</a></td>
           <td>{{ record[2] }}</td>
           <td>
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='/customer-orders/{{ customer_order_id }}/update-item/{{ record[1] }}';">
+              <i class="fa fa-edit"></i>
+            </button>
             <button class="btn btn-danger" type="button" onclick="window.location.href='/customer-orders/{{ customer_order_id }}/delete-item/{{ record[1] }}';">
               <i class="fa fa-minus"></i>
             </button>
