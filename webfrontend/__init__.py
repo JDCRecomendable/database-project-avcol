@@ -510,7 +510,7 @@ def add_customer():
 
 @app.route("/customers/<customer_id>/add-location", methods=["GET", "POST"])
 def add_customer_location(customer_id):
-    # check if customer ID exists
+    # check if customer exists
     customers_query_constructor.reset()
     customers_query_constructor.add_condition_exact_value(DBFields.Customers.id, customer_id)
     selection = get_selected_records(customers_query_constructor)
@@ -650,6 +650,35 @@ def add_customer_order():
                 customer_order_id = selection[1][0][0]
                 return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
     return render_template("addition/customerOrder.html", form=form)
+
+
+@app.route("/customer-orders/<customer_order_id>/add-item", methods=["GET", "POST"])
+def add_customer_order_item(customer_order_id):
+    customer_orders_query_constructor.reset()
+    customer_orders_query_constructor.add_condition_exact_value(DBFields.CustomerOrders.id, customer_order_id)
+    selection = get_selected_records(customer_orders_query_constructor)
+    if selection[0] == 0 and not selection[1]:
+        flash_danger(FLASH_RECORD_NOT_EXISTS)
+        return redirect(url_for("list_customer_orders"))
+    elif selection[0] == 1:
+        flash_danger(FLASH_ERROR.format(selection[1]))
+        return redirect(url_for("list_customer_orders"))
+
+    form = CustomerOrderItemDetailsForm()
+    form.customer_order_id_string.data = customer_order_id
+    form.qty_bought_string.data = 1
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        product_gtin14 = result["product_gtin14_string"][0]
+        qty_bought = result["qty_bought_string"][0]
+        values = [customer_order_id, product_gtin14, qty_bought]
+        is_added = add_record(DBQueryFilePath.add_customer_order_item, values)
+        if is_added[0] == 1:
+            flash_danger(FLASH_ERROR.format(is_added[1]))
+            return redirect(url_for("add_customer_order_item", customer_order_id=customer_order_id))
+        flash_success(FLASH_RECORD_ADDED)
+        return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
+    return render_template("addition/customerOrderItem.html", form=form)
 
 
 @app.route("/company-orders/add", methods=["GET", "POST"])

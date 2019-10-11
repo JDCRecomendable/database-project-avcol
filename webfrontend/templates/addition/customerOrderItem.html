@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block details %}
-{{ render_label_and_input(form.customer_order_id_string) }}
+{{ render_label_and_input(form.customer_order_id_string, disabled_status=True) }}
 {{ render_label_and_input(form.product_gtin14_string) }}
 {{ render_label_and_input(form.qty_bought_string) }}
 {% endblock %}
