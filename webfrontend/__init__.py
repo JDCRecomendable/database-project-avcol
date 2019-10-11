@@ -29,6 +29,7 @@ from webfrontend.forms.select_filters import CustomersDataFilterForm, ProductsDa
 from webfrontend.forms.select_filters import CustomerOrdersDataFilterForm, CompanyOrdersDataFilterForm
 from webfrontend.forms.data_fields import CustomerDetailsForm, ProductDetailsForm
 from webfrontend.forms.data_fields import CustomerOrderDetailsForm, CompanyOrderDetailsForm
+from webfrontend.forms.data_fields import CustomerLocationsDetailsForm, CustomerOrderItemDetailsForm
 
 
 # Prepare Flask (Web Interface) App
@@ -505,6 +506,80 @@ def add_customer():
                 customer_id = selection[1][0][0]
                 return redirect(url_for("show_customer_details", customer_id=customer_id))
     return render_template("addition/customer.html", form=form)
+
+
+@app.route("/customers/<customer_id>/add-location", methods=["GET", "POST"])
+def add_customer_location(customer_id):
+    # check if customer ID exists
+    customers_query_constructor.reset()
+    customers_query_constructor.add_condition_exact_value(DBFields.Customers.id, customer_id)
+    selection = get_selected_records(customers_query_constructor)
+    if selection[0] == 0 and not selection[1]:
+        flash_danger(FLASH_RECORD_NOT_EXISTS)
+        return redirect(url_for("list_customers"))
+    elif selection[0] == 1:
+        flash_danger(FLASH_ERROR.format(selection[1]))
+        return redirect(url_for("list_customers"))
+
+    form = CustomerLocationsDetailsForm()
+    form.customer_id_string.data = customer_id
+    if request.method == "POST":
+        # get the city, road name and place no. from the form results
+        result = request.form.to_dict(flat=False)
+        city = result["city_name_string"][0]
+        road_name = result["road_name_string"][0]
+        place_no = result["place_no_string"][0]
+
+        # find out if location already exists, and set the location query constructor conditions accordingly
+        locations_query_constructor.reset()
+        locations_query_constructor.add_condition_like(DBFields.Locations.city, city)
+        locations_query_constructor.add_condition_exact_value(DBFields.Locations.road_name, road_name)
+        locations_query_constructor.add_condition_exact_value(DBFields.Locations.place_no, place_no)
+        locations_query_constructor.add_field(DBFields.Locations.id)
+        selection = get_selected_records(locations_query_constructor)
+        # stop and display errors at next screen if errors are found
+        if selection[0] == 1:
+            flash_danger(FLASH_ERROR.format(selection[1]))
+            return redirect(url_for("add_customer_location", customer_id=customer_id))
+
+        # check for any ID present, which means location exists, otherwise, must create new location
+        selection = selection[1]
+        # if no ID present, create new location
+        if not selection:
+            # insert into database the new location record
+            values = [city, road_name, place_no]
+            is_added = add_record(DBQueryFilePath.add_location, values)
+            # check for any errors in inserting the record
+            if is_added[0] == 1:
+                flash_danger(FLASH_ERROR.format(is_added[1]))
+                return redirect(url_for("add_customer_location", customer_id=customer_id))
+
+            # retrieve the ID of the newly-inserted record, using the exact same location query conditions set earlier
+            location_target = get_selected_records(locations_query_constructor)
+            # check for any errors in retrieving the ID of the newly-inserted record
+            if location_target[0] == 1:
+                flash_danger(FLASH_ERROR.format(is_added[1]))
+                return redirect(url_for("add_customer_location", customer_id=customer_id))
+
+            # set the ID to that of the newly-created location
+            location_id = location_target[1][0][0]
+        # otherwise, if ID is present, then location must be present, so use the ID of that location
+        else:
+            location_id = selection[0][0]
+
+        # after finding existing or creating new location record, create now the customer location record
+        values = [customer_id, location_id]
+        is_added = add_record(DBQueryFilePath.add_customer_location, values)
+        # check for any errors in adding the new customer location record
+        if is_added[0] == 1:
+            flash_danger(FLASH_ERROR.format(is_added[1]))
+            return redirect(url_for("add_customer_location", customer_id=customer_id))
+
+        # if customer location record successfuly added, redirect back to the customer details, where the new location
+        # must be shown
+        flash_success(FLASH_RECORD_ADDED)
+        return redirect(url_for("show_customer_details", customer_id=customer_id))
+    return render_template("addition/customerLocation.html", form=form)
 
 
 @app.route("/products/add", methods=["GET", "POST"])
