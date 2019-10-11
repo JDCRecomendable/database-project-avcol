@@ -22,6 +22,7 @@ customer_order_items_query_constructor = None
 company_orders_query_constructor = None
 
 
+# Flash Messages
 def flash_success(message: str):
     """Add success message to next request. Assumes that the next request supports rendering flashed messages.
     :type message: str
@@ -43,6 +44,7 @@ def flash_danger(message: str):
     flash(message, "danger")
 
 
+# Manipulate Database
 def get_selected_records(query_constructor: QueryConstructor) -> list:
     """Return selected records.
     :type query_constructor: QueryConstructor
@@ -77,6 +79,7 @@ def delete_record(query_constructor: QueryConstructor):
     return database_connector.execute_query(query, commit=True)
 
 
+# Filter Data from Forms
 def filter_customer_selection(form_result: dict) -> bool:
     """Add the conditions for customers to the SQL query constructor, if any, and return True if at least one condition
     is added.
