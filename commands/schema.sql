@@ -3,12 +3,10 @@
 -- Model: New Model    Version: 1.0
 -- MySQL Workbench Forward Engineering
 
--- SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
--- SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 -- SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
-SET UNIQUE_CHECKS=0;
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
@@ -31,7 +29,15 @@ CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`customers` (
   `email_address` VARCHAR(63) NOT NULL,
   `phone` VARCHAR(10) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `email_address_UNIQUE` (`email_address` ASC))
+  UNIQUE INDEX `email_address_UNIQUE` (`email_address` ASC),
+  -- Added Checks
+  CHECK (
+    LENGTH(`last_name`) > 1  AND
+    LENGTH(`first_name`) > 1  AND
+    `email_address` LIKE "%_@__%.__%"  AND
+    `phone` LIKE "0_______%"  AND
+    LENGTH(`phone`) < 15
+  ))
 ENGINE = InnoDB;
 
 
@@ -43,7 +49,13 @@ CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`products` (
   `name` VARCHAR(255) NOT NULL,
   `description` VARCHAR(4095) NULL,
   `qty_in_stock` INT NOT NULL,
-  PRIMARY KEY (`gtin14`))
+  PRIMARY KEY (`gtin14`),
+  -- Added Checks
+  CHECK (
+    LENGTH(`gtin14`) = 14  AND
+    LENGTH(`name`) > 1 AND
+    `qty_in_stock` > 0
+  ))
 ENGINE = InnoDB;
 
 
@@ -56,7 +68,13 @@ CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`locations` (
   `road_name` VARCHAR(31) NOT NULL,
   `place_no` VARCHAR(7) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `location_UNIQUE` (`city` ASC, `road_name` ASC, `place_no` ASC))
+  UNIQUE INDEX `location_UNIQUE` (`city` ASC, `road_name` ASC, `place_no` ASC),
+  -- Added Checks
+  CHECK (
+    LENGTH(`city`) > 1  AND
+    LENGTH(`road_name`) > 3  AND
+    LENGTH(`place_no`) > 0
+  ))
 ENGINE = InnoDB;
 
 
@@ -119,7 +137,11 @@ CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`customer_order_items` (
     FOREIGN KEY (`product_gtin14`)
     REFERENCES `online_shop_logistics`.`products` (`gtin14`)
     ON DELETE NO ACTION
-    ON UPDATE CASCADE)
+    ON UPDATE CASCADE,
+  -- Added Checks
+  CHECK (
+    `qty_bought` > 0
+  ))
 ENGINE = InnoDB;
 
 
@@ -138,11 +160,14 @@ CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`company_orders` (
     FOREIGN KEY (`product_gtin14`)
     REFERENCES `online_shop_logistics`.`products` (`gtin14`)
     ON DELETE NO ACTION
-    ON UPDATE CASCADE)
+    ON UPDATE CASCADE,
+  -- Added Checks
+  CHECK (
+    qty_bought > 0
+  ))
 ENGINE = InnoDB;
 
 
--- SET SQL_MODE=@OLD_SQL_MODE;
--- SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 -- SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
