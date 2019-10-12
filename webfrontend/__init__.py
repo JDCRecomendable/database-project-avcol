@@ -997,12 +997,13 @@ def confirm_customer_order(customer_order_id):
     selection = get_selected_records(customer_orders_query_constructor)
     if selection[0] == 0 and not selection[1]:
         flash_danger(FLASH_RECORD_NOT_EXISTS)
-        return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
+        return redirect(url_for("list_customer_orders"))
     elif selection[0] == 1:
         flash_danger(FLASH_ERROR.format(selection[1]))
         return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
 
     form = CustomerOrderDetailsForm()
+
     customer_order_items_query_constructor.reset()
     customer_order_items_query_constructor.add_condition_exact_value(
         DBFields.CustomerOrderItems.customer_order_id,
@@ -1082,10 +1083,11 @@ def confirm_company_order(company_order_id):
     selection = get_selected_records(company_orders_query_constructor)
     if selection[0] == 0 and not selection[1]:
         flash_danger(FLASH_RECORD_NOT_EXISTS)
-        return redirect(url_for("show_company_order_details", company_order_id=company_order_id))
+        return redirect(url_for("list_company_orders"))
     elif selection[0] == 1:
         flash_danger(FLASH_ERROR.format(selection[1]))
         return redirect(url_for("show_company_order_details", company_order_id=company_order_id))
+
     product_gtin14 = selection[1][0][1]
     qty_ordered = selection[1][0][3]
 
