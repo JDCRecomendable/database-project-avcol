@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`products` (
   CHECK (
     LENGTH(`gtin14`) = 14  AND
     LENGTH(`name`) > 1 AND
-    `qty_in_stock` > 0
+    `qty_in_stock` >= 0
   ))
 ENGINE = InnoDB;
 
