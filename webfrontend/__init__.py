@@ -989,35 +989,45 @@ def delete_company_order(company_order_id):
 # Confirm Orders
 @app.route("/customer-orders/<customer_order_id>/confirm", methods=["GET", "POST"])
 def confirm_customer_order(customer_order_id):
+    # ensure that customer order exists
     customer_orders_query_constructor.reset()
     customer_orders_query_constructor.add_condition_exact_value(
         DBFields.CustomerOrders.id,
         customer_order_id
     )
     selection = get_selected_records(customer_orders_query_constructor)
+    # if customer order does not exist, redirect to customer order listing and show that it does not exist
     if selection[0] == 0 and not selection[1]:
         flash_danger(FLASH_RECORD_NOT_EXISTS)
         return redirect(url_for("list_customer_orders"))
+    # else show any other error and stop operation immediately
     elif selection[0] == 1:
         flash_danger(FLASH_ERROR.format(selection[1]))
         return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
 
     form = CustomerOrderDetailsForm()
 
+    # also obtain the customer order items involved
     customer_order_items_query_constructor.reset()
     customer_order_items_query_constructor.add_condition_exact_value(
         DBFields.CustomerOrderItems.customer_order_id,
         customer_order_id
     )
+    # show any error and stop operation immediately
     selection = get_selected_records(customer_order_items_query_constructor)
     if selection[0] == 1:
         flash_danger(FLASH_ERROR.format(selection[1]))
         return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
 
+    # if user submitted the form
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
+
+        # confirm that user intends to confirm customer order
         response_customer_order_id = result["customer_order_id_string"][0]
+        # if user submits expected answer
         if customer_order_id == response_customer_order_id:
+            # check that all intended order will not deplete product qty in stock to negative
             not_exceeding_stock = True
             qty_after_order = []
             for item in selection[1]:
@@ -1037,7 +1047,10 @@ def confirm_customer_order(customer_order_id):
                         not_exceeding_stock = False
                         break
                     qty_after_order.append(int(qty) - int(item[2]))
+
+            # if intended order will indeed not deplete product qty in stock to negative
             if not_exceeding_stock:
+                # decrease the product qty in stock as the order will involve taking the product(s)
                 for item in selection[1]:
                     products_query_constructor.reset()
                     products_query_constructor.add_condition_exact_value(
@@ -1053,6 +1066,18 @@ def confirm_customer_order(customer_order_id):
                     if is_updated[0] == 1:
                         flash_danger(FLASH_ERROR.format(is_updated[1]))
                         return redirect(url_for("confirm_customer_order", customer_order_id=customer_order_id))
+
+                # then delete the customer order items
+                customer_order_items_query_constructor.reset()
+                customer_order_items_query_constructor.add_condition_exact_value(
+                    DBFields.CustomerOrderItems.customer_order_id,
+                    customer_order_id
+                )
+                is_deleted = delete_record(customer_order_items_query_constructor)
+                if is_deleted[0] == 1:
+                    flash_danger(FLASH_ERROR.format(is_deleted[1]))
+
+                # finally, delete customer order
                 customer_orders_query_constructor.reset()
                 customer_orders_query_constructor.add_condition_exact_value(
                     DBFields.CustomerOrders.id,
@@ -1066,6 +1091,7 @@ def confirm_customer_order(customer_order_id):
                     flash_danger(FLASH_ERROR.format(is_deleted[1]))
             else:
                 flash_danger(FLASH_NOT_ENOUGH_STOCK)
+        # otherwise, show user that he/she did not submit correct answer
         else:
             flash_danger(FLASH_RECORD_ID_NO_MATCH)
     return render_template("confirmation/customerOrder.html", field=form.customer_order_id_string,
@@ -1075,28 +1101,36 @@ def confirm_customer_order(customer_order_id):
 
 @app.route("/company-orders/<company_order_id>/confirm", methods=["GET", "POST"])
 def confirm_company_order(company_order_id):
+    # ensure that company order exists
     company_orders_query_constructor.reset()
     company_orders_query_constructor.add_condition_exact_value(
         DBFields.CompanyOrders.id,
         company_order_id
     )
     selection = get_selected_records(company_orders_query_constructor)
+    # if company order does not exist, redirect to company order listing and show that it does not exist
     if selection[0] == 0 and not selection[1]:
         flash_danger(FLASH_RECORD_NOT_EXISTS)
         return redirect(url_for("list_company_orders"))
+    # else show any other error and stop operation immediately
     elif selection[0] == 1:
         flash_danger(FLASH_ERROR.format(selection[1]))
         return redirect(url_for("show_company_order_details", company_order_id=company_order_id))
 
+    # also obtain the product involved and qty ordered in the company order if it exists
     product_gtin14 = selection[1][0][1]
     qty_ordered = selection[1][0][3]
 
     form = CompanyOrderDetailsForm()
 
+    # if user submitted the form
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
+        # confirm that user intends to confirm company order
         response_company_order_id = result["company_order_id_string"][0]
+        # if user submits expected answer
         if company_order_id == response_company_order_id:
+            # get current qty in stock of product
             products_query_constructor.reset()
             products_query_constructor.add_condition_exact_value(
                 DBFields.Products.gtin14,
@@ -1107,6 +1141,8 @@ def confirm_company_order(company_order_id):
             if selection[0] == 1:
                 flash_danger(FLASH_ERROR.format(selection[1]))
                 return redirect(url_for("confirm_company_order", company_order_id=company_order_id))
+
+            # then attempt to increase the qty in stock as the company order will add product stockpile
             current_qty = int(selection[1][0][0])
             new_qty = current_qty + qty_ordered
             products_query_constructor.add_value(str(new_qty))
@@ -1114,6 +1150,8 @@ def confirm_company_order(company_order_id):
             if is_updated[0] == 1:
                 flash_danger(FLASH_ERROR.format(selection[1]))
                 return redirect(url_for("confirm_company_order", company_order_id=company_order_id))
+
+            # finally, delete company order to finish the operation
             company_orders_query_constructor.reset()
             company_orders_query_constructor.add_condition_exact_value(
                 DBFields.CompanyOrders.id,
@@ -1125,6 +1163,7 @@ def confirm_company_order(company_order_id):
                 return redirect(url_for("list_company_orders"))
             else:
                 flash_danger(FLASH_ERROR.format(is_deleted[1]))
+        # otherwise, show user that he/she did not submit correct answer
         else:
             flash_danger(FLASH_RECORD_ID_NO_MATCH)
     return render_template("confirmation/companyOrder.html", field=form.company_order_id_string,
