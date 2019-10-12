@@ -141,6 +141,9 @@ class DBQueryFilePath:
     # Schema Creation
     schema = "commands/schema.sql"
 
+    # Startup SQL Commands
+    startup = "commands/startup.sql"
+
     # Data Deletion (QUESTIONABLE)
     delete_company_order = "commands/deletion/delete_company_order.sql"
     delete_customer_location = "commands/deletion/delete_customer_location.sql"

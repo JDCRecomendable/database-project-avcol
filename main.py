@@ -64,6 +64,7 @@ def main_activity():
             config.write(config_file)
 
     # Set-Up Database Connector in and Activate Web Interface
+    database_connector.execute_queries_sequentially(get_text_file_lines(DBQueryFilePath.startup))
     webfrontend.utils.database_connector = database_connector
     webfrontend.app.run(debug=True, host=config[Config.Headers.web_interface][Config.Keys.WebInterface.host],
                         port=config[Config.Headers.web_interface][Config.Keys.WebInterface.port])
