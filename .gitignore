@@ -108,3 +108,5 @@ venvLinux/
 venvArchLinux/
 .idea/
 
+# VSCode
+.vscode/
