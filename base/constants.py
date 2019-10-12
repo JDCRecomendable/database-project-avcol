@@ -144,15 +144,6 @@ class DBQueryFilePath:
     # Startup SQL Commands
     startup = "commands/startup.sql"
 
-    # Data Deletion (QUESTIONABLE)
-    delete_company_order = "commands/deletion/delete_company_order.sql"
-    delete_customer_location = "commands/deletion/delete_customer_location.sql"
-    delete_customer_order_item = "commands/deletion/delete_customer_order_item.sql"
-    delete_customer_order = "commands/deletion/delete_customer_order.sql"
-    delete_customer = "commands/deletion/delete_customer.sql"
-    delete_location = "commands/deletion/delete_location.sql"
-    delete_product = "commands/deletion/delete_product.sql"
-
     # Data Insertion
     add_company_order = "commands/insertion/add_company_order.sql"
     add_customer_location = "commands/insertion/add_customer_location.sql"
@@ -161,35 +152,6 @@ class DBQueryFilePath:
     add_customer = "commands/insertion/add_customer.sql"
     add_location = "commands/insertion/add_location.sql"
     add_product = "commands/insertion/add_product.sql"
-
-    # Data Reading (QUESTIONABLE)
-    get_company_order_id_from_customerid_and_date = "commands/reading/get_company_order_id_from_customerid_and_datetime.sql"
-    get_customer_order_id_from_customerid_and_date = "commands/reading/get_customer_order_id_from_customerid_and_datetime.sql"
-    get_customerid_from_email_address = "commands/reading/get_customerid_from_email_address.sql"
-    get_locationid_from_address = "commands/reading/get_locationid_from_address.sql"
-    get_product_id_from_name = "commands/reading/get_product_id_from_name.sql"
-    list_all_company_orders = "commands/reading/list_all_company_orders.sql"
-    list_all_customer_locations = "commands/reading/list_all_customer_locations.sql"
-    list_all_customer_orders = "commands/reading/list_all_customer_orders.sql"
-    list_all_customers = "commands/reading/list_all_customers.sql"
-    list_all_locations = "commands/reading/list_all_locations.sql"
-    list_all_products = "commands/reading/list_all_products.sql"
-    list_specific_company_orders_of_products = "commands/reading/list_specific_company_orders_of_products.sql"
-    list_specific_customer_order_items_from_customer_order = "commands/reading/list_specific_customer_order_items_from_customer_order.sql"
-    list_specific_customer_order_items_from_customer = "commands/reading/list_specific_customer_order_items_from_customer.sql"
-    list_specific_customer_order_items_to_customer_and_location = "commands/reading/list_specific_customer_order_items_to_customer_and_location.sql"
-    list_specific_customer_order_items_to_location = "commands/reading/list_specific_customer_order_items_to_location.sql"
-    list_specific_customer_orders_of_customer = "commands/reading/list_specific_customer_orders_of_customer.sql"
-    list_specific_customer_orders_to_customer_and_location = "commands/reading/list_specific_customer_orders_to_customer_and_location.sql"
-    list_specific_customer_orders_to_location = "commands/reading/list_specific_customer_orders_to_location.sql"
-    list_specific_customers_in_location = "commands/reading/list_specific_customers_in_location.sql"
-    list_specific_locations_of_customer = "commands/reading/list_specific_locations_of_customer.sql"
-    list_specific_products_from_customer_order = "commands/reading/list_specific_products_from_customer_order.sql"
-    list_specific_products_to_customer_and_location = "commands/reading/list_specific_products_to_customer_and_location.sql"
-    list_specific_products_to_customer = "commands/reading/list_specific_products_to_customer.sql"
-    list_specific_products_to_location = "commands/reading/list_specific_products_to_location.sql"
-    return_total_expenditure = "commands/reading/return_total_expenditure.sql"
-    return_total_income = "commands/reading/return_total_income.sql"
 
 
 class SampleDataFilepath:
