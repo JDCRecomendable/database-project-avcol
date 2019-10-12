@@ -5,10 +5,10 @@
 
 ## Pre-Requisites
 * Python 3
-* MySQL Server 5.7 or higher
-* MySQL Connector/Python 5.7 or higher
+* MySQL Server 8.0.16 or higher OR MariaDB 10.2 or higher
+* MySQL Connector/Python 8.0 or higher
 * Flask web application framework
-* Flask-WTF (installs WTForms module)
+* WTForms module
 
 ## Running
 1. Open `config.cfg` and set up the necessary parameters as per specifications
