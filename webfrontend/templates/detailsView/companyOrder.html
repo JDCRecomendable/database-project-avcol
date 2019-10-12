@@ -20,3 +20,9 @@
 {{ render_label_and_input(form.company_order_qty_bought_string) }}
 {{ render_label_and_input(form.company_order_delivery_date_string) }}
 {% endblock %}
+
+{% block moreoptions %}
+<button class="btn btn-success" type="button" onclick="window.location.href='/company-orders/{{ company_order_id }}/confirm';">
+  Confirm Order
+</button>
+{% endblock %}

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Online Shop Logistics Management">
     <meta name="author" content="Jared Recomendable">
-    <title>Online Shop Logistics Management - {% block title %}{% endblock %}</title>
+    <title>Online Shop Logistics Management - Confirm {{ order_type_capitalised }} Order</title>
 
     <!-- Include Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -56,30 +56,36 @@
       <main role="main" class="pt-3 px-4">
         <div class="d-flex flex-wrap mb-3">
           <div class="flex-grow-1 mr-2">
-            <h3 class="offset-md-1 offset-lg-2">Details of {% block recordname %}{% endblock %}</h3>
+            <h3 class="offset-md-1 offset-lg-2">Confirm {{ order_type_capitalised }} Order {{ id }}</h3>
           </div>
         </div>
+        <div class="p-3 my-5 px-0 col-sm-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 border border-primary rounded">
+          {% block productcontents %}{% endblock %}
+        </div>
         <form method="POST">
-          {% block details %}{% endblock %}
+          <div class="form-group row">
+            <div class="mr-0 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+              To confirm the order, type the ID of the {{ order_type }} order (<strong>{{ id }}</strong>) and hit the 'Confirm' button.
+            </div>
+            <div class="mr-0 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+              If successful, the quantity in stock of products will {% block orderaction %}{% endblock %} accordingly and this order will be deleted.
+            </div>
+          </div>
+          {{ render_label_and_input(field) }}
           <div class="form-group row mr-0">
             <div class="px-0 col-sm-9 offset-sm-3 col-md-7 offset-md-4 col-lg-5 offset-lg-5">
-              <p><em>* Mandatory fields</em></p>
+              <p><em>* Mandatory field</em></p>
             </div>
           </div>
           <div class="form-group row mr-0">
             <div class="px-0 col-sm-9 offset-sm-3 col-md-7 offset-md-4 col-lg-5 offset-lg-5">
-              <button class="btn btn-outline-secondary mr-2" type="button" onclick="window.location.href='/{% block returnlink %}{% endblock %}';">
-                Return
+              <button class="btn btn-outline-secondary mr-2" type="button" onclick="window.location.href='/{{ order_type }}-orders/{{ id }}';">
+                Cancel
               </button>
-              <button class="btn btn-danger" type="button" onclick="window.location.href='/{% block deletelink %}{% endblock %}/delete';">
-                Delete
-              </button>
-              <input type="submit" value="Update" class="btn btn-primary m-2 px-3">
-              {% block moreoptions %}{% endblock %}
+              <input type="submit" value="Confirm" class="btn btn-success m-2 px-3">
             </div>
           </div>
         </form>
-        {% block specialcontent %}{% endblock %}
       </main>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

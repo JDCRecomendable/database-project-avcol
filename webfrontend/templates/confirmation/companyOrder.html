@@ -1,0 +1,32 @@
+{% extends "confirmation/__layout.html" %}
+{% from "detailsView/_macros.html" import render_label_and_input %}
+
+{% block orderaction %}increase{% endblock %}
+
+
+{% block navigation %}
+<li><a class="dropdown-item" href="/customers">Customers</a></li>
+<li><a class="dropdown-item" href="/products">Products</a></li>
+<li><a class="dropdown-item" href="/customer-orders">Customer Orders</a></li>
+<li><a class="dropdown-item text-info" href="/company-orders">Company Orders</a></li>
+{% endblock %}
+
+{% block productcontents %}
+<h4>Product Involved</h4>
+<div class="table-responsive">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th>Product GTIN-14</th>
+        <th>Qty Ordered</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="/products/{{ product_gtin14 }}" target="_blank">{{ product_gtin14 }}</a></td>
+        <td>{{ qty_ordered }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

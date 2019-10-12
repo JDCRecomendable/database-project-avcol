@@ -26,6 +26,12 @@
 {{ render_label_and_input(form.delivery_location_string) }}
 {% endblock %}
 
+{% block moreoptions %}
+<button class="btn btn-success" type="button" onclick="window.location.href='/customer-orders/{{ customer_order_id }}/confirm';">
+  Confirm Order
+</button>
+{% endblock %}
+
 {% block specialcontent %}
 <div class="d-flex flex-wrap mb-3 px-0 col-sm-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
   <div class="flex-grow-1 mr-2">

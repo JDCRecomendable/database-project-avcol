@@ -64,7 +64,7 @@ def list_customers():
     form = CustomersDataFilterForm()
 
     customers_query_constructor.reset()
-    if request.method == "POST" and form.validate():
+    if request.method == "POST":
         result = request.form.to_dict(flat=False)
         filter_customer_selection(result)
         if filter_location_selection(result):
@@ -116,7 +116,7 @@ def list_products():
     form = ProductsDataFilterForm()
 
     products_query_constructor.reset()
-    if request.method == "POST" and form.validate():
+    if request.method == "POST":
         result = request.form.to_dict(flat=False)
         filter_product_selection(result)
         if filter_customer_selection(result):
@@ -186,7 +186,7 @@ def list_customer_orders():
     form = CustomerOrdersDataFilterForm()
 
     customer_orders_query_constructor.reset()
-    if request.method == "POST" and form.validate():
+    if request.method == "POST":
         result = request.form.to_dict(flat=False)
         filter_customer_order_selection(result)
         if filter_customer_selection(result):
@@ -227,7 +227,7 @@ def list_company_orders():
     form = CompanyOrdersDataFilterForm()
 
     company_orders_query_constructor.reset()
-    if request.method == "POST" and form.validate():
+    if request.method == "POST":
         result = request.form.to_dict(flat=False)
         filter_company_order_selection(result)
         if filter_product_selection(result):
@@ -816,6 +816,23 @@ def delete_customer(customer_id):
 @app.route("/customers/<customer_id>/delete-location/<location_id>")
 def delete_customer_location(customer_id,  location_id):
     customer_locations_query_constructor.reset()
+    customer_locations_query_constructor.add_condition_exact_value(
+        DBFields.CustomerLocations.location_id,
+        location_id
+    )
+    customer_locations_query_constructor.add_condition_exact_value(
+        DBFields.CustomerLocations.customer_id,
+        customer_id
+    )
+    selection = get_selected_records(customer_locations_query_constructor)
+    if selection[0] == 0 and not selection[1]:
+        flash_danger(FLASH_RECORD_NOT_EXISTS)
+        return redirect(url_for("show_customer_details", customer_id=customer_id))
+    elif selection[0] == 1:
+        flash_danger(FLASH_ERROR.format(selection[1]))
+        return redirect(url_for("show_customer_details", customer_id=customer_id))
+
+    customer_locations_query_constructor.reset()
     customer_locations_query_constructor.add_condition_exact_value(DBFields.CustomerLocations.location_id, location_id)
     selection = get_selected_records(customer_locations_query_constructor)
     if selection[0] == 1:
@@ -966,3 +983,148 @@ def delete_company_order(company_order_id):
             flash_danger(FLASH_RECORD_ID_NO_MATCH)
             return redirect(url_for("show_company_order_details", company_order_id=company_order_id))
     return render_template("deletion/companyOrder.html", field=form.company_order_id_string, record_id=company_order_id)
+
+
+# WEB INTERFACE ROUTING
+# Confirm Orders
+@app.route("/customer-orders/<customer_order_id>/confirm", methods=["GET", "POST"])
+def confirm_customer_order(customer_order_id):
+    customer_orders_query_constructor.reset()
+    customer_orders_query_constructor.add_condition_exact_value(
+        DBFields.CustomerOrders.id,
+        customer_order_id
+    )
+    selection = get_selected_records(customer_orders_query_constructor)
+    if selection[0] == 0 and not selection[1]:
+        flash_danger(FLASH_RECORD_NOT_EXISTS)
+        return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
+    elif selection[0] == 1:
+        flash_danger(FLASH_ERROR.format(selection[1]))
+        return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
+
+    form = CustomerOrderDetailsForm()
+    customer_order_items_query_constructor.reset()
+    customer_order_items_query_constructor.add_condition_exact_value(
+        DBFields.CustomerOrderItems.customer_order_id,
+        customer_order_id
+    )
+    selection = get_selected_records(customer_order_items_query_constructor)
+    if selection[0] == 1:
+        flash_danger(FLASH_ERROR.format(selection[1]))
+        return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
+
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        response_customer_order_id = result["customer_order_id_string"][0]
+        if customer_order_id == response_customer_order_id:
+            not_exceeding_stock = True
+            qty_after_order = []
+            for item in selection[1]:
+                products_query_constructor.reset()
+                products_query_constructor.add_condition_exact_value(
+                    DBFields.Products.gtin14,
+                    item[1]
+                )
+                products_query_constructor.add_field(DBFields.Products.qty_in_stock)
+                qty_left = get_selected_records(products_query_constructor)
+                if qty_left[0] == 1:
+                    flash_danger(FLASH_ERROR.format(qty_left[1]))
+                    return redirect(url_for("confirm_customer_order", customer_order_id=customer_order_id))
+                elif qty_left[0] == 0 and qty_left[1]:
+                    qty = qty_left[1][0][0]
+                    if int(qty) < int(item[2]):
+                        not_exceeding_stock = False
+                        break
+                    qty_after_order.append(int(qty) - int(item[2]))
+            if not_exceeding_stock:
+                for item in selection[1]:
+                    products_query_constructor.reset()
+                    products_query_constructor.add_condition_exact_value(
+                        DBFields.Products.gtin14,
+                        item[1]
+                    )
+                    products_query_constructor.add_field_and_value(
+                        DBFields.Products.qty_in_stock,
+                        str(qty_after_order[0])
+                    )
+                    qty_after_order.pop(0)
+                    is_updated = update_record(products_query_constructor)
+                    if is_updated[0] == 1:
+                        flash_danger(FLASH_ERROR.format(is_updated[1]))
+                        return redirect(url_for("confirm_customer_order", customer_order_id=customer_order_id))
+                customer_orders_query_constructor.reset()
+                customer_orders_query_constructor.add_condition_exact_value(
+                    DBFields.CustomerOrders.id,
+                    customer_order_id
+                )
+                is_deleted = delete_record(customer_orders_query_constructor)
+                if is_deleted[0] == 0:
+                    flash_success(FLASH_ORDER_FULFILLED)
+                    return redirect(url_for("list_customer_orders"))
+                else:
+                    flash_danger(FLASH_ERROR.format(is_deleted[1]))
+            else:
+                flash_danger(FLASH_NOT_ENOUGH_STOCK)
+        else:
+            flash_danger(FLASH_RECORD_ID_NO_MATCH)
+    return render_template("confirmation/customerOrder.html", field=form.customer_order_id_string,
+                           order_type="customer", order_type_capitalised="Customer", id=customer_order_id,
+                           customer_order_items=selection[1])
+
+
+@app.route("/company-orders/<company_order_id>/confirm", methods=["GET", "POST"])
+def confirm_company_order(company_order_id):
+    company_orders_query_constructor.reset()
+    company_orders_query_constructor.add_condition_exact_value(
+        DBFields.CompanyOrders.id,
+        company_order_id
+    )
+    selection = get_selected_records(company_orders_query_constructor)
+    if selection[0] == 0 and not selection[1]:
+        flash_danger(FLASH_RECORD_NOT_EXISTS)
+        return redirect(url_for("show_company_order_details", company_order_id=company_order_id))
+    elif selection[0] == 1:
+        flash_danger(FLASH_ERROR.format(selection[1]))
+        return redirect(url_for("show_company_order_details", company_order_id=company_order_id))
+    product_gtin14 = selection[1][0][1]
+    qty_ordered = selection[1][0][3]
+
+    form = CompanyOrderDetailsForm()
+
+    if request.method == "POST":
+        result = request.form.to_dict(flat=False)
+        response_company_order_id = result["company_order_id_string"][0]
+        if company_order_id == response_company_order_id:
+            products_query_constructor.reset()
+            products_query_constructor.add_condition_exact_value(
+                DBFields.Products.gtin14,
+                product_gtin14
+            )
+            products_query_constructor.add_field(DBFields.Products.qty_in_stock)
+            selection = get_selected_records(products_query_constructor)
+            if selection[0] == 1:
+                flash_danger(FLASH_ERROR.format(selection[1]))
+                return redirect(url_for("confirm_company_order", company_order_id=company_order_id))
+            current_qty = int(selection[1][0][0])
+            new_qty = current_qty + qty_ordered
+            products_query_constructor.add_value(str(new_qty))
+            is_updated = update_record(products_query_constructor)
+            if is_updated[0] == 1:
+                flash_danger(FLASH_ERROR.format(selection[1]))
+                return redirect(url_for("confirm_company_order", company_order_id=company_order_id))
+            company_orders_query_constructor.reset()
+            company_orders_query_constructor.add_condition_exact_value(
+                DBFields.CompanyOrders.id,
+                company_order_id
+            )
+            is_deleted = delete_record(company_orders_query_constructor)
+            if is_deleted[0] == 0:
+                flash_success(FLASH_ORDER_FULFILLED)
+                return redirect(url_for("list_company_orders"))
+            else:
+                flash_danger(FLASH_ERROR.format(is_deleted[1]))
+        else:
+            flash_danger(FLASH_RECORD_ID_NO_MATCH)
+    return render_template("confirmation/companyOrder.html", field=form.company_order_id_string,
+                           order_type="company", order_type_capitalised="Company", id=company_order_id,
+                           product_gtin14=product_gtin14, qty_ordered=qty_ordered)
