@@ -58,6 +58,13 @@ webfrontend.utils.company_orders_query_constructor = company_orders_query_constr
 
 
 # WEB INTERFACE ROUTING
+# Default
+@app.route("/")
+def default_route():
+    return redirect(url_for("list_customers"))
+
+
+# WEB INTERFACE ROUTING
 # Show Data
 @app.route("/customers/", methods=["GET", "POST"])
 def list_customers():
