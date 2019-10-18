@@ -25,6 +25,7 @@ class Config:
             is_initialised = "is_initialised"
 
         class Database:
+            schema = "schema"
             username = "username"
             password = "password"
             host = "host"
@@ -38,6 +39,7 @@ class Config:
             "is_initialised": "0"
         }
         database = {
+            "schema": "online_shop",
             "username": "root",
             "password": "abc123",
             "host": "127.0.0.1"
