@@ -55,3 +55,13 @@ def get_text_file_lines(file_path: str) -> list:
     result = query_obj.readlines()
     query_obj.close()
     return result
+
+
+def remove_unsafe_chars(string: str) -> str:
+    """Remove unsafe characters from the string that will be used for SQL queries.
+    :type string: str
+    :rtype: str
+    """
+    for char in UNSAFE_QUERY_CHARS:
+        string = string.replace(char, " ")
+    return string

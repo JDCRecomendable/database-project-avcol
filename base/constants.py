@@ -8,6 +8,9 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
 
+UNSAFE_QUERY_CHARS = ("'", '"', ":", ";", "\\")
+
+
 class Config:
     file_path = "config.cfg"
     newline_char = "\r\n"
