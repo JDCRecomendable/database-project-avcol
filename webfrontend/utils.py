@@ -10,7 +10,7 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 from flask import flash
 from database.query_constructors import QueryConstructor
 from base.constants import *
-from base.utils import get_text_file_lines_as_single_line
+from base.utils import get_text_file_lines_as_single_line, remove_unsafe_chars
 
 database_connector = None
 customers_query_constructor = None
@@ -68,7 +68,10 @@ def add_record(insert_query_filepath: str, values: list):
     :type values: list
     """
     query = get_text_file_lines_as_single_line(insert_query_filepath)
-    return database_connector.execute_query(query.format(*values), commit=True)
+    values_processed = []
+    for value in values:
+        values_processed.append(remove_unsafe_chars(value))
+    return database_connector.execute_query(query.format(*values_processed), commit=True)
 
 
 def delete_record(query_constructor: QueryConstructor):
