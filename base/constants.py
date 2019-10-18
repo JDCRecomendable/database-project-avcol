@@ -8,7 +8,7 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
 
-UNSAFE_QUERY_CHARS = ("'", '"', ":", ";", "\\")
+UNSAFE_QUERY_CHARS = ("'", '"', ";", "\\")
 
 
 class Config:
