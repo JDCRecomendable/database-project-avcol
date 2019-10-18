@@ -70,7 +70,7 @@ def add_record(insert_query_filepath: str, values: list):
     query = get_text_file_lines_as_single_line(insert_query_filepath)
     values_processed = []
     for value in values:
-        values_processed.append(remove_unsafe_chars(value))
+        values_processed.append(remove_unsafe_chars(str(value)))
     return database_connector.execute_query(query.format(DBSchemaTableNames.schema, *values_processed), commit=True)
 
 
