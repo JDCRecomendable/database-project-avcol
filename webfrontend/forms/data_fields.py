@@ -38,7 +38,7 @@ class CustomerOrderDetailsForm(Form):
     customer_order_id_string = IntegerField("Customer Order ID*")
     customer_id_string = IntegerField("Customer ID*")
     customer_order_datetime_ordered_string = DateTimeField("Date/Time Ordered*")
-    customer_order_delivery_date_string = DateField("Delivery Date*")
+    customer_order_delivery_date_string = DateField("Target Delivery Date*")
     delivery_location_string = IntegerField("Delivery Location*")
 
 
@@ -53,4 +53,4 @@ class CompanyOrderDetailsForm(Form):
     company_order_product_gtin14_string = StringField("Product GTIN-14*")
     company_order_datetime_ordered_string = DateTimeField("Date/Time Ordered*")
     company_order_qty_bought_string = IntegerField("Qty Bought*")
-    company_order_delivery_date_string = DateField("Delivery Date*")
+    company_order_delivery_date_string = DateField("Target Delivery Date*")
