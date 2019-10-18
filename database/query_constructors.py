@@ -37,6 +37,8 @@ class QueryConstructor:
         :type field: str
         :type value: str
         """
+        value = remove_unsafe_chars(value)
+
         if self.condition:
             self._add_and()
         self.condition += '({} = "{}")'.format(field, value)
@@ -48,6 +50,9 @@ class QueryConstructor:
         :type lower_limit: str
         :type upper_limit: str
         """
+        lower_limit = remove_unsafe_chars(lower_limit)
+        upper_limit = remove_unsafe_chars(upper_limit)
+
         if self.condition and (lower_limit or upper_limit):
             self._add_and()
         if not lower_limit and upper_limit:
@@ -67,6 +72,8 @@ class QueryConstructor:
         :type at_beginning: bool
         :type at_end: bool
         """
+        like_value = remove_unsafe_chars(like_value)
+
         if self.condition:
             self._add_and()
         if not at_beginning and not at_end:
@@ -96,7 +103,7 @@ class QueryConstructor:
 
     def add_value(self, value: str):
         """Add a value to the query."""
-        self.value_list.append(value)
+        self.value_list.append(remove_unsafe_chars(value))
 
     def add_field_and_value(self, field: str, value: str):
         """Add a field and a value to the query."""
