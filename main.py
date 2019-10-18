@@ -9,7 +9,6 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 
 from base.utils import *
 from database import connector
-import webfrontend
 
 # If configuration exists, read it. Else, make one for editing by the user.
 config = read_config(Config.file_path)
@@ -21,6 +20,9 @@ if not config_exists:
     with open(Config.file_path, "w+", newline=Config.newline_char) as config_file:
         config.write(config_file)
 
+DBSchemaTableNames.schema = config[Config.Headers.database][Config.Keys.Database.schema]
+import webfrontend
+
 
 def add_sample_data(query_file_path, data_source_file_path, db_connector):
     query = get_text_file_lines_as_single_line(query_file_path)
@@ -28,7 +30,7 @@ def add_sample_data(query_file_path, data_source_file_path, db_connector):
         line = line.strip()
         line_elements = line.split(";")
         db_connector.execute_query(
-            query.format(*line_elements),
+            query.format(DBSchemaTableNames.schema, *line_elements),
             commit=True
         )
 
@@ -41,7 +43,9 @@ def main_activity():
     if (config[Config.Headers.system][Config.Keys.System.is_initialised] ==
             Config.DefaultKeyValuePairs.system[Config.Keys.System.is_initialised]):
         # Define the Schema and Tables for the Database
-        database_connector.execute_queries_sequentially(get_text_file_lines(DBQueryFilePath.schema))
+        schema_definition = format_text_file_lines(get_text_file_lines(DBQueryFilePath.schema),
+                                                   schema_name=DBSchemaTableNames.schema)
+        database_connector.execute_queries_sequentially(schema_definition)
 
         # Addition of Sample Data (before modification during demonstration, provided the data has not been added yet)
         add_sample_data(DBQueryFilePath.add_customer,

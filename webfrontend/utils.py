@@ -71,7 +71,7 @@ def add_record(insert_query_filepath: str, values: list):
     values_processed = []
     for value in values:
         values_processed.append(remove_unsafe_chars(value))
-    return database_connector.execute_query(query.format(*values_processed), commit=True)
+    return database_connector.execute_query(query.format(DBSchemaTableNames.schema, *values_processed), commit=True)
 
 
 def delete_record(query_constructor: QueryConstructor):

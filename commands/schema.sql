@@ -10,19 +10,19 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema online_shop_logistics
+-- Schema {schema_name}
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema online_shop_logistics
+-- Schema {schema_name}
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `online_shop_logistics` DEFAULT CHARACTER SET utf8 ;
-USE `online_shop_logistics` ;
+CREATE SCHEMA IF NOT EXISTS `{schema_name}` DEFAULT CHARACTER SET utf8 ;
+USE `{schema_name}` ;
 
 -- -----------------------------------------------------
--- Table `online_shop_logistics`.`customers`
+-- Table `{schema_name}`.`customers`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`customers` (
+CREATE TABLE IF NOT EXISTS `{schema_name}`.`customers` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `last_name` VARCHAR(31) NOT NULL,
   `first_name` VARCHAR(31) NOT NULL,
@@ -42,9 +42,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `online_shop_logistics`.`products`
+-- Table `{schema_name}`.`products`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`products` (
+CREATE TABLE IF NOT EXISTS `{schema_name}`.`products` (
   `gtin14` CHAR(14) NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   `description` VARCHAR(4095) NULL,
@@ -60,9 +60,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `online_shop_logistics`.`locations`
+-- Table `{schema_name}`.`locations`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`locations` (
+CREATE TABLE IF NOT EXISTS `{schema_name}`.`locations` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `city` VARCHAR(31) NOT NULL,
   `road_name` VARCHAR(31) NOT NULL,
@@ -79,30 +79,30 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `online_shop_logistics`.`customer_locations`
+-- Table `{schema_name}`.`customer_locations`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`customer_locations` (
+CREATE TABLE IF NOT EXISTS `{schema_name}`.`customer_locations` (
   `customer_id` INT NOT NULL,
   `location_id` INT NOT NULL,
   PRIMARY KEY (`customer_id`, `location_id`),
   INDEX `location_id_idx` (`location_id` ASC),
   CONSTRAINT `fk_customer_locations_customer_id`
     FOREIGN KEY (`customer_id`)
-    REFERENCES `online_shop_logistics`.`customers` (`id`)
+    REFERENCES `{schema_name}`.`customers` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_customer_locations_location_id`
     FOREIGN KEY (`location_id`)
-    REFERENCES `online_shop_logistics`.`locations` (`id`)
+    REFERENCES `{schema_name}`.`locations` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `online_shop_logistics`.`customer_orders`
+-- Table `{schema_name}`.`customer_orders`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`customer_orders` (
+CREATE TABLE IF NOT EXISTS `{schema_name}`.`customer_orders` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `customer_id` INT NOT NULL,
   `datetime_ordered` DATETIME NOT NULL,
@@ -113,16 +113,16 @@ CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`customer_orders` (
   INDEX `customer_location_idx` (`customer_id` ASC, `delivery_location` ASC),
   CONSTRAINT `fk_customer_orders_customer_location`
     FOREIGN KEY (`customer_id` , `delivery_location`)
-    REFERENCES `online_shop_logistics`.`customer_locations` (`customer_id` , `location_id`)
+    REFERENCES `{schema_name}`.`customer_locations` (`customer_id` , `location_id`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `online_shop_logistics`.`customer_order_items`
+-- Table `{schema_name}`.`customer_order_items`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`customer_order_items` (
+CREATE TABLE IF NOT EXISTS `{schema_name}`.`customer_order_items` (
   `customer_order_id` INT NOT NULL,
   `product_gtin14` CHAR(14) NOT NULL,
   `qty_bought` INT NOT NULL,
@@ -130,12 +130,12 @@ CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`customer_order_items` (
   INDEX `product_id_idx` (`product_gtin14` ASC),
   CONSTRAINT `fk_order_items_customer_order_id`
     FOREIGN KEY (`customer_order_id`)
-    REFERENCES `online_shop_logistics`.`customer_orders` (`id`)
+    REFERENCES `{schema_name}`.`customer_orders` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_order_items_product_id`
     FOREIGN KEY (`product_gtin14`)
-    REFERENCES `online_shop_logistics`.`products` (`gtin14`)
+    REFERENCES `{schema_name}`.`products` (`gtin14`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE,
   -- Added Checks
@@ -146,9 +146,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `online_shop_logistics`.`company_orders`
+-- Table `{schema_name}`.`company_orders`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`company_orders` (
+CREATE TABLE IF NOT EXISTS `{schema_name}`.`company_orders` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `product_gtin14` CHAR(14) NOT NULL,
   `datetime_ordered` DATETIME NOT NULL,
@@ -158,7 +158,7 @@ CREATE TABLE IF NOT EXISTS `online_shop_logistics`.`company_orders` (
   UNIQUE INDEX `company_order_UNIQUE` (`product_gtin14` ASC, `datetime_ordered` ASC, `qty_bought` ASC, `delivery_date` ASC),
   CONSTRAINT `fk_company_orders_product_id`
     FOREIGN KEY (`product_gtin14`)
-    REFERENCES `online_shop_logistics`.`products` (`gtin14`)
+    REFERENCES `{schema_name}`.`products` (`gtin14`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE,
   -- Added Checks

@@ -87,7 +87,7 @@ class Msg:
 
 
 class DBSchemaTableNames:
-    schema = "online_shop_logistics"
+    schema = None
     customers = "customers"
     customer_locations = "customer_locations"
     locations = "locations"

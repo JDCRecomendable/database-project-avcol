@@ -57,6 +57,16 @@ def get_text_file_lines(file_path: str) -> list:
     return result
 
 
+def format_text_file_lines(text_file_lines: list, **kwargs) -> list:
+    """Return a list containing the lines, formatted.
+    :type text_file_lines: list
+    """
+    result = []
+    for line in text_file_lines:
+        result.append(line.format(**kwargs))
+    return result
+
+
 def remove_unsafe_chars(string: str) -> str:
     """Remove unsafe characters from the string that will be used for SQL queries.
     :type string: str

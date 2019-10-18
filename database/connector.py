@@ -64,6 +64,7 @@ class DatabaseConnector:
                     return 0, self.cursor.fetchall()
                 return 0,
             except mysql.connector.Error as err:
+                print_error(statement)
                 print_error(str(err))
                 return 1, str(err)
         else:
