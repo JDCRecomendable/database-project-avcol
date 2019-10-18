@@ -17,7 +17,7 @@ class CustomerDetailsForm(Form):
     first_name_string = StringField("First Name*")
     last_name_string = StringField("Last Name*")
     email_address_string = EmailField("Email Address*")
-    phone_string = TelField("Phone Number")
+    phone_string = TelField("Phone Number*")
 
 
 class CustomerLocationsDetailsForm(Form):
