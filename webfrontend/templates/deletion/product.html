@@ -6,8 +6,8 @@
 {% block cancellink %}products/{{ record_id }}{% endblock %}
 
 {% block navigation %}
-<li><a class="dropdown-item" href="/customers">Customers</a></li>
-<li><a class="dropdown-item text-info" href="/products">Products</a></li>
-<li><a class="dropdown-item" href="/customer-orders">Customer Orders</a></li>
-<li><a class="dropdown-item" href="/company-orders">Company Orders</a></li>
+<li class="nav-item mx-2"><a class="nav-link" href="/customers">Customers</a></li>
+<li class="nav-item active mx-2"><a class="nav-link" href="/products">Products</a></li>
+<li class="nav-item mx-2"><a class="nav-link" href="/customer-orders">Customer Orders</a></li>
+<li class="nav-item mx-2"><a class="nav-link" href="/company-orders">Company Orders</a></li>
 {% endblock %}
