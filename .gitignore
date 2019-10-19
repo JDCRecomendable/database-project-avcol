@@ -110,3 +110,6 @@ venvArchLinux/
 
 # VSCode
 .vscode/
+
+# Configuration
+config.cfg
