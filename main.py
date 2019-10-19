@@ -19,6 +19,10 @@ if not config_exists:
     config[Config.Headers.web_interface] = Config.DefaultKeyValuePairs.web_interface
     with open(Config.file_path, "w+", newline=Config.newline_char) as config_file:
         config.write(config_file)
+    print(Msg.Config.initialised)
+    exit(0)
+else:
+    print_message(Msg.Config.configuration_read)
 
 DBSchemaTableNames.schema = config[Config.Headers.database][Config.Keys.Database.schema]
 import webfrontend

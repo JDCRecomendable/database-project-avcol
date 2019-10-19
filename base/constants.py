@@ -51,6 +51,11 @@ class Config:
 
 
 class Msg:
+    class Config:
+        initialised = "Welcome!\n\nThe file `config.cfg` has been created.\nPlease ensure that the configuration matches\nthat of the database server.\n\nWhen ready, simply execute `main.py` again."
+        configuration_read = "Configuration has been read from `config.cfg`."
+
+
     class Symbol:
         message = "*"
         warning = "!"
