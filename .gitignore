@@ -113,3 +113,6 @@ venvArchLinux/
 
 # Configuration
 config.cfg
+
+# macOS
+.DS_Store
