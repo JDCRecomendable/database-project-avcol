@@ -111,8 +111,9 @@ venvArchLinux/
 # VSCode
 .vscode/
 
-# Configuration
+# Configuration and Logs
 config.cfg
+log.txt
 
 # macOS
 .DS_Store
