@@ -8,7 +8,10 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
 from base.utils import *
+from base.logger import Logger
 from database import connector
+
+logger = Logger()
 
 # If configuration exists, read it. Else, make one for editing by the user.
 config = read_config(Config.file_path)
