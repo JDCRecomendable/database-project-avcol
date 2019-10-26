@@ -8,6 +8,7 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
 UNSAFE_QUERY_CHARS = ("'", '"', ";", "\\")
+LOG_FILEPATH = "log.txt"
 
 
 class Config:

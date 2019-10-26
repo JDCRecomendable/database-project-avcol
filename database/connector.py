@@ -10,6 +10,7 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 import mysql.connector
 from mysql.connector import errorcode
 from base.utils import *
+from base.logger import Logger
 
 
 class DatabaseConnector:
@@ -21,10 +22,12 @@ class DatabaseConnector:
         self.username = database_config[Config.Keys.Database.username]
         self.password = database_config[Config.Keys.Database.password]
         self.host = database_config[Config.Keys.Database.host]
+        self.logger = Logger(LOG_FILEPATH)
 
     def start_connection(self):
         try:
             print_message(Msg.DatabaseConnector.connecting)
+            self.logger.log_message(Msg.DatabaseConnector.connecting)
             self.cnx = mysql.connector.connect(
                 user=self.username,
                 password=self.password,
@@ -33,13 +36,17 @@ class DatabaseConnector:
             self.cursor = self.cnx.cursor()
             self.db_is_connected = True
             print_message(Msg.DatabaseConnector.connected)
+            self.logger.log_message(Msg.DatabaseConnector.connected)
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                 print_error(Msg.DatabaseConnector.invalid_database_credentials)
+                self.logger.log_error(Msg.DatabaseConnector.invalid_database_credentials)
             elif err.errno == errorcode.ER_BAD_DB_ERROR:
                 print_error(Msg.DatabaseConnector.database_not_exists)
+                self.logger.log_error(Msg.DatabaseConnector.database_not_exists)
             else:
                 print_error(str(err))
+                self.logger.log_error(str(err))
             exit(1)
 
     def execute_query(self, query, inputs=(), select=False, commit=False) -> tuple:
@@ -58,6 +65,7 @@ class DatabaseConnector:
             try:
                 self.cursor.execute(statement)
                 print_message(Msg.DatabaseConnector.command_processed + statement)
+                self.logger.log_message(Msg.DatabaseConnector.command_processed + statement)
                 if commit:
                     self.cnx.commit()
                 if select:
@@ -65,10 +73,13 @@ class DatabaseConnector:
                 return 0,
             except mysql.connector.Error as err:
                 print_error(statement)
+                self.logger.log_error(statement)
                 print_error(str(err))
+                self.logger.log_error(str(err))
                 return 1, str(err)
         else:
             print_error(Msg.DatabaseConnector.not_connected)
+            self.logger.log_error(Msg.DatabaseConnector.not_connected)
             exit(1)
 
     def execute_queries_sequentially(self, queries) -> tuple:
@@ -89,6 +100,7 @@ class DatabaseConnector:
                         statement += query.strip()
                         self.cursor.execute(statement)
                         print_message(Msg.DatabaseConnector.command_processed + statement)
+                        self.logger.log_message(Msg.DatabaseConnector.command_processed + statement)
                         statement = ""
                     else:
                         statement += query.strip() + " "
@@ -96,6 +108,7 @@ class DatabaseConnector:
                 return 0,
             except mysql.connector.Error as err:
                 print_error(str(err))
+                self.logger.log_error(str(err))
                 return 1, str(err)
 
     def stop_connection(self):
@@ -103,6 +116,8 @@ class DatabaseConnector:
             self.cursor.close()
             self.cnx.close()
             print_message(Msg.DatabaseConnector.connection_stopped)
+            self.logger.log_message(Msg.DatabaseConnector.connection_stopped)
         else:
             print_error(Msg.DatabaseConnector.not_connected)
+            self.logger.log_error(Msg.DatabaseConnector.not_connected)
             exit(1)

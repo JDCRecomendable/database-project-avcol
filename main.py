@@ -11,7 +11,7 @@ from base.utils import *
 from base.logger import Logger
 from database import connector
 
-logger = Logger()
+logger = Logger(LOG_FILEPATH)
 
 # If configuration exists, read it. Else, make one for editing by the user.
 config = read_config(Config.file_path)
@@ -26,6 +26,7 @@ if not config_exists:
     exit(0)
 else:
     print_message(Msg.Config.configuration_read)
+    logger.log_message(Msg.Config.configuration_read)
 
 DBSchemaTableNames.schema = config[Config.Headers.database][Config.Keys.Database.schema]
 import webfrontend

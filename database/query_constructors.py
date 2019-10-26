@@ -8,6 +8,9 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
 from base.utils import *
+from base.logger import Logger
+
+logger = Logger(LOG_FILEPATH)
 
 
 class QueryConstructor:
@@ -63,6 +66,7 @@ class QueryConstructor:
             self.condition += '({} BETWEEN "{}" AND "{}")'.format(field, lower_limit, upper_limit)
         else:
             print_error(Msg.DatabaseQueryConstructor.missing_ranged_values_limits)
+            logger.log_error(Msg.DatabaseQueryConstructor.missing_ranged_values_limits)
 
     def add_condition_like(self, field: str, like_value: str, at_beginning: bool = False, at_end: bool = False):
         """Add a condition to go along with the SQL query, where the value for the condition would be a subset
@@ -119,6 +123,7 @@ class QueryConstructor:
 
         if len(table_name) == 0:
             print_error(Msg.DatabaseQueryConstructor.missing_table_name)
+            logger.log_error(Msg.DatabaseQueryConstructor.missing_table_name)
             return ""
 
         if not schema_name:
@@ -153,14 +158,17 @@ class QueryConstructor:
 
         if len(table_name) == 0:
             print_error(Msg.DatabaseQueryConstructor.missing_table_name)
+            logger.log_error(Msg.DatabaseQueryConstructor.missing_table_name)
             return ""
 
         if len(fields) == 0 or len(values) == 0:
             print_error(Msg.DatabaseQueryConstructor.missing_fields_or_values)
+            logger.log_error(Msg.DatabaseQueryConstructor.missing_fields_or_values)
             return ""
 
         if len(fields) != len(values):
             print_error(Msg.DatabaseQueryConstructor.number_of_field_and_value_mismatch)
+            logger.log_error(Msg.DatabaseQueryConstructor.number_of_field_and_value_mismatch)
             return ""
 
         if not schema_name:
@@ -191,10 +199,12 @@ class QueryConstructor:
 
         if len(table_name) == 0:
             print_error(Msg.DatabaseQueryConstructor.missing_table_name)
+            logger.log_error(Msg.DatabaseQueryConstructor.missing_table_name)
             return ""
 
         if len(condition) == 0:
             print_error(Msg.DatabaseQueryConstructor.cannot_render)
+            logger.log_error(Msg.DatabaseQueryConstructor.cannot_render)
             return ""
 
         if not schema_name:
