@@ -11,7 +11,8 @@ from base.utils import *
 from base.logger import Logger
 from database import connector
 
-logger = Logger(LOG_FILEPATH)
+logger = Logger(LoggerConfig.file_path)
+logger.trim(LoggerConfig.log_size)
 
 # If configuration exists, read it. Else, make one for editing by the user.
 config = read_config(Config.file_path)
@@ -57,19 +58,21 @@ def main_activity():
 
         # Addition of Sample Data (before modification during demonstration, provided the data has not been added yet)
         add_sample_data(DBQueryFilePath.add_customer,
-                        SampleDataFilepath.customers, database_connector)
+                        SampleDataFilePath.customers, database_connector)
         add_sample_data(DBQueryFilePath.add_product,
-                        SampleDataFilepath.products, database_connector)
+                        SampleDataFilePath.products, database_connector)
         add_sample_data(DBQueryFilePath.add_location,
-                        SampleDataFilepath.locations, database_connector)
+                        SampleDataFilePath.locations, database_connector)
         add_sample_data(DBQueryFilePath.add_customer_location,
-                        SampleDataFilepath.customer_locations, database_connector)
+                        SampleDataFilePath.customer_locations, database_connector)
         add_sample_data(DBQueryFilePath.add_company_order,
-                        SampleDataFilepath.company_orders, database_connector)
+                        SampleDataFilePath.company_orders, database_connector)
         add_sample_data(DBQueryFilePath.add_customer_order,
-                        SampleDataFilepath.customer_orders, database_connector)
+                        SampleDataFilePath.customer_orders, database_connector)
         add_sample_data(DBQueryFilePath.add_customer_order_item,
-                        SampleDataFilepath.customer_order_items, database_connector)
+                        SampleDataFilePath.customer_order_items, database_connector)
+        
+        # Update Config File
         config[Config.Headers.system][Config.Keys.System.is_initialised] = "1"
         # noinspection PyShadowingNames
         with open(Config.file_path, "w+", newline=Config.newline_char) as config_file:
@@ -87,3 +90,4 @@ def main_activity():
 
 if __name__ == "__main__":
     main_activity()
+    logger.trim(LoggerConfig.log_size)
