@@ -22,7 +22,7 @@ class DatabaseConnector:
         self.username = database_config[Config.Keys.Database.username]
         self.password = database_config[Config.Keys.Database.password]
         self.host = database_config[Config.Keys.Database.host]
-        self.logger = Logger(LOG_FILEPATH)
+        self.logger = Logger(LoggerConfig.file_path)
 
     def start_connection(self):
         try:

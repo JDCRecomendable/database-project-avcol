@@ -10,7 +10,7 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 from base.utils import *
 from base.logger import Logger
 
-logger = Logger(LOG_FILEPATH)
+logger = Logger(LoggerConfig.file_path)
 
 
 class QueryConstructor:

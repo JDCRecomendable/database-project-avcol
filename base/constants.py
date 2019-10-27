@@ -8,7 +8,11 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
 UNSAFE_QUERY_CHARS = ("'", '"', ";", "\\")
-LOG_FILEPATH = "log.txt"
+
+
+class LoggerConfig:
+    file_path = "log.txt"
+    log_size = 5000
 
 
 class Config:
@@ -163,7 +167,7 @@ class DBQueryFilePath:
     add_product = "commands/insertion/add_product.sql"
 
 
-class SampleDataFilepath:
+class SampleDataFilePath:
     customers = "sample_data/customers.txt"
     locations = "sample_data/locations.txt"
     customer_locations = "sample_data/customer_locations.txt"
