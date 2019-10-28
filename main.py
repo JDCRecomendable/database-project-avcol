@@ -11,23 +11,27 @@ from base.utils import *
 from base.logger import Logger
 from database import connector
 
-logger = Logger(LoggerConfig.file_path)
-logger.trim(LoggerConfig.log_size)
-
 # If configuration exists, read it. Else, make one for editing by the user.
 config = read_config(Config.file_path)
 config_exists = check_if_config_exists(Config.file_path)
+
 if not config_exists:
     config[Config.Headers.system] = Config.DefaultKeyValuePairs.system
     config[Config.Headers.database] = Config.DefaultKeyValuePairs.database
     config[Config.Headers.web_interface] = Config.DefaultKeyValuePairs.web_interface
+    config[Config.Headers.logger] = Config.DefaultKeyValuePairs.logger
     with open(Config.file_path, "w+", newline=Config.newline_char) as config_file:
         config.write(config_file)
     print(Msg.Config.initialised)
     exit(0)
 else:
     print_message(Msg.Config.configuration_read)
-    logger.log_message(Msg.Config.configuration_read)
+
+# Initialise logger in `main.py`
+logger = Logger(LoggerConfig.file_path)
+logger.trim(int(
+    config[Config.Headers.logger][Config.Keys.Logger.max_number_of_lines]
+))
 
 DBSchemaTableNames.schema = config[Config.Headers.database][Config.Keys.Database.schema]
 import webfrontend
@@ -90,4 +94,6 @@ def main_activity():
 
 if __name__ == "__main__":
     main_activity()
-    logger.trim(LoggerConfig.log_size)
+    logger.trim(int(
+        config[Config.Headers.logger][Config.Keys.Logger.max_number_of_lines]
+    ))

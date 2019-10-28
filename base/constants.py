@@ -12,7 +12,6 @@ UNSAFE_QUERY_CHARS = ("'", '"', ";", "\\")
 
 class LoggerConfig:
     file_path = "log.txt"
-    log_size = 5000
 
 
 class Config:
@@ -23,6 +22,7 @@ class Config:
         system = "SYSTEM"
         database = "DATABASE"
         web_interface = "WEB_INTERFACE"
+        logger = "LOGGER"
 
     class Keys:
         class System:
@@ -38,6 +38,9 @@ class Config:
             host = "host"
             port = "port"
 
+        class Logger:
+            max_number_of_lines = "max_number_of_lines"
+
     class DefaultKeyValuePairs:
         system = {
             "is_initialised": "0"
@@ -51,6 +54,9 @@ class Config:
         web_interface = {
             "host": "127.0.0.1",
             "port": "5000"
+        }
+        logger = {
+            "max_number_of_lines": "5000"
         }
 
 
