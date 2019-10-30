@@ -284,7 +284,12 @@ def show_customer_details(customer_id):
         is_updated = update_record(customers_query_constructor)
 
         if is_updated[0] == 1:
-            flash_danger(FLASH_ERROR.format(is_updated[1]))
+            if "HY000" in is_updated[1] and "3819" in is_updated[1]:
+                    flash_danger(FLASH_INVALID_INPUT_TO_ADD)
+            elif "23000" in is_updated[1] and "1452" in is_updated[1]:
+                flash_danger(FLASH_INVALID_INPUT_KEY_CONSTRAINT)
+            else:
+                flash_danger(FLASH_ERROR.format(is_updated[1]))
         else:
             flash_success(FLASH_RECORD_UPDATED)
 
@@ -350,7 +355,12 @@ def show_product_details(product_gtin14):
         is_updated = update_record(products_query_constructor)
 
         if is_updated[0] == 1:
-            flash_danger(FLASH_ERROR.format(is_updated[1]))
+            if "HY000" in is_updated[1] and "3819" in is_updated[1]:
+                    flash_danger(FLASH_INVALID_INPUT_TO_ADD)
+            elif "23000" in is_updated[1] and "1452" in is_updated[1]:
+                flash_danger(FLASH_INVALID_INPUT_KEY_CONSTRAINT)
+            else:
+                flash_danger(FLASH_ERROR.format(is_updated[1]))
         else:
             flash_success(FLASH_RECORD_UPDATED)
 
@@ -397,7 +407,12 @@ def show_customer_order_details(customer_order_id):
         is_updated = update_record(customer_orders_query_constructor)
 
         if is_updated[0] == 1:
-            flash_danger(FLASH_ERROR.format(is_updated[1]))
+            if "HY000" in is_updated[1] and "3819" in is_updated[1]:
+                    flash_danger(FLASH_INVALID_INPUT_TO_ADD)
+            elif "23000" in is_updated[1] and "1452" in is_updated[1]:
+                flash_danger(FLASH_INVALID_INPUT_KEY_CONSTRAINT)
+            else:
+                flash_danger(FLASH_ERROR.format(is_updated[1]))
         else:
             flash_success(FLASH_RECORD_UPDATED)
 
@@ -453,7 +468,12 @@ def show_company_order_details(company_order_id):
         is_updated = update_record(company_orders_query_constructor)
 
         if is_updated[0] == 1:
-            flash_danger(FLASH_ERROR.format(is_updated[1]))
+            if "HY000" in is_updated[1] and "3819" in is_updated[1]:
+                    flash_danger(FLASH_INVALID_INPUT_TO_ADD)
+            elif "23000" in is_updated[1] and "1452" in is_updated[1]:
+                flash_danger(FLASH_INVALID_INPUT_KEY_CONSTRAINT)
+            else:
+                flash_danger(FLASH_ERROR.format(is_updated[1]))
         else:
             flash_success(FLASH_RECORD_UPDATED)
 
@@ -494,7 +514,12 @@ def add_customer():
         values = [first_name, last_name, email_address, phone]
         is_added = add_record(DBQueryFilePath.add_customer, values)
         if is_added[0] == 1:
-            flash_danger(FLASH_ERROR.format(is_added[1]))
+            if "HY000" in is_added[1] and "3819" in is_added[1]:
+                flash_danger(FLASH_INVALID_INPUT_TO_ADD)
+            elif "23000" in is_added[1] and "1452" in is_added[1]:
+                flash_danger(FLASH_INVALID_INPUT_KEY_CONSTRAINT)
+            else:
+                flash_danger(FLASH_ERROR.format(is_added[1]))
         else:
             flash_success(FLASH_RECORD_ADDED)
             customers_query_constructor.reset()
@@ -558,7 +583,12 @@ def add_customer_location(customer_id):
             is_added = add_record(DBQueryFilePath.add_location, values)
             # check for any errors in inserting the record
             if is_added[0] == 1:
-                flash_danger(FLASH_ERROR.format(is_added[1]))
+                if "HY000" in is_added[1] and "3819" in is_added[1]:
+                    flash_danger(FLASH_INVALID_INPUT_TO_ADD)
+                elif "23000" in is_added[1] and "1452" in is_added[1]:
+                    flash_danger(FLASH_INVALID_INPUT_KEY_CONSTRAINT)
+                else:
+                    flash_danger(FLASH_ERROR.format(is_added[1]))
                 return redirect(url_for("add_customer_location", customer_id=customer_id))
 
             # retrieve the ID of the newly-inserted record, using the exact same location query conditions set earlier
@@ -579,7 +609,12 @@ def add_customer_location(customer_id):
         is_added = add_record(DBQueryFilePath.add_customer_location, values)
         # check for any errors in adding the new customer location record
         if is_added[0] == 1:
-            flash_danger(FLASH_ERROR.format(is_added[1]))
+            if "HY000" in is_added[1] and "3819" in is_added[1]:
+                flash_danger(FLASH_INVALID_INPUT_TO_ADD)
+            elif "23000" in is_added[1] and "1452" in is_added[1]:
+                flash_danger(FLASH_INVALID_INPUT_KEY_CONSTRAINT)
+            else:
+                flash_danger(FLASH_ERROR.format(is_added[1]))
             return redirect(url_for("add_customer_location", customer_id=customer_id))
 
         # if customer location record successfuly added, redirect back to the customer details, where the new location
@@ -602,7 +637,12 @@ def add_product():
         values = [gtin14, name, description, qty_in_stock]
         is_added = add_record(DBQueryFilePath.add_product, values)
         if is_added[0] == 1:
-            flash_danger(FLASH_ERROR.format(is_added[1]))
+            if "HY000" in is_added[1] and "3819" in is_added[1]:
+                flash_danger(FLASH_INVALID_INPUT_TO_ADD)
+            elif "23000" in is_added[1] and "1452" in is_added[1]:
+                flash_danger(FLASH_INVALID_INPUT_KEY_CONSTRAINT)
+            else:
+                flash_danger(FLASH_ERROR.format(is_added[1]))
         else:
             flash_success(FLASH_RECORD_ADDED)
             products_query_constructor.reset()
@@ -634,7 +674,12 @@ def add_customer_order():
         values = [customer_id, datetime_ordered, delivery_date, delivery_location]
         is_added = add_record(DBQueryFilePath.add_customer_order, values)
         if is_added[0] == 1:
-            flash_danger(FLASH_ERROR.format(is_added[1]))
+            if "HY000" in is_added[1] and "3819" in is_added[1]:
+                flash_danger(FLASH_INVALID_INPUT_TO_ADD)
+            elif "23000" in is_added[1] and "1452" in is_added[1]:
+                flash_danger(FLASH_INVALID_INPUT_KEY_CONSTRAINT)
+            else:
+                flash_danger(FLASH_ERROR.format(is_added[1]))
         else:
             flash_success(FLASH_RECORD_ADDED)
             customer_orders_query_constructor.reset()
@@ -681,7 +726,12 @@ def add_customer_order_item(customer_order_id):
         values = [customer_order_id, product_gtin14, qty_bought]
         is_added = add_record(DBQueryFilePath.add_customer_order_item, values)
         if is_added[0] == 1:
-            flash_danger(FLASH_ERROR.format(is_added[1]))
+            if "HY000" in is_added[1] and "3819" in is_added[1]:
+                flash_danger(FLASH_INVALID_INPUT_TO_ADD)
+            elif "23000" in is_added[1] and "1452" in is_added[1]:
+                flash_danger(FLASH_INVALID_INPUT_KEY_CONSTRAINT)
+            else:
+                flash_danger(FLASH_ERROR.format(is_added[1]))
             return redirect(url_for("add_customer_order_item", customer_order_id=customer_order_id))
         flash_success(FLASH_RECORD_ADDED)
         return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
@@ -701,7 +751,12 @@ def add_company_order():
         values = [product_gtin14, datetime_ordered, qty_bought, delivery_date]
         is_added = add_record(DBQueryFilePath.add_company_order, values)
         if is_added[0] == 1:
-            flash_danger(FLASH_ERROR.format(is_added[1]))
+            if "HY000" in is_added[1] and "3819" in is_added[1]:
+                flash_danger(FLASH_INVALID_INPUT_TO_ADD)
+            elif "23000" in is_added[1] and "1452" in is_added[1]:
+                flash_danger(FLASH_INVALID_INPUT_KEY_CONSTRAINT)
+            else:
+                flash_danger(FLASH_ERROR.format(is_added[1]))
         else:
             flash_success(FLASH_RECORD_ADDED)
             company_orders_query_constructor.reset()
@@ -754,7 +809,12 @@ def update_customer_order_item(customer_order_id, product_gtin14):
         is_updated = update_record(customer_order_items_query_constructor)
 
         if is_updated[0] == 1:
-            flash_danger(FLASH_ERROR.format(is_updated[1]))
+            if "HY000" in is_updated[1] and "3819" in is_updated[1]:
+                    flash_danger(FLASH_INVALID_INPUT_TO_ADD)
+            elif "23000" in is_updated[1] and "1452" in is_updated[1]:
+                flash_danger(FLASH_INVALID_INPUT_KEY_CONSTRAINT)
+            else:
+                flash_danger(FLASH_ERROR.format(is_updated[1]))
         else:
             flash_success(FLASH_RECORD_UPDATED)
             return redirect(url_for("show_customer_order_details", customer_order_id=customer_order_id))
