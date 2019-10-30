@@ -53,7 +53,7 @@ class Config:
         }
         web_interface = {
             "host": "127.0.0.1",
-            "port": "5000"
+            "port": "50000"
         }
         logger = {
             "max_number_of_lines": "5000"
