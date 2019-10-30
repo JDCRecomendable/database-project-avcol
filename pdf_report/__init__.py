@@ -13,13 +13,12 @@ from datetime import datetime
 
 class PDF(FPDF):
     def __init__(self, header_title_text: str = "", header_subtitle_text: str = "", footer_text: str = "",
-                 font_face: str = "Arial", output_filename = "result.pdf"):
+                 font_face: str = "Arial"):
         super().__init__()
         self.header_title_text = header_title_text
         self.header_subtitle_text = header_subtitle_text
         self.footer_text = footer_text
         self.font_face = font_face
-        self.output_filename = output_filename
         self.set_font(font_face)
         self.add_page()
 
@@ -37,8 +36,6 @@ class PDF(FPDF):
         self.cell(0, 10, self.footer_text, 0, 0, "L")
         self.cell(0, 10, "{} | Page {}".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), self.page_no()), 0, 0, "R")
 
-    def auto_write(self, text):
-        self.cell(0, 5, text, 0, 1)
-
-    def render(self):
-        self.output(self.output_filename, "F")
+    def auto_write(self, text: str, width: int = 0, height: int = 5, line_break: int = 1):
+        """Place a cell of text into the PDF document."""
+        self.cell(width, height, text, 0, line_break)
