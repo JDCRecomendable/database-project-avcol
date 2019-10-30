@@ -25,6 +25,7 @@ class PDF(FPDF):
     def header(self):
         """Define the header parameters for the PDF document."""
         self.set_font(self.font_face, "B", 16)
+        self.set_text_color(0, 0, 0)
         self.cell(0, 10, self.header_title_text, 0, 0, "L")
         self.cell(0, 10, self.header_subtitle_text, 0, 0, "R")
         self.ln(12)
@@ -33,9 +34,15 @@ class PDF(FPDF):
         """Define the footer parameters for the PDF document."""
         self.set_y(-15)
         self.set_font(self.font_face, 'B', 8)
+        self.set_text_color(0, 0, 0)
         self.cell(0, 10, self.footer_text, 0, 0, "L")
         self.cell(0, 10, "{} | Page {}".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), self.page_no()), 0, 0, "R")
 
-    def auto_write(self, text: str, width: int = 0, height: int = 5, line_break: int = 1):
-        """Place a cell of text into the PDF document."""
-        self.cell(width, height, text, 0, line_break)
+    def auto_write(self, text: str, width: int = 0, height: int = 5, align: str = "L", line_break: int = 1,
+                   fill: int = 0):
+        """Place a cell of text into the PDF document. Comes with default parameters."""
+        if fill != 0:
+            self.set_text_color(255, 255, 255)
+        else:
+            self.set_text_color(0, 0, 0)
+        self.cell(width, height, text, 0, line_break, align, fill)

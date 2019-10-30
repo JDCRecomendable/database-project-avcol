@@ -27,6 +27,7 @@ class QueryConstructor:
         self.field_list = []
         self.value_list = []
         self.condition = ""
+        self.order = ""
 
     def reset(self):
         """Clear the query in memory for this object. Essential before creating a new query."""
@@ -114,12 +115,19 @@ class QueryConstructor:
         self.add_field(field)
         self.add_value(value)
 
+    def add_order(self, field: str, ascending: bool = True):
+        if ascending:
+            self.order = "ORDER BY {} ASC".format(field)
+        else:
+            self.order = "ORDER BY {} DESC".format(field)
+
     # Rendering the Queries
     def render_select_query(self) -> str:
         """Return constructed select SQL query."""
         schema_name = self.schema_name
         table_name = self.table_name
         condition = self.condition
+        order = self.order
 
         if len(table_name) == 0:
             print_error(Msg.DatabaseQueryConstructor.missing_table_name)
@@ -141,11 +149,12 @@ class QueryConstructor:
         if len(condition) > 0:
             condition = "WHERE ({})".format(condition)
 
-        return "SELECT {} FROM {}{} {}".format(
+        return "SELECT {} FROM {}{} {} {}".format(
             fields,
             schema_name,
             table_name,
-            condition
+            condition,
+            order
         )
 
     def render_update_query(self) -> str:

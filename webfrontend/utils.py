@@ -252,3 +252,12 @@ def filter_company_order_selection(form_result: dict) -> bool:
         condition_count += 1
     return bool(condition_count)
 
+
+# Make Text Ready for Latin-1 Encoding
+def prepare_for_latin1(string) -> str:
+    """Format the string such that it is readily encoded to Latin-1.
+    :type string
+    """
+    string = str(string).encode("latin-1", "replace")
+    string = string.decode("latin-1")
+    return string

@@ -8,7 +8,7 @@ This program DOES NOT COME WITH ANY WARRANTY, EXPRESS OR IMPLIED.
 """
 
 # Import Utils from System
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, make_response
 from os import urandom
 from datetime import datetime
 
@@ -16,7 +16,8 @@ from datetime import datetime
 from base.constants import *
 from webfrontend.constants import *
 import webfrontend.utils
-from webfrontend.utils import flash_success, flash_info, flash_danger, QueryConstructor
+from webfrontend.utils import flash_success, flash_info, flash_danger, QueryConstructor, prepare_for_latin1
+from pdf_report import PDF
 
 # Import Database Actions
 from webfrontend.utils import get_selected_records, update_record, add_record, delete_record
@@ -65,12 +66,148 @@ def default_route():
 
 
 # WEB INTERFACE ROUTING
+# Display Reports
+@app.route("/customers/report")
+def report_customers():
+    customers_query_constructor.reset()
+    customers_query_constructor.add_order(DBFields.Customers.id, ascending=True)
+    selection = get_selected_records(customers_query_constructor)
+    if selection[0] == 0:
+        pdf = PDF("Online Shop Logistics Management", "Selection of Customers", "View of All Customers")
+        for record in selection[1]:
+            pdf.auto_write("Customer {}".format(prepare_for_latin1(record[0])), fill=1)
+
+            pdf.auto_write("Name:", width=20, line_break=0)
+            pdf.auto_write("{} {}".format(prepare_for_latin1(record[2]), prepare_for_latin1(record[1])))
+
+            pdf.auto_write("Email:", width=20, line_break=0)
+            pdf.auto_write("{}".format(prepare_for_latin1(record[3])))
+
+            pdf.auto_write("Phone:", width=20, line_break=0)
+            pdf.auto_write("{}".format(prepare_for_latin1(record[4])))
+
+            pdf.ln()
+        response = make_response(pdf.output(dest="S").encode("latin-1"))
+        response.headers.set('Content-Disposition', 'inline', filename='Report.pdf')
+        response.headers.set('Content-Type', 'application/pdf')
+        return response
+    return selection[1]
+
+
+@app.route("/products/report")
+def report_products():
+    products_query_constructor.reset()
+    products_query_constructor.add_order(DBFields.Products.gtin14, ascending=True)
+    selection = get_selected_records(products_query_constructor)
+    if selection[0] == 0:
+        pdf = PDF("Online Shop Logistics Management", "Selection of Products", "View of All Products")
+        for record in selection[1]:
+            pdf.auto_write("Product {}".format(prepare_for_latin1(record[0])), fill=1)
+
+            pdf.auto_write("Name:", width=32, line_break=0)
+            pdf.auto_write("{}".format(prepare_for_latin1(record[1])))
+
+            pdf.auto_write("Qty in Stock:", width=32, line_break=0)
+            pdf.auto_write("{}".format(prepare_for_latin1(record[3])))
+
+            if len(record[2]):
+                pdf.auto_write("Description:", width=32, line_break=1)
+                pdf.write(5, "{}".format(prepare_for_latin1(record[2])))
+                pdf.ln()
+
+            pdf.ln()
+            pdf.ln()
+        response = make_response(pdf.output(dest="S").encode("latin-1", "replace"))
+        response.headers.set('Content-Disposition', 'inline', filename='Report.pdf')
+        response.headers.set('Content-Type', 'application/pdf')
+        return response
+    return selection[1]
+
+
+@app.route("/customer-orders/report")
+def report_customer_orders():
+    customer_orders_query_constructor.reset()
+    customer_orders_query_constructor.add_order(DBFields.CustomerOrders.id, ascending=True)
+    selection = get_selected_records(customer_orders_query_constructor)
+    if selection[0] == 0:
+        pdf = PDF("Online Shop Logistics Management", "Selection of Customer Orders", "View of All Customer Orders")
+        for record in selection[1]:
+            pdf.auto_write("Customer Order {}".format(prepare_for_latin1(record[0])), fill=1)
+
+            customers_query_constructor.reset()
+            customers_query_constructor.add_condition_exact_value(DBFields.Customers.id, str(record[1]))
+            customers_query_constructor.add_field(DBFields.Customers.first_name)
+            customers_query_constructor.add_field(DBFields.Customers.last_name)
+            name = get_selected_records(customers_query_constructor)[1][0]
+            pdf.auto_write("Customer:", width=44, line_break=0)
+            pdf.auto_write("[{}] {} {}".format(prepare_for_latin1(record[1]), name[0], name[1]))
+
+            pdf.auto_write("Date/Time Ordered", width=44, line_break=0)
+            pdf.auto_write("{}".format(prepare_for_latin1(record[2])))
+
+            pdf.auto_write("Target Delivery Date:", width=44, line_break=0)
+            pdf.auto_write("{}".format(prepare_for_latin1(record[3])))
+
+            locations_query_constructor.reset()
+            locations_query_constructor.add_condition_exact_value(DBFields.Locations.id, str(record[4]))
+            locations_query_constructor.add_field(DBFields.Locations.place_no)
+            locations_query_constructor.add_field(DBFields.Locations.road_name)
+            locations_query_constructor.add_field(DBFields.Locations.city)
+            location = get_selected_records(locations_query_constructor)[1][0]
+            pdf.auto_write("Delivery Location:", width=44, line_break=0)
+            pdf.auto_write("{} {}, {}".format(prepare_for_latin1(location[0]), prepare_for_latin1(location[1]),
+                                              prepare_for_latin1(location[2])))
+
+            pdf.ln()
+        response = make_response(pdf.output(dest="S").encode("latin-1"))
+        response.headers.set('Content-Disposition', 'inline', filename='Report.pdf')
+        response.headers.set('Content-Type', 'application/pdf')
+        return response
+    return selection[1]
+
+
+@app.route("/company-orders/report")
+def report_company_orders():
+    company_orders_query_constructor.reset()
+    company_orders_query_constructor.add_order(DBFields.CompanyOrders.id, ascending=True)
+    selection = get_selected_records(company_orders_query_constructor)
+    if selection[0] == 0:
+        pdf = PDF("Online Shop Logistics Management", "Selection of Company Orders", "View of All Company Orders")
+        for record in selection[1]:
+            pdf.auto_write("Company Order {}".format(prepare_for_latin1(record[0])), fill=1)
+
+            products_query_constructor.reset()
+            products_query_constructor.add_condition_exact_value(DBFields.Products.gtin14, str(record[1]))
+            products_query_constructor.add_field(DBFields.Products.name)
+            product = get_selected_records(products_query_constructor)[1][0]
+            pdf.auto_write("Product:", width=44, line_break=0)
+            pdf.auto_write("[{}] {}".format(prepare_for_latin1(record[1]), prepare_for_latin1(product[0])))
+
+            pdf.auto_write("Qty Bought:", width=44, line_break=0)
+            pdf.auto_write("{}".format(prepare_for_latin1(record[3])))
+
+            pdf.auto_write("Date/Time Ordered:", width=44, line_break=0)
+            pdf.auto_write("{}".format(prepare_for_latin1(record[2])))
+
+            pdf.auto_write("Target Delivery Date:", width=44, line_break=0)
+            pdf.auto_write("{}".format(prepare_for_latin1(record[4])))
+
+            pdf.ln()
+        response = make_response(pdf.output(dest="S").encode("latin-1", "replace"))
+        response.headers.set('Content-Disposition', 'inline', filename='Report.pdf')
+        response.headers.set('Content-Type', 'application/pdf')
+        return response
+    return selection[1]
+
+
+# WEB INTERFACE ROUTING
 # Show Data
 @app.route("/customers/", methods=["GET", "POST"])
 def list_customers():
     form = CustomersDataFilterForm()
 
     customers_query_constructor.reset()
+    customers_query_constructor.add_order(DBFields.Customers.id, ascending=True)
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
         filter_customer_selection(result)
@@ -123,6 +260,7 @@ def list_products():
     form = ProductsDataFilterForm()
 
     products_query_constructor.reset()
+    products_query_constructor.add_order(DBFields.Products.gtin14, ascending=True)
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
         filter_product_selection(result)
@@ -193,6 +331,7 @@ def list_customer_orders():
     form = CustomerOrdersDataFilterForm()
 
     customer_orders_query_constructor.reset()
+    customer_orders_query_constructor.add_order(DBFields.CustomerOrders.id, ascending=True)
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
         filter_customer_order_selection(result)
@@ -234,6 +373,7 @@ def list_company_orders():
     form = CompanyOrdersDataFilterForm()
 
     company_orders_query_constructor.reset()
+    company_orders_query_constructor.add_order(DBFields.CompanyOrders.id, ascending=True)
     if request.method == "POST":
         result = request.form.to_dict(flat=False)
         filter_company_order_selection(result)
