@@ -75,7 +75,7 @@ def report_customers():
     if selection[0] == 0:
         pdf = PDF("Online Shop Logistics Management", "Selection of Customers", "View of All Customers")
         for record in selection[1]:
-            pdf.auto_write("Customer {}".format(prepare_for_latin1(record[0])), fill=1)
+            pdf.auto_write("Customer {}".format(prepare_for_latin1(record[0])), fill=1, bold=True)
 
             pdf.auto_write("Name:", width=20, line_break=0)
             pdf.auto_write("{} {}".format(prepare_for_latin1(record[2]), prepare_for_latin1(record[1])))
@@ -102,7 +102,7 @@ def report_products():
     if selection[0] == 0:
         pdf = PDF("Online Shop Logistics Management", "Selection of Products", "View of All Products")
         for record in selection[1]:
-            pdf.auto_write("Product {}".format(prepare_for_latin1(record[0])), fill=1)
+            pdf.auto_write("Product {}".format(prepare_for_latin1(record[0])), fill=1, bold=True)
 
             pdf.auto_write("Name:", width=32, line_break=0)
             pdf.auto_write("{}".format(prepare_for_latin1(record[1])))
@@ -132,7 +132,7 @@ def report_customer_orders():
     if selection[0] == 0:
         pdf = PDF("Online Shop Logistics Management", "Selection of Customer Orders", "View of All Customer Orders")
         for record in selection[1]:
-            pdf.auto_write("Customer Order {}".format(prepare_for_latin1(record[0])), fill=1)
+            pdf.auto_write("Customer Order {}".format(prepare_for_latin1(record[0])), fill=1, bold=True)
 
             customers_query_constructor.reset()
             customers_query_constructor.add_condition_exact_value(DBFields.Customers.id, str(record[1]))
@@ -158,6 +158,7 @@ def report_customer_orders():
             pdf.auto_write("{} {}, {}".format(prepare_for_latin1(location[0]), prepare_for_latin1(location[1]),
                                               prepare_for_latin1(location[2])))
 
+
             pdf.ln()
         response = make_response(pdf.output(dest="S").encode("latin-1"))
         response.headers.set('Content-Disposition', 'inline', filename='Report.pdf')
@@ -174,7 +175,7 @@ def report_company_orders():
     if selection[0] == 0:
         pdf = PDF("Online Shop Logistics Management", "Selection of Company Orders", "View of All Company Orders")
         for record in selection[1]:
-            pdf.auto_write("Company Order {}".format(prepare_for_latin1(record[0])), fill=1)
+            pdf.auto_write("Company Order {}".format(prepare_for_latin1(record[0])), fill=1, bold=True)
 
             products_query_constructor.reset()
             products_query_constructor.add_condition_exact_value(DBFields.Products.gtin14, str(record[1]))
