@@ -69,11 +69,10 @@ def default_route():
 # Display Reports
 @app.route("/customers/report")
 def report_customers():
-    customers_query_constructor.reset()
     customers_query_constructor.add_order(DBFields.Customers.id, ascending=True)
     selection = get_selected_records(customers_query_constructor)
     if selection[0] == 0:
-        pdf = PDF("Online Shop Logistics Management", "Selection of Customers", "View of All Customers")
+        pdf = PDF("Online Shop Logistics Management", "Selection of Customers", "View of Customers")
         for record in selection[1]:
             pdf.auto_write("Customer {}".format(prepare_for_latin1(record[0])), fill=1, bold=True)
 
@@ -96,11 +95,10 @@ def report_customers():
 
 @app.route("/products/report")
 def report_products():
-    products_query_constructor.reset()
     products_query_constructor.add_order(DBFields.Products.gtin14, ascending=True)
     selection = get_selected_records(products_query_constructor)
     if selection[0] == 0:
-        pdf = PDF("Online Shop Logistics Management", "Selection of Products", "View of All Products")
+        pdf = PDF("Online Shop Logistics Management", "Selection of Products", "View of Products")
         for record in selection[1]:
             pdf.auto_write("Product {}".format(prepare_for_latin1(record[0])), fill=1, bold=True)
 
@@ -126,11 +124,10 @@ def report_products():
 
 @app.route("/customer-orders/report")
 def report_customer_orders():
-    customer_orders_query_constructor.reset()
     customer_orders_query_constructor.add_order(DBFields.CustomerOrders.id, ascending=True)
     selection = get_selected_records(customer_orders_query_constructor)
     if selection[0] == 0:
-        pdf = PDF("Online Shop Logistics Management", "Selection of Customer Orders", "View of All Customer Orders")
+        pdf = PDF("Online Shop Logistics Management", "Selection of Customer Orders", "View of Customer Orders")
         for record in selection[1]:
             pdf.auto_write("Customer Order {}".format(prepare_for_latin1(record[0])), fill=1, bold=True)
 
@@ -169,11 +166,10 @@ def report_customer_orders():
 
 @app.route("/company-orders/report")
 def report_company_orders():
-    company_orders_query_constructor.reset()
     company_orders_query_constructor.add_order(DBFields.CompanyOrders.id, ascending=True)
     selection = get_selected_records(company_orders_query_constructor)
     if selection[0] == 0:
-        pdf = PDF("Online Shop Logistics Management", "Selection of Company Orders", "View of All Company Orders")
+        pdf = PDF("Online Shop Logistics Management", "Selection of Company Orders", "View of Company Orders")
         for record in selection[1]:
             pdf.auto_write("Company Order {}".format(prepare_for_latin1(record[0])), fill=1, bold=True)
 
