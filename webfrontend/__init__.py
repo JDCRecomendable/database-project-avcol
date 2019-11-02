@@ -85,6 +85,29 @@ def report_customers():
             pdf.auto_write("Phone:", width=20, line_break=0)
             pdf.auto_write("{}".format(prepare_for_latin1(record[4])))
 
+            customer_locations_query_constructor.reset()
+            customer_locations_query_constructor.add_condition_exact_value(DBFields.CustomerLocations.customer_id,
+                                                                           str(record[0]))
+            customer_locations_query_constructor.add_field(DBFields.CustomerLocations.location_id)
+            location_id_list = get_selected_records(customer_locations_query_constructor)[1]
+            location_records = []
+            for location_id in location_id_list:
+                locations_query_constructor.reset()
+                locations_query_constructor.add_condition_exact_value(DBFields.Locations.id, str(location_id[0]))
+                locations_query_constructor.add_field(DBFields.Locations.id)
+                locations_query_constructor.add_field(DBFields.Locations.place_no)
+                locations_query_constructor.add_field(DBFields.Locations.road_name)
+                locations_query_constructor.add_field(DBFields.Locations.city)
+                location = get_selected_records(locations_query_constructor)[1][0]
+                location_records.append(location)
+            sorted(location_records)
+            pdf.auto_write("Locations:")
+            for location in location_records:
+                pdf.auto_write("        ID [{}]:   {} {}, {}".format(prepare_for_latin1(location[0]),
+                                                                     prepare_for_latin1(location[1]),
+                                                                     prepare_for_latin1(location[2]),
+                                                                     prepare_for_latin1(location[3])))
+
             pdf.ln()
         response = make_response(pdf.output(dest="S").encode("latin-1"))
         response.headers.set('Content-Disposition', 'inline', filename='Report.pdf')
@@ -155,6 +178,23 @@ def report_customer_orders():
             pdf.auto_write("{} {}, {}".format(prepare_for_latin1(location[0]), prepare_for_latin1(location[1]),
                                               prepare_for_latin1(location[2])))
 
+            customer_order_items_query_constructor.reset()
+            customer_order_items_query_constructor.add_condition_exact_value(
+                DBFields.CustomerOrderItems.customer_order_id, str(record[0])
+            )
+            customer_order_items_query_constructor.add_field(DBFields.CustomerOrderItems.product_gtin14)
+            customer_order_items_query_constructor.add_field(DBFields.CustomerOrderItems.qty_bought)
+            customer_order_items_records = get_selected_records(customer_order_items_query_constructor)[1]
+            pdf.auto_write("Products Involved:")
+            for customer_order_item in customer_order_items_records:
+                products_query_constructor.reset()
+                products_query_constructor.add_condition_exact_value(DBFields.Products.gtin14,
+                                                                     str(customer_order_item[0]))
+                products_query_constructor.add_field(DBFields.Products.name)
+                product = get_selected_records(products_query_constructor)[1][0][0]
+                pdf.auto_write("        {} Orders of [{}] {}".format(prepare_for_latin1(customer_order_item[1]),
+                                                                     prepare_for_latin1(customer_order_item[0]),
+                                                                     prepare_for_latin1(product)))
 
             pdf.ln()
         response = make_response(pdf.output(dest="S").encode("latin-1"))
