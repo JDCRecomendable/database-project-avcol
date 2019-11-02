@@ -18,4 +18,12 @@
   {{ render_main_field(form.customer_delivery_date_lower_limit_string) }}
   {{ render_main_field(form.customer_delivery_date_upper_limit_string) }}
 </div>
+
+<!-- Delivery Location -->
+<div class="shadow-sm border p-2 m-2">
+  {{ render_label_and_filter_option(form.customer_order_location_selection) }}
+  {{ render_main_field(form.customer_order_location_place_no) }}
+  {{ render_main_field(form.customer_order_location_road_name) }}
+  {{ render_main_field(form.customer_order_location_city) }}
+</div>
 {% endmacro %}

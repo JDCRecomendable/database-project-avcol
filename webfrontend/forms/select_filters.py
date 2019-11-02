@@ -105,6 +105,12 @@ class CustomerOrdersDataBasicForm(Form):
     customer_delivery_date_lower_limit_string, customer_delivery_date_upper_limit_string =\
         gen_ranged_date_fields("Delivery Date")
 
+    # Customer Order Location
+    customer_order_location_selection = gen_selection("Delivery Location")
+    customer_order_location_place_no = StringField("Place No.")
+    customer_order_location_road_name = StringField("Road Name")
+    customer_order_location_city = StringField("City")
+
 
 class CompanyOrderDataBasicForm(Form):
     # ID

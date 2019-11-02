@@ -214,6 +214,26 @@ def filter_customer_order_selection(form_result: dict) -> bool:
             upper_limit=form_result["customer_delivery_date_upper_limit_string"][0]
         )
         condition_count += 1
+    if form_result["customer_order_location_selection"][0] == "filter":
+        locations_query_constructor.reset()
+        locations_query_constructor.add_condition_like(
+            DBFields.Locations.place_no,
+            form_result["customer_order_location_place_no"][0]
+        )
+        locations_query_constructor.add_condition_like(
+            DBFields.Locations.road_name,
+            form_result["customer_order_location_road_name"][0]
+        )
+        locations_query_constructor.add_condition_like(
+            DBFields.Locations.city,
+            form_result["customer_order_location_city"][0]
+        )
+        locations_query_constructor.add_field(DBFields.Locations.id)
+        customer_orders_query_constructor.add_nested_query(
+            DBFields.CustomerOrders.delivery_location,
+            locations_query_constructor.render_select_query()
+        )
+        condition_count += 1
     return bool(condition_count)
 
 
